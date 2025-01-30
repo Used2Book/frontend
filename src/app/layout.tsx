@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import NavLink from "@/components/navbar";
+import NavLinkNoAuth from "@/components/navbar-signup";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +27,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
-        {children}
+        <NavLink />
+        {/* <NavLinkNoAuth/> */}
+        {/* <NavLinkSignup /> */}
+        <div className="content-padding">{children}</div>
       </body>
     </html>
   );
