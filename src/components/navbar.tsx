@@ -7,8 +7,9 @@ import Heart_Icon from "@/assets/images/heart.png";
 import Profile_Image from "@/assets/images/profile.jpg";
 import Menu_Icon from "@/assets/images/menu.png";
 import Cat_Profile from "@/assets/images/cat-profile.jpg";
-
-
+import useStore from "@/contexts/useStore";
+import useAuthStore from "@/contexts/auth-store";
+import { logout } from "@/services/auth";
 const NavItemString = ({ href, link_string }: { href: string; link_string: string }) => (
     <li className="p-2 hover:bg-zinc-700 rounded-full text-xs md:text-sm">
         <Link href={href}>{link_string}</Link>
@@ -18,12 +19,14 @@ const NavItemString = ({ href, link_string }: { href: string; link_string: strin
 const NavItemIcon = ({ href, src, alt }: { href: string; src: string; alt: string }) => (
     <li className="justify-center items-center p-2 hover:bg-zinc-700 rounded-full">
         <Link href={href}>
-            <Image src={src} alt={alt} width={20} height={20}/>
+            <Image src={src} alt={alt} width={20} height={20} />
         </Link>
     </li>
 );
 
 export default function NavLink() {
+    const user = useStore(useAuthStore, (state) => state.user);
+
     return (
         <nav className="bg-black top-0 left-0 w-full z-10 px-4 sm:px-10 py-3 text-xs md:text-sm font-medium text-white">
             <div className="flex flex-col lg:flex-row xl:flex-row flex-wrap justify-center md:justify-between lg:justify-between items-center">
@@ -35,35 +38,57 @@ export default function NavLink() {
                     </div>
 
                     {/* Navigation Links */}
-                    <div>
-                        <ul className="flex space-x-6 sm:space-x-10 md:space-x-12 items-center">
-                            <NavItemString href="/" link_string="Home" />
-                            <NavItemString href="/" link_string="Web board" />
-                            <NavItemString href="/" link_string="Book hub" />
-                            <NavItemString href="/" link_string="Library" />
-                        </ul>
-                    </div>
+                    {user ?
+                        (<div>
+                            <ul className="flex space-x-6 sm:space-x-10 md:space-x-12 items-center">
+                                <NavItemString href="/" link_string="Home" />
+                                <NavItemString href="/" link_string="Web board" />
+                                <NavItemString href="/" link_string="Book hub" />
+                                <NavItemString href="/" link_string="Library" />
+                            </ul>
+                        </div>) : <></>
+                    }
                 </div>
 
                 {/* Right Icons */}
                 <div>
-                    <ul className="flex space-x-3 sm:space-x-5 items-center">
-                        <NavItemIcon href="/wishlist" alt="wishlist" src={Heart_Icon.src} />
-                        <NavItemIcon href="/chat" alt="chat" src={Chat_Icon.src} />
-                        <NavItemIcon href="/notification" alt="notification" src={Bell_Noti.src} />
-                        <li>
-                            <div className="bg-green-500 w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-gray-300">
-                                <Image
-                                    src={Cat_Profile}
-                                    alt="Profile"
-                                    width={40}
-                                    height={40}
-                                    className="object-cover"
-                                />
-                            </div>
-                        </li>
-                        <NavItemIcon href="/menu" alt="menu" src={Menu_Icon.src} />
-                    </ul>
+                    {user ?
+                        (<ul className="flex space-x-3 sm:space-x-5 items-center">
+                            <NavItemIcon href="/wishlist" alt="wishlist" src={Heart_Icon.src} />
+                            <NavItemIcon href="/chat" alt="chat" src={Chat_Icon.src} />
+                            <NavItemIcon href="/notification" alt="notification" src={Bell_Noti.src} />
+                            <li>
+                                <div className="bg-green-500 w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-gray-300">
+                                    <Image
+                                        src={Cat_Profile}
+                                        alt="Profile"
+                                        width={40}
+                                        height={40}
+                                        className="object-cover"
+                                    />
+                                </div>
+                            </li>
+                            <NavItemIcon href="/menu" alt="menu" src={Menu_Icon.src} />
+                            <li>
+                            <Link
+                            href="/auth"
+                            className="bg-white text-black px-3 py-2 rounded-lg hover:bg-zinc-300 transition duration-200"
+                            onClick={async (e) => {
+                                e.preventDefault(); // ✅ Prevent default link behavior
+                                await logout(); // ✅ Pass router as a parameter
+                              }}
+                        >
+                            Log out
+                        </Link>
+                            </li>
+                        </ul>) : 
+                        (<Link
+                            href="/auth"
+                            className="bg-white text-black px-3 py-2 rounded-lg hover:bg-zinc-300 transition duration-200"
+                        >
+                            Sign in / Sign up
+                        </Link>)
+                    }
                 </div>
             </div>
         </nav >

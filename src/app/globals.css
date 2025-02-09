@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --background: #f0f0f0;
+  --background: #ffffff;
   --foreground: #171717;
 }
 
@@ -13,6 +13,9 @@
     --foreground: #ededed;
   }
 } */
+html, body {
+  overflow-x: hidden; /* ✅ Prevents entire page from scrolling in X direction */
+}
 
 body {
   color: var(--foreground);
@@ -21,11 +24,22 @@ body {
 }
 
 .content-padding {
-  /* padding: 2rem; Add the desired padding */
+  /* padding: 4rem;  */
+  /* Add the desired padding */
 }
 
 .carousel .transition {
   transition: transform 0.5s ease-in-out;
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Hides scrollbar in Chrome & Safari */
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Hides scrollbar in IE & Edge */
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
+
 
 

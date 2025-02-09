@@ -38,7 +38,7 @@ const RecommendBookCard: React.FC<Book> = ({ title, author, image, rating }) => 
             backgroundColor: bgColor,
         }}>
             {/* Book Cover Section */}
-            <div className="flex-1 flex justify-end rounded-sm shadow-sm max-w-sm">
+            <div className="flex-1 flex justify-end rounded-sm max-w-sm">
                 {/* <div className="relative w-40 sm:w-52 md:w-60 lg:w-64 h-60 sm:h-72 md:h-80 lg:h-96"> */}
                 <div className="relative w-8 sm:w-20 md:w-24 lg:w-40 h-24 sm:h-36 md:h-44 lg:h-60">
 

@@ -18,9 +18,11 @@ export default {
       },
       fontSize: {
         xxs: "0.65rem", 
-        xxxs: "0.545rem"
+        xxxs: "0.545rem",
+        xxxxs: "0.445rem"
       },
     },
   },
-  plugins: [],
+  plugins: [
+  ],
 } satisfies Config;
