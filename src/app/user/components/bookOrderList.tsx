@@ -17,7 +17,7 @@ const BookOrderListCard: React.FC = () => {
                             id={book.id}
                             title={book.title}
                             author={book.author}
-                            image={book.image}
+                            cover_image_url={book.cover_image_url}
                             rating={book.rating}
                         />
                     </div>
@@ -50,7 +50,7 @@ export default BookOrderListCard;
 //                     id={book.id}
 //                     title={book.title}
 //                     author={book.author}
-//                     image={book.image}
+//                     image={book.cover_image_url}
 //                     rating={book.rating}
 //                 />
 //             ))}

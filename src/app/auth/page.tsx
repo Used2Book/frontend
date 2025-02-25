@@ -6,22 +6,30 @@ import useAuthStore from "@/contexts/auth-store";
 import Image from "next/image";
 import Cat from "@/assets/images/used2book-logo.png";
 import { Icons } from "@/components/icons";
-
+import { useEffect } from "react";
 export default function AuthPage() {
     const router = useRouter();
 
 
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const user = useAuthStore((state) => state.user);
+
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
-    const { setUser, setToken } = useAuthStore();
-
+    useEffect(() => {
+        useAuthStore.getState().clearAuth();
+    }, []);
+    
     // ✅ Toggle Login/Signup & Clear Input Fields
     const handleToggle = (mode: boolean) => {
         setIsLogin(mode);
         setEmail(""); // ✅ Clears email field
+        setFirstName("");
+        setLastName("");
         setPassword(""); // ✅ Clears password field
         setError(""); // ✅ Clears any error message
     };
@@ -30,27 +38,40 @@ export default function AuthPage() {
     const handleAuth = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
-
+    
         try {
             if (isLogin) {
-                console.log("login")
+                console.log("login");
                 await login(email, password);
-                router.push("/user/home");
+    
+                // ✅ Fetch the latest user data after login
+                const updatedUser = useAuthStore.getState().user;
+    
+                console.log("Updated user role:", updatedUser?.role);
+    
+                if (updatedUser?.role === "admin") {
+                    console.log("Welcome Admin!");
+                    router.push("/admin");
+                } else {
+                    console.log("Welcome User!");
+
+                    router.push("/user/home");
+                }
             } else {
-                console.log("signup")
-                await signup(email, password);
+                console.log("signup");
+                await signup(firstName, lastName, email, password);
             }
         } catch (err) {
             setError("Authentication failed. Check your credentials.");
             console.error("Auth error:", err);
         }
     };
+    
 
     // ✅ Handle Google Login
     const handleGoogleLogin = async () => {
         try {
             await loginWithGoogle();
-            router.push("/user/home");
         } catch (err) {
             setError("Authentication failed. Check your credentials.- Google");
             console.error("Google login failed", err);
@@ -65,20 +86,20 @@ export default function AuthPage() {
             </div>
 
             {/* Right Half with Login/Signup Form */}
-            <div className="bg-green-400 w-1/2 flex items-center justify-center">
+            <div className="bg-black w-1/2 flex items-center justify-center">
                 <div className="bg-white p-8 rounded-lg shadow-md w-3/4">
                     <h2 className="text-2xl font-bold mb-4 text-center">Welcome</h2>
 
                     {/* Toggle Login/Signup */}
                     <div className="flex justify-around mb-4">
                         <button
-                            className={`px-4 py-2 rounded-lg transition-colors ${isLogin ? 'bg-pink-500 text-white' : 'bg-gray-300 text-black'}`}
+                            className={`px-4 py-2 rounded-lg transition-colors ${isLogin ? 'bg-black text-white' : 'bg-gray-300 text-black'}`}
                             onClick={() => handleToggle(true)}
                         >
                             Login
                         </button>
                         <button
-                            className={`px-4 py-2 rounded-lg transition-colors ${!isLogin ? 'bg-pink-500 text-white' : 'bg-gray-300 text-black'}`}
+                            className={`px-4 py-2 rounded-lg transition-colors ${!isLogin ? 'bg-black text-white' : 'bg-gray-300 text-black'}`}
                             onClick={() => handleToggle(false)}
                         >
                             Sign Up
@@ -91,6 +112,30 @@ export default function AuthPage() {
                     {/* Login/Signup Form */}
                     <form onSubmit={handleAuth} className="block">
                         <h3 className="text-xl font-semibold mb-4">{isLogin ? "Login" : "Sign Up"}</h3>
+                        {isLogin ? null : 
+                        <>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                                <input
+                                    type="name"
+                                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                    value={firstName}
+                                    onChange={(e) => setFirstName(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                                <input
+                                    type="name"
+                                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        </>
+                        }
 
                         <div className="mb-4">
                             <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>

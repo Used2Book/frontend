@@ -4,6 +4,14 @@ import useAuthStore from "@/contexts/auth-store";
 import { refreshToken } from "@/services/auth";
 export const API_URL = process.env.NEXT_PUBLIC_GATEWAY_URL;
 
+
+export const uploadClient = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+});
 export const httpClient = axios.create({
   baseURL: API_URL,
   withCredentials: true, // Important for sending cookies
@@ -22,9 +30,23 @@ function getToken() {
   }
 }
 
-
-
 httpClient.interceptors.request.use(
+  (config) => {
+    const token = getToken();
+    // If token is available, set Authorization header
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+
+
+uploadClient.interceptors.request.use(
   (config) => {
     const token = getToken();
     // If token is available, set Authorization header

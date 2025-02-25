@@ -5,18 +5,16 @@ import Link from 'next/link';
 
 
 // export default function BookCard({ title, author, image, rating }: BookCardProps) {
-const BookCard: React.FC<Book> = ({ title, author, image, rating, id }) => {
+const BookCard: React.FC<Book> = ({ title, author, cover_image_url, rating, id }) => {
     return (
         // <Link href={{ pathname: "/book/[id]", params: { id: id.toString() } }}>
         // <Link href="/book/[id]" as={`/book/${id}`}>
-        <Link href="/user/book">
-
-
+        <Link href={`/book/${id}`} passHref>
             <div className="flex flex-col p-3 bg-white rounded-md w-20 sm:w-24 md:w-28 lg:w-28 shadow-md">
                 <div className="w-full max-w-sm h-20 sm:h-24 md:h-28 lg:h-32 relative">
                     <Image
                         alt="Book cover"
-                        src={image}
+                        src={cover_image_url}
                         layout="fill"
                         objectFit="cover"
                         className="rounded-sm border-[1px] border-zinc-300 shadow-md"

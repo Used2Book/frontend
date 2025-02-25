@@ -15,7 +15,11 @@ const useAuthStore = create<AuthState>()(
     (set) => ({
       user: null,
       token: null,
-      setUser: (user) => set({ user }),
+      setUser: (user) => {
+        console.log("🔍 Zustand Updated → User:", user); // ✅ Logs in Browser
+        console.log("user.role:", user?.role);
+        set({ user });
+    },
       setToken: (token) => set({ token }),
       clearAuth: () => set({ user: null, token: null }),
     }),

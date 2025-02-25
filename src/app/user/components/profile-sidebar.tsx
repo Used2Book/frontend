@@ -1,0 +1,40 @@
+import React, { useState } from "react";
+import Link from "next/link";
+import { MessageSquareQuote,BookUser } from "lucide-react";
+import { User } from "@/types/user";
+interface ProfileSidebarProps {
+    user: User;
+  }
+  
+  const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
+
+    return (
+        <div className="relative h-full px-5">
+            <div className="w-full max-w-lg mx-auto bg-white shadow-md rounded-lg p-6 border border-gray-200">
+                {/* Quote Section */}
+                <div className="mb-4 p-3 bg-blue-100 rounded-md text-blue-700">
+                    <div className="flex items-center space-x-2">
+                        <MessageSquareQuote size={20} />
+                        <h3 className="text-md font-semibold">Favorite Quote</h3>
+                    </div>
+                    <p className="text-gray-700 mt-2 italic">
+                        {user?.quote || "No quote available."}
+                    </p>
+                </div>
+
+                {/* Bio Section */}
+                <div className="p-3 bg-gray-100 rounded-md">
+                <div className="flex items-center space-x-2">
+                    <BookUser size={20}/>
+                    <h3 className="text-md font-semibold text-gray-700">Bio</h3>
+                </div>
+                    <p className="text-gray-600 mt-2">
+                        {user?.bio || "No bio available. Update your profile to add one."}
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default ProfileSidebar;

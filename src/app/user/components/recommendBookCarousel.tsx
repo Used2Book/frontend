@@ -19,7 +19,7 @@ export default function RecommendBookCarouselCard() {
                         id={book.id}
                         title={book.title}
                         author={book.author}
-                        image={book.image}
+                        cover_image_url={book.cover_image_url}
                         rating={book.rating}
                     />
                 ))}

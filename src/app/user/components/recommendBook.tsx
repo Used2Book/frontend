@@ -20,18 +20,18 @@ const getDominantColor = async (imageUrl: string): Promise<string> => {
   
 
 
-const RecommendBookCard: React.FC<Book> = ({ title, author, image, rating }) => {
+const RecommendBookCard: React.FC<Book> = ({ title, author, cover_image_url, rating }) => {
     const [bgColor, setBgColor] = useState<string>('');
 
     useEffect(() => {
         // Call the async function to set the background color
         const fetchColor = async () => {
-            const color = await getDominantColor(image); // url
+            const color = await getDominantColor(cover_image_url); // url
             setBgColor(color);
         };
         
         fetchColor();
-    }, [image]);
+    }, [cover_image_url]);
 
     return (
         <div className="flex relative h-full w-full justify-center items-center px-72 py-12 space-x-6" style={{
@@ -44,7 +44,7 @@ const RecommendBookCard: React.FC<Book> = ({ title, author, image, rating }) => 
 
                     <Image
                         alt="Book cover"
-                        src={image}
+                        src={cover_image_url}
                         layout="fill"
                         objectFit="cover"
                         className="rounded-sm border border-zinc-300"

@@ -10,8 +10,10 @@ import Cat_Profile from "@/assets/images/cat-profile.jpg";
 import useStore from "@/contexts/useStore";
 import useAuthStore from "@/contexts/auth-store";
 import { logout } from "@/services/auth";
+import MenuDropdown from "./menu-dropdown";
+import Avatar from "./avatar";
 const NavItemString = ({ href, link_string }: { href: string; link_string: string }) => (
-    <li className="p-2 hover:bg-zinc-700 rounded-full text-xs md:text-sm">
+    <li className="p-2 hover:bg-zinc-700 rounded-full text-xs md:text-sm cursor-pointer">
         <Link href={href}>{link_string}</Link>
     </li>
 );
@@ -33,18 +35,18 @@ export default function NavLink() {
                 <div className="flex flex-col lg:flex-row xl:flex-row flex-wrap justify-center md:justify-between lg:justify-between items-center space-x-2 md:space-x-10">
 
                     {/* Logo */}
-                    <div className="w-auto max-w-[40px] sm:max-w-[60px] md:max-w-[80px]">
+                    <Link href="/user/profile" className="w-auto max-w-[40px] sm:max-w-[60px] md:max-w-[80px] cursor-pointer">
                         <Image src={Logo} alt="Used2Book Logo" layout="responsive" />
-                    </div>
+                    </Link>
 
                     {/* Navigation Links */}
                     {user ?
                         (<div>
                             <ul className="flex space-x-6 sm:space-x-10 md:space-x-12 items-center">
-                                <NavItemString href="/" link_string="Home" />
+                                <NavItemString href="/user/home" link_string="Home" />
                                 <NavItemString href="/" link_string="Web board" />
                                 <NavItemString href="/" link_string="Book hub" />
-                                <NavItemString href="/" link_string="Library" />
+                                {/* <NavItemString href="/" link_string="Library" /> */}
                             </ul>
                         </div>) : <></>
                     }
@@ -58,33 +60,21 @@ export default function NavLink() {
                             <NavItemIcon href="/chat" alt="chat" src={Chat_Icon.src} />
                             <NavItemIcon href="/notification" alt="notification" src={Bell_Noti.src} />
                             <li>
-                                <div className="bg-green-500 w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-gray-300">
-                                    <Image
-                                        src={Cat_Profile}
-                                        alt="Profile"
-                                        width={40}
-                                        height={40}
-                                        className="object-cover"
-                                    />
-                                </div>
+                                <Link href="/user/profile" className="cursor-pointer">
+                                    <div className="bg-green-500 w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-gray-300">
+                                        <Avatar user={user} />
+                                    </div>
+                                </Link>
                             </li>
-                            <NavItemIcon href="/menu" alt="menu" src={Menu_Icon.src} />
-                            <li>
-                            <Link
-                            href="/auth"
-                            className="bg-white text-black px-3 py-2 rounded-lg hover:bg-zinc-300 transition duration-200"
-                            onClick={async (e) => {
-                                e.preventDefault(); // ✅ Prevent default link behavior
-                                await logout(); // ✅ Pass router as a parameter
-                              }}
-                        >
-                            Log out
-                        </Link>
-                            </li>
-                        </ul>) : 
+
+                            {/* <NavItemIcon href="/menu" alt="menu" src={Menu_Icon.src} /> */}
+                            {/* <MenuDropdown /> */}
+
+                            
+                        </ul>) :
                         (<Link
                             href="/auth"
-                            className="bg-white text-black px-3 py-2 rounded-lg hover:bg-zinc-300 transition duration-200"
+                            className="bg-white text-black px-3 py-2 rounded-lg hover:bg-zinc-300 transition duration-200 cursor-pointer"
                         >
                             Sign in / Sign up
                         </Link>)

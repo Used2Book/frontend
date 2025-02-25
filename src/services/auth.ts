@@ -2,34 +2,13 @@
 import httpClient from "@/lib/http-client";
 import useAuthStore from "@/contexts/auth-store";
 import { toast } from "react-hot-toast";
+import { getMe } from "@/services/user";
 
 
-// ✅ Get user info (without modifying token)
-export const getMe = async () => {
+
+export const signup = async (first_name: string, last_name: string, email: string, password: string) => {
   try {
-    console.log("Fetching user...");
-    const { data } = await httpClient.get("user/me");
-    
-    if (data?.user) {
-      useAuthStore.getState().setUser(data.user); // ✅ Only update Zustand once
-      console.log("User fetched:", data.user);
-      return data.user; // ✅ Return user for further use
-    }
-
-    return null;
-  } catch (err) {
-    console.warn("Failed to fetch user:", err);
-    toast.error("Your session has expired. Please log in again.");
-    useAuthStore.getState().clearAuth(); // ✅ Clear Zustand if API fails
-    return null;
-  }
-};
-
-
-
-export const signup = async (email: string, password: string) => {
-  try {
-    const res = await httpClient.post("user/signup/email", { email, password });
+    const res = await httpClient.post("auth/signup/email", {first_name, last_name, email, password });
     return res.data;
   } catch (err) {
     console.error("Signup failed:", err);
@@ -40,12 +19,13 @@ export const signup = async (email: string, password: string) => {
 // ✅ Login with Email & Password
 export const login = async (email: string, password: string) => {
   try {
-    const res = await httpClient.post("user/login/email", { 
-      email: email, 
-      password: password });
+    const res = await httpClient.post("auth/login/email", {
+      email: email,
+      password: password
+    });
     console.log(`res.data.token : ${res.data.token}`)
     useAuthStore.getState().setToken(res.data.token);
-    getMe();
+    await getMe();
     return res.data;
   } catch (err) {
     console.error("Login failed:", err);
@@ -55,7 +35,7 @@ export const login = async (email: string, password: string) => {
 
 export const loginWithGoogle = () => {
   const redirectTo = encodeURIComponent(window.location.href); // ✅ Get current page
-  window.location.href = `http://localhost:6951/user/google-provider?redirect=${redirectTo}`;
+  window.location.href = `http://localhost:6951/auth/google-provider?redirect=${redirectTo}`;
 };
 
 
@@ -72,7 +52,7 @@ export const logout = async () => {
 
 export const refreshToken = async () => {
   try {
-    const res = await httpClient.post("/auth/refresh-token");
+    const res = await httpClient.post("/auth-token/refresh-token");
     const newToken = res.data.token;
     useAuthStore.getState().setToken(newToken);
     return newToken;
@@ -82,3 +62,66 @@ export const refreshToken = async () => {
     return null;
   }
 };
+
+// ✅ Send OTP Request
+export async function sendOTP(phone: string) {
+  try {
+    const res: any = await httpClient.post("auth/send-otp", { phone_number: phone })
+
+    console.log("Response Status:", res.status); // Debugging
+    console.log("Response Data:", res); // Debugging
+
+    const data = await res.data;
+
+
+    // Check if the request was successful
+    if (res.status == 409) {
+      return { success: false, message: "Phone number is already in used, please put new phone number .."};
+    }
+      
+
+    if (res.status !== 200) throw new Error(data.message || "Failed to send OTP");
+
+    return { success: true, message: data.message };
+  } catch (error) {
+    return { success: false, message: (error as Error).message };
+  }
+}
+
+// ✅ Verify OTP Request
+export async function verifyOTP(phone: string, otp: string) {
+  try {
+    const res: any = await httpClient.post("auth/verify-otp", { phone_number: phone, otp: otp})
+
+    const data = await res.data;
+
+    console.log("Response Status:", res.status); // Debugging
+    console.log("Response Data:", data); // Debugging
+
+    // Check if the request was successful
+    if (res.status !== 200) throw new Error(data.message || "OTP verification failed");
+
+    return { success: true, message: data.message };
+  } catch (error) {
+    return { success: false, message: (error as Error).message };
+  }
+}
+
+// ✅ Send OTP Request
+export async function resendOTP(phone: string) {
+  try {
+    const res: any = await httpClient.post("auth/resend-otp", { phone_number: phone })
+
+    const data = await res.data;
+
+    console.log("Response Status:", res.status); // Debugging
+    console.log("Response Data:", data); // Debugging
+
+    // Check if the request was successful
+    if (res.status !== 200) throw new Error(data.message || "Failed to send OTP");
+
+    return { success: true, message: data.message };
+  } catch (error) {
+    return { success: false, message: (error as Error).message };
+  }
+}

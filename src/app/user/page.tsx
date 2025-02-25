@@ -12,7 +12,7 @@ export default function UserPage() {
     const user = useAuthStore((state) => state.user);
     return (
         <div className="space-y-14">
-            Welcome !! {user?.name}
+            Welcome !! {user?.first_name}
             <Link href="/book">Book</Link>
             {/* <BookOrderListCard/> */}
             {/* <BookListCard /> */}

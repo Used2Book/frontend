@@ -28,7 +28,7 @@ const BookOwnerDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => 
 
                         <Image
                             alt="Book cover"
-                            src={bookDetail.image}
+                            src={bookDetail.cover_image_url}
                             layout="fill"
                             objectFit="cover"
                             className="rounded-sm border border-zinc-300"
@@ -79,9 +79,11 @@ const BookOwnerDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => 
                 <div className="flex space-x-2 items-center">
                     <p className="text-sm font-bold">Genres </p>
                     <ul className="flex space-x-2">
-                        {bookDetail.genres?.map((genre, index) => (
+                        
+                        {Array.isArray(bookDetail.genres) && bookDetail.genres.map((genre, index) => (
                             <li key={index} className="bg-zinc-600 px-2 py-1 rounded-lg text-white">{genre}</li>
                         ))}
+
                     </ul>
                 </div>
                 <div className="flex space-x-2 items-center">

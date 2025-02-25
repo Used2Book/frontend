@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import star_png from '@/assets/images/star.png';
-import Cat_Profile from "@/assets/images/cat-profile.jpg";
+import NoAvatar from "@/assets/images/no-avatar.png";
 import ThumbsUpButton from "./thumbsup";
 import { Review } from "@/types/review";
 
@@ -11,12 +11,12 @@ const ReviewCard: React.FC<{ reviewDetail: Review }> = ({ reviewDetail }) => {
 
     useEffect(() => {
         const calculateDaysAgo = () => {
-            if (!reviewDetail || !reviewDetail.datePosted) {
+            if (!reviewDetail || !reviewDetail.created_at) {
                 setTimeAgo("Unknown date");
                 return;
             }
 
-            const reviewDate = new Date(reviewDetail.datePosted);
+            const reviewDate = new Date(reviewDetail.created_at);
             if (isNaN(reviewDate.getTime())) {
                 setTimeAgo("Invalid date");
                 return;
@@ -37,18 +37,18 @@ const ReviewCard: React.FC<{ reviewDetail: Review }> = ({ reviewDetail }) => {
         calculateDaysAgo();
     }, [reviewDetail]);
     return (
-        <div className="flex relative h-full w-full mx-auto space-x-4 py-3 border-b-[1px] border-zinc-200">
+        <div className="flex relative h-full w-full mx-auto space-x-4 py-3 border-b-[1px] border-zinc-200 bg-sky-50 shadow-sm rounded-md p-5">
             {/* Profile Section */}
             <div className="flex-shrink-0 flex justify-center rounded-sm">
                 <div className="w-12 h-12 rounded-full overflow-hidden">
-                    <Image src={Cat_Profile} alt="Profile" width={60} height={60} />
+                    <Image src={reviewDetail?.picture_profile ? reviewDetail?.picture_profile : NoAvatar} alt="Profile" width={60} height={60} />
                 </div>
             </div>
 
             {/* Review Info Section */}
             <div className="flex-1 space-y-2 text-sm pt-1">
                 <div className="flex justify-between">
-                    <p className="text-base font-bold">{reviewDetail.username}</p>
+                    <p className="text-base font-bold">{reviewDetail.first_name} {reviewDetail.last_name}</p>
                     <p className="text-xs text-zinc-500">{timeAgo}</p>
                 </div>
                 <div className="flex space-x-2 items-center">
@@ -56,7 +56,7 @@ const ReviewCard: React.FC<{ reviewDetail: Review }> = ({ reviewDetail }) => {
                     <p>{reviewDetail.rating}</p>
                 </div>
                 <p className="line-clamp-3">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                    {reviewDetail.comment}
                 </p>
                 <div className="flex space-x-2 items-center text-xxs">
                     <div className="flex">
