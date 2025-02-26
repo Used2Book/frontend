@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import BookOwnerCard from "@/app/user/components/bookOwner";
 import { Book } from "@/types/book";
-import { MyListing } from "@/services/user";
+import { myListing } from "@/services/user";
 import { getBookByID, getBookListingByID } from "@/services/book"; // Fetch book details by ID
 import SaleListingCard from "@/app/user/components/SaleListingCard";
 

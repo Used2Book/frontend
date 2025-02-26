@@ -4,7 +4,6 @@ import BookListCard from "../book/components/bookList";
 import ProfileCard from "./components/profile";
 import BookOrderCard from "./components/bookOrder";
 import BookOrderListCard from "./components/bookOrderList";
-import BookOwnerListCard from "./components/bookOwnerList";
 import BookDetailCard from "../book/components/bookDetail";
 import useAuthStore from "@/contexts/auth-store";
 import Link from "next/link";

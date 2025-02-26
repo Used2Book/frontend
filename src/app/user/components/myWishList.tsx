@@ -7,7 +7,7 @@ import BookOrderCard from "@/app/user/components/bookOrder";
 import { mockBookCarouselList } from "@/assets/mockData/books";
 import BookOwnerCard from "@/app/user/components/bookOwner";
 import UserLibraryCard from "@/app/user/components/userLibraryCard";
-import { MyLibrary, MyListing, myWishList } from "@/services/user";
+import { myLibrary, myListing, myWishList } from "@/services/user";
 import { getBookByID } from "@/services/book";
 const MyWishList: React.FC = () => {
     const [bookList, setBookList] = useState<Book[]>([]); // ✅ Store real book data

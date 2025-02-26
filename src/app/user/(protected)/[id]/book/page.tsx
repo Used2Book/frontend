@@ -2,7 +2,6 @@
 import { useRouter } from 'next/router';
 import { notFound } from 'next/navigation';
 import { mockBookList, mockBookOwnerList } from '@/assets/mockData/books';
-import BookOwnerListCard from '../../../components/bookOwnerList';
 import BookDetailCard from '../../../../book/components/bookDetail';
 import BookOrderListCard from '../../../components/bookOrderList';
 import BookOwnerDetailCard from '../../../components/bookOwnerDetail';

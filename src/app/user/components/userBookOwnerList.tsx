@@ -1,35 +1,31 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import BookCard from "@/app/book/components/book";
-import { Book } from "@/types/book";
-import { mockBookList } from "@/assets/mockData/books";
-import BookOrderCard from "@/app/user/components/bookOrder";
-import { mockBookCarouselList } from "@/assets/mockData/books";
 import BookOwnerCard from "@/app/user/components/bookOwner";
-import UserLibraryCard from "@/app/user/components/userLibraryCard";
-import { myLibrary, myListing, userLibrary } from "@/services/user";
-import { getBookByID } from "@/services/book";
+import { Book } from "@/types/book";
+import { myListing, userListing} from "@/services/user";
+import { getBookByID } from "@/services/book"; // Fetch book details by ID
 
-
-const UserLibraryList: React.FC<{clientID: number}> = ({clientID}) => {
+const UserBookOwnerListCard: React.FC<{clientID: number}> = ({clientID}) => {
     const [bookList, setBookList] = useState<Book[]>([]); // ✅ Store real book data
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchLibrary = async () => {
+        const fetchListings = async () => {
             try {
-                // Step 1: Fetch user library (only book IDs)
-                const clientLibrary = await userLibrary(clientID);
-
-                if (!clientLibrary || clientLibrary.length === 0) {
+                // Step 1: Fetch user listings (only book IDs & prices)
+                const userListings = await userListing(clientID);
+                if (!userListings || userListings.length === 0) {
                     setLoading(false);
                     return;
                 }
 
                 // Step 2: Fetch full book details for each book_id
-                const bookDetailsPromises = clientLibrary.map((libraryItem) =>
-                    getBookByID(libraryItem.book_id)
-                );
+                const bookDetailsPromises = userListings.map(async (listing) => {
+                    const book = await getBookByID(listing.book_id);
+                    return book
+                        ? { ...book, price: listing.price, status: listing.status, allow_offers: listing.allow_offers } // Merge listing details
+                        : null;
+                });
 
                 // Step 3: Resolve all book fetches
                 const books = await Promise.all(bookDetailsPromises);
@@ -40,40 +36,40 @@ const UserLibraryList: React.FC<{clientID: number}> = ({clientID}) => {
                 // Step 5: Update state with real books
                 setBookList(validBooks);
             } catch (error) {
-                console.error("Error fetching library:", error);
+                console.error("Error fetching user listings:", error);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchLibrary();
+        fetchListings();
     }, []);
 
     return (
-        // <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 place-items-center">
-        <div className="w-full bg-zinc-100 shadow-sm rounded-md min-h-0 overflow-hidden">
+        <div className="w-full bg-zinc-100 shadow-sm rounded-md">
             {loading ? (
-                <p className="text-center py-4">Loading your library ...</p>
+                <p className="text-center py-4">Loading your listings...</p>
             ) : bookList.length === 0 ? (
-                <p className="text-center py-4">Adding some book ...</p>
+                <p className="text-center py-4">No books listed for sale.</p>
             ) : (
                 <div className="flex space-x-6 overflow-x-auto py-4 scrollbar-hide mx-3">
-
                     {bookList.map((book) => (
-                        <UserLibraryCard
+                        <BookOwnerCard
                             key={book.id}
                             id={book.id}
                             title={book.title}
                             author={book.author}
                             cover_image_url={book.cover_image_url}
                             rating={book.rating}
+                            price={book.price} // ✅ Send price from listing
+                            status={book.status} // ✅ Send listing status
+                            allow_offers={book.allow_offers}
                         />
                     ))}
                 </div>
             )}
-
         </div>
     );
 };
 
-export default UserLibraryList;
+export default UserBookOwnerListCard;

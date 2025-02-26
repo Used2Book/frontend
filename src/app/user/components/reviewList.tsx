@@ -4,7 +4,8 @@ import ReviewCard from "./review";
 import { Review } from "@/types/review";
 import { getBookReview } from "@/services/book";
 
-const ReviewListCard: React.FC<{ bookID: number }> = ({ bookID }) => {
+const ReviewListCard: React.FC<{ bookID: number; refreshTrigger: boolean }> = ({ bookID, refreshTrigger }) => {
+// const ReviewListCard: React.FC<{ bookID: number }> = ({ bookID }) => {
     const [reviewList, setReviewList] = useState<Review[]>([]);
     const [showAll, setShowAll] = useState<boolean>(false); // State to toggle showing all reviews
 
@@ -22,7 +23,7 @@ const ReviewListCard: React.FC<{ bookID: number }> = ({ bookID }) => {
         };
 
         fetchReviews();
-    }, [bookID]); // Dependency to refetch when bookID changes
+    }, [bookID, refreshTrigger]); // Dependency to refetch when bookID changes
 
     const handleShowMore = () => setShowAll(true); // Function to show all reviews
 

@@ -1,12 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { MessageSquareQuote,BookUser } from "lucide-react";
 import { User } from "@/types/user";
+import { userProfile } from "@/services/user";
 interface ProfileSidebarProps {
     user: User;
   }
   
-  const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ user }) => {
+const ProfileSidebar: React.FC<{clientID: number}> = ({clientID}) => {
+    const [client, setClient] = useState<User | null>(null);
+
+    useEffect(() => {
+        const fetchClientProfile = async () => {
+            try {
+                const client_profile = await userProfile(clientID);
+                setClient(client_profile);
+            } catch (error) {
+                console.error("Error fetching user profile:", error);
+            }
+        };
+    
+        fetchClientProfile(); // ✅ Call the function inside useEffect
+    
+    }, [clientID]); // ✅ Correct dependency array
 
     return (
         <div className="relative h-full px-5">
@@ -18,7 +34,7 @@ interface ProfileSidebarProps {
                         <h3 className="text-md font-semibold">Favorite Quote</h3>
                     </div>
                     <p className="text-gray-700 mt-2 italic">
-                        {user?.quote || "No quote available."}
+                        {client?.quote || "No quote available."}
                     </p>
                 </div>
 
@@ -29,7 +45,7 @@ interface ProfileSidebarProps {
                     <h3 className="text-md font-semibold text-gray-700">Bio</h3>
                 </div>
                     <p className="text-gray-600 mt-2">
-                        {user?.bio || "No bio available. Update your profile to add one."}
+                        {client?.bio || "No bio available. Update your profile to add one."}
                     </p>
                 </div>
             </div>
