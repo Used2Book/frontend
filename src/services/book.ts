@@ -1,4 +1,4 @@
-import { httpClient, uploadClient } from "@/lib/http-client";
+import { httpClient} from "@/lib/http-client";
 import useAuthStore from "@/contexts/auth-store";
 import { toast } from "react-hot-toast";
 

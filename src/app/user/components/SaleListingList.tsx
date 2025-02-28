@@ -1,14 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import BookOwnerCard from "@/app/user/components/bookOwner";
-import { Book } from "@/types/book";
-import { myListing } from "@/services/user";
+import { SaleBook } from "@/types/book";
 import { getBookByID, getBookListingByID } from "@/services/book"; // Fetch book details by ID
 import SaleListingCard from "@/app/user/components/SaleListingCard";
 
 
 const SaleListingList: React.FC<{bookID: number}> = ({bookID}) => {
-    const [bookList, setBookList] = useState<Book[]>([]); // ✅ Store real book data
+    const [bookList, setBookList] = useState<SaleBook[]>([]); // ✅ Store real book data
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -27,7 +25,7 @@ const SaleListingList: React.FC<{bookID: number}> = ({bookID}) => {
                     const book = await getBookByID(listing.book_id);
                     console.log("mare book:", book)
                     return book
-                        ? { ...book, price: listing.price, status: listing.status, allow_offers: listing.allow_offers, seller_id: listing.seller_id, id: listing.id } // Merge listing details
+                        ? { ...book, price: listing.price, status: listing.status, allow_offers: listing.allow_offers, seller_id: listing.seller_id, id: listing.id, book_id: listing.book_id } // Merge listing details
                         : null;
                 });
                 // Step 3: Resolve all book fetches

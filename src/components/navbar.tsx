@@ -4,14 +4,10 @@ import Logo from "@/assets/images/used2book-logo.png";
 import Bell_Noti from "@/assets/images/notification.png";
 import Chat_Icon from "@/assets/images/nav-chat.png";
 import Heart_Icon from "@/assets/images/heart.png";
-import Profile_Image from "@/assets/images/profile.jpg";
-import Menu_Icon from "@/assets/images/menu.png";
-import Cat_Profile from "@/assets/images/cat-profile.jpg";
 import useStore from "@/contexts/useStore";
 import useAuthStore from "@/contexts/auth-store";
-import { logout } from "@/services/auth";
-import MenuDropdown from "./menu-dropdown";
 import Avatar from "./avatar";
+import { Bell, ShoppingCart, MessageCircleMore } from "lucide-react";
 const NavItemString = ({ href, link_string }: { href: string; link_string: string }) => (
     <li className="p-2 hover:bg-zinc-700 rounded-full text-xs md:text-sm cursor-pointer">
         <Link href={href}>{link_string}</Link>
@@ -56,12 +52,27 @@ export default function NavLink() {
                 <div>
                     {user ?
                         (<ul className="flex space-x-3 sm:space-x-5 items-center">
-                            <NavItemIcon href="/wishlist" alt="wishlist" src={Heart_Icon.src} />
-                            <NavItemIcon href="/chat" alt="chat" src={Chat_Icon.src} />
-                            <NavItemIcon href="/notification" alt="notification" src={Bell_Noti.src} />
+                            <li className="justify-center items-center p-2 hover:bg-zinc-700 rounded-full">
+                                <Link href="/user/cart">
+                                    <ShoppingCart size={20} />
+                                </Link>
+                            </li>
+                            <li className="justify-center items-center p-2 hover:bg-zinc-700 rounded-full">
+                                <Link href="/user/chat">
+                                    <MessageCircleMore size={20} />
+                                </Link>
+                            </li>
+                            <li className="justify-center items-center p-2 hover:bg-zinc-700 rounded-full">
+                                <Link href="/notification">
+                                    <Bell size={20} />
+                                </Link>
+                            </li>
                             <li>
                                 <Link href="/user/profile" className="cursor-pointer">
-                                    <div className="bg-green-500 w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-gray-300">
+                                    <div className="bg-green-500 w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-gray-300 
+                                    transition-all duration-200 ease-in-out 
+                        transform hover:scale-105 active:scale-95 
+                        hover:border-blue-400 hover:border-2">
                                         <Avatar user={user} />
                                     </div>
                                 </Link>
@@ -70,7 +81,7 @@ export default function NavLink() {
                             {/* <NavItemIcon href="/menu" alt="menu" src={Menu_Icon.src} /> */}
                             {/* <MenuDropdown /> */}
 
-                            
+
                         </ul>) :
                         (<Link
                             href="/auth"

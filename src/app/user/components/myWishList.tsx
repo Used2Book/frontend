@@ -5,7 +5,6 @@ import { Book } from "@/types/book";
 import { mockBookList } from "@/assets/mockData/books";
 import BookOrderCard from "@/app/user/components/bookOrder";
 import { mockBookCarouselList } from "@/assets/mockData/books";
-import BookOwnerCard from "@/app/user/components/bookOwner";
 import UserLibraryCard from "@/app/user/components/userLibraryCard";
 import { myLibrary, myListing, myWishList } from "@/services/user";
 import { getBookByID } from "@/services/book";

@@ -18,6 +18,8 @@ export interface Book {
   allow_offers?: boolean;
   status?: string;
   seller_id?: number;
+  average_rating?: number;
+  num_ratings?: number;
 }
 
 export interface SaleBook {
@@ -36,6 +38,8 @@ export interface SaleBook {
   status?: string;
   seller_id: number;
   book_id?: number;
+  average_rating?: number;
+  num_ratings?: number;
 }
 
 

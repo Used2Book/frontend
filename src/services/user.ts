@@ -1,7 +1,7 @@
-import { httpClient, uploadClient } from "@/lib/http-client";
+import { httpClient} from "@/lib/http-client";
 import useAuthStore from "@/contexts/auth-store";
 import { toast } from "react-hot-toast";
-
+import uploadClient from "@/lib/upload-client";
 // ✅ Get user info (without modifying token)
 export const getMe = async () => {
   try {
@@ -162,7 +162,7 @@ export const bookInitialWishlistStatus = async (bookID : number) => {
   }
 };
 
-export const MyLibrary = async () => {
+export const myLibrary = async () => {
   try {
     console.log("Fetching user library...");
     const res = await httpClient.get("user/get-library");
@@ -174,7 +174,8 @@ export const MyLibrary = async () => {
   }
 };
 
-export const MyListing = async () => {
+
+export const myListing = async () => {
   try {
     console.log("Fetching user library...");
     const res = await httpClient.get("user/get-listing");
@@ -186,10 +187,58 @@ export const MyListing = async () => {
   }
 };
 
+export const getListingByID = async (listing_ID : number) => {
+  try {
+    console.log("Fetching listing...", listing_ID);
+    const res = await httpClient.get(`user/get-listing-by-id/${listing_ID}`);
+    console.log("listing detail :", res.data.listing)
+    return res.data.listing
+  } catch (err) {
+    console.log("Get user listing unsuccessfully !")
+    return null
+  }
+};
+
 export const myWishList = async () => {
   try {
     console.log("Fetching user library...");
     const res = await httpClient.get("user/get-wishlist");
+    console.log("user listing :", res.data.wishlist)
+    return res.data.wishlist
+  } catch (err) {
+    console.log("Get user wishlist unsuccessfully !")
+    return null
+  }
+};
+
+export const userLibrary = async (id:number) => {
+  try {
+    console.log("Fetching user library...");
+    const res = await httpClient.get(`user/get-library/${id}`);
+    console.log("user library :", res.data.library)
+    return res.data.library
+  } catch (err) {
+    console.log("Get user library unsuccessfully !")
+    return null
+  }
+};
+
+export const userListing = async (id: number) => {
+  try {
+    console.log("Fetching user library...");
+    const res = await httpClient.get(`user/get-listing/${id}`);
+    console.log("user listing :", res.data.listing)
+    return res.data.listing
+  } catch (err) {
+    console.log("Get user listing unsuccessfully !")
+    return null
+  }
+};
+
+export const userWishList = async (id: number) => {
+  try {
+    console.log("Fetching user library...");
+    const res = await httpClient.get(`user/get-wishlist/${id}`);
     console.log("user listing :", res.data.wishlist)
     return res.data.wishlist
   } catch (err) {

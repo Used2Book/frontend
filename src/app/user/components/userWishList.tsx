@@ -1,14 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import BookCard from "@/app/book/components/book";
 import { Book } from "@/types/book";
-import { mockBookList } from "@/assets/mockData/books";
-import BookOrderCard from "@/app/user/components/bookOrder";
-import { mockBookCarouselList } from "@/assets/mockData/books";
-import BookOwnerCard from "@/app/user/components/bookOwner";
 import UserLibraryCard from "@/app/user/components/userLibraryCard";
-import { myLibrary, myListing, myWishList, userWishList } from "@/services/user";
-import { getBookByID } from "@/services/book";
+import { userWishList } from "@/services/user";
+
 const UserWishList: React.FC<{clientID: number}> = ({clientID}) => {
     const [bookList, setBookList] = useState<Book[]>([]); // ✅ Store real book data
     const [loading, setLoading] = useState(true);

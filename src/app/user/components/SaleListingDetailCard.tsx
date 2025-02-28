@@ -1,11 +1,13 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import Image from "next/image";
-import { mockBookList } from "@/assets/mockData/books";
-import { Book } from "@/types/book";
 import star_png from '@/assets/images/star.png';
 import { Heart } from "lucide-react";
-
+import { SaleBook } from "@/types/book";
+import { getListingByID } from "@/services/user";
+import toast from "react-hot-toast";
+import { getGenresBookByID } from "@/services/book";
+import { userProfile } from "@/services/user";
 // export default function BookDetailCard({ bookId }: { bookId: string }) {
 //     const [book, setBook] = useState(null);
 
@@ -15,8 +17,46 @@ import { Heart } from "lucide-react";
 //         .then((res) => res.json())
 //         .then((data) => setBook(data));
 //     }, [bookId]);
-const BookOwnerDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => {
-    const [isWishlist, setIsWishlist] = useState(false);
+
+const SaleListingDetailCard: React.FC<{ book_listing: string }> = ({ book_listing }) => {
+    const [bookId, listingId] = book_listing.split("_");
+
+    const [listing, setListing] = useState<SaleBook | null>(null)
+    const [loading, setLoading] = useState(true);
+
+    const [seller, setSeller] = useState(null);
+    
+
+    useEffect(() => {
+        if (!book_listing) return;
+        console.log("book_listing:", book_listing)
+        console.log("bookId - mare:", bookId)
+        console.log("listingId - mare:", listingId)
+        const fetchData = async () => {
+            try {
+                const fetchedListing = await getListingByID(parseInt(listingId));
+                if (!fetchedListing) {
+                    toast.error("Listing not found");
+                    setLoading(false);
+                    return;
+                }
+                console.log("fetched Listing:", fetchedListing.seller_id)
+
+                const fetchedGenres = await getGenresBookByID(parseInt(bookId));
+                const listingWithGenres = { ...fetchedListing, genres: fetchedGenres || [] };
+
+                setListing(listingWithGenres);
+                const seller_profile = await userProfile(fetchedListing.seller_id);
+                setSeller(seller_profile)
+            } catch (err) {
+                toast.error("Error fetching book or genres");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [book_listing]);
 
     return (
         <div className="flex relative h-full w-full justify-start px-24 py-12 space-x-6 border-b-[1px] bg-white border-zinc-200 mb-5">
@@ -25,23 +65,22 @@ const BookOwnerDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => 
                 {/* <div className="relative w-40 sm:w-52 md:w-60 lg:w-64 h-60 sm:h-72 md:h-80 lg:h-96"> */}
                 <div className="flex flex-col">
                     <div className="relative w-8 sm:w-20 md:w-24 lg:w-40 h-24 sm:h-36 md:h-44 lg:h-64">
-
-                        <Image
-                            alt="Book cover"
-                            src={bookDetail.cover_image_url}
-                            layout="fill"
-                            objectFit="cover"
-                            className="rounded-sm border border-zinc-300"
-                        />
+                        {listing &&
+                            <Image
+                                alt="Book cover"
+                                src={listing.cover_image_url}
+                                layout="fill"
+                                objectFit="cover"
+                                className="rounded-sm border border-zinc-300"
+                            />
+                        }
                     </div>
                     <div className="w-full">
                         <button className="bg-black text-white text-xxs font-bold w-full py-1 mt-2 rounded-sm shadow-md hover:bg-zinc-700 transition">
                             Buy
                         </button>
                         <div className="flex justify-center items-center mt-2 w-full space-x-1">
-                            <div>
-                                {/* <Image src={Heart_Wish} alt="wishlist" width={12} height={12} /> */}
-                                {/* Heart Button */}
+                            {/* <div>
                                 <button
                                     onClick={() => setIsWishlist(!isWishlist)}
                                     className="w-6 h-6 flex justify-center items-center rounded-md transition"
@@ -52,7 +91,7 @@ const BookOwnerDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => 
                                             }`}
                                     />
                                 </button>
-                            </div>
+                            </div> */}
                             <button className="flex-1 font-bold text-xxs py-0.5 rounded-sm border-[1.5px] border-black shadow-md hover:bg-zinc-200 transition">
                                 Make an Offer
                             </button>
@@ -63,41 +102,47 @@ const BookOwnerDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => 
 
             {/* Book Info Section */}
             <div className="flex-2 justify-start space-y-2 text-sm p-4">
-                <p className="text-lg font-bold">{bookDetail.title}</p>
+                <p className="text-lg font-bold">{listing?.title}</p>
                 <div className="flex space-x-2 items-center">
                     <p className="text-sm font-bold">Author</p>
-                    <p>{bookDetail.author}</p>
+                    <p>{listing?.author}</p>
                 </div>
                 <div className="flex space-x-2 items-center">
                     <Image src={star_png} alt="rating" width={15} height={15} />
-                    <p>{bookDetail.rating}</p>
+                    <p>{listing?.average_rating}</p>
+                    <p className="text-zinc-400">({listing?.num_ratings})</p>
                 </div>
                 <p className="text-sm font-bold">Description</p>
                 <p className="line-clamp-3">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                    {listing?.description}
                 </p>
                 <div className="flex space-x-2 items-center">
-                    <p className="text-sm font-bold">Genres </p>
+                    <p className="inline-block whitespace-nowrap font-bold">Genres</p>
                     <ul className="flex space-x-2">
-                        
-                        {Array.isArray(bookDetail.genres) && bookDetail.genres.map((genre, index) => (
-                            <li key={index} className="bg-zinc-600 px-2 py-1 rounded-lg text-white">{genre}</li>
+                        {Array.isArray(listing?.genres) && listing.genres.map((genre, index) => (
+                            <li
+                                key={index}
+                                className="bg-zinc-600 px-2 py-1 rounded-lg text-white text-xxs inline-block whitespace-nowrap"
+                            >
+                                {genre}
+                            </li>
                         ))}
-
                     </ul>
                 </div>
                 <div className="flex space-x-2 items-center">
                     <p className="text-sm font-bold">Price </p>
-                    <p>{bookDetail.price} Baht</p>
+                    <p>{listing?.price} Baht</p>
                 </div>
                 <div className="flex flex-col space-y-1">
                     <p className="text-sm font-bold">Seller's Note</p>
                     <p>No note yet</p>
                 </div>
+                <p>{seller?.first_name}</p>
 
             </div>
         </div>
     );
 };
 
-export default BookOwnerDetailCard;
+export default SaleListingDetailCard;
+

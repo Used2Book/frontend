@@ -1,17 +1,9 @@
 // services/api.ts
 import axios from "axios";
-import useAuthStore from "@/contexts/auth-store";
-import { refreshToken } from "@/services/auth";
 export const API_URL = process.env.NEXT_PUBLIC_GATEWAY_URL;
 
 
-export const uploadClient = axios.create({
-  baseURL: API_URL,
-  withCredentials: true,
-  headers: {
-    "Content-Type": "multipart/form-data",
-  },
-});
+
 export const httpClient = axios.create({
   baseURL: API_URL,
   withCredentials: true, // Important for sending cookies
@@ -19,6 +11,7 @@ export const httpClient = axios.create({
     "Content-Type": "application/json",
   },
 });
+
 
 function getToken() {
   try {
@@ -46,19 +39,7 @@ httpClient.interceptors.request.use(
 
 
 
-uploadClient.interceptors.request.use(
-  (config) => {
-    const token = getToken();
-    // If token is available, set Authorization header
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+
 
 // // ✅ Handle token expiration & auto-refresh
 // httpClient.interceptors.response.use(
@@ -89,4 +70,6 @@ uploadClient.interceptors.request.use(
 //   }
 // );
 
-export default httpClient;
+// export default {httpClient};
+
+

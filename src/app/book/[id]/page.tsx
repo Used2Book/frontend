@@ -2,9 +2,7 @@
 import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
 import { getBookByID, getGenresBookByID } from "@/services/book";
-import BookOwnerListCard from "@/app/user/components/bookOwnerList";
 import BookDetailCard from "@/app/book/components/bookDetail";
-import BookOrderListCard from "@/app/user/components/bookOrderList";
 import { Book } from "@/types/book";
 import { use } from "react";
 import SaleListingList from "@/app/user/components/SaleListingList";
@@ -24,7 +22,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
     const [rating, setRating] = useState<number>(0);
     const [hover, setHover] = useState<number | null>(null);
     const [reviewText, setReviewText] = useState("");
-
+    const [refreshReviews, setRefreshReviews] = useState(false);
     
     useEffect(() => {
         if (!bookID) return;
@@ -50,7 +48,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
         };
 
         fetchData();
-    }, [bookID]);
+    }, [bookID, refreshReviews]);
 
     const handleReviewSubmit = async () => {
         if (rating === 0) {
@@ -63,7 +61,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
             setIsModalOpen(false);
             setReviewText("");
             setRating(0);
-            
+            setRefreshReviews(prev => !prev);
             // alert("Review submitted successfully!");
         } catch (error) {
             console.error("Error submitting review:", error);
@@ -93,13 +91,12 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
                                     Write a Review
                                 </button>
                             </div>
-                            <ReviewListCard bookID={bookID} />
+                            <ReviewListCard bookID={bookID} refreshTrigger={refreshReviews} />
                         </div>
                     </div>
                     <div className="px-20 py-2 space-y-6">
                         <p className="font-bold text-lg">Someone who has the book</p>
                         <SaleListingList bookID={bookID} />
-                        <BookOrderListCard />
                     </div>
 
                     {/* Review Modal */}

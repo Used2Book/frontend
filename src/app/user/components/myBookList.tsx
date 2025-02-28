@@ -1,12 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import BookOwnerCard from "@/app/user/components/bookOwner";
-import { Book } from "@/types/book";
+import { SaleBook } from "@/types/book";
 import { myListing } from "@/services/user";
 import { getBookByID } from "@/services/book"; // Fetch book details by ID
-
-const MyBookOwnerListCard: React.FC = () => {
-    const [bookList, setBookList] = useState<Book[]>([]); // ✅ Store real book data
+import SaleListingCard from "@/app/user/components/SaleListingCard";
+const MyBookListCard: React.FC = () => {
+    const [bookList, setBookList] = useState<SaleBook[]>([]); // ✅ Store real book data
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -14,6 +13,7 @@ const MyBookOwnerListCard: React.FC = () => {
             try {
                 // Step 1: Fetch user listings (only book IDs & prices)
                 const myListings = await myListing();
+                console.log("myListings:", myListings)
                 if (!myListings || myListings.length === 0) {
                     setLoading(false);
                     return;
@@ -23,7 +23,7 @@ const MyBookOwnerListCard: React.FC = () => {
                 const bookDetailsPromises = myListings.map(async (listing) => {
                     const book = await getBookByID(listing.book_id);
                     return book
-                        ? { ...book, price: listing.price, status: listing.status, allow_offers: listing.allow_offers } // Merge listing details
+                        ? { ...book, price: listing.price, status: listing.status, allow_offers: listing.allow_offers, seller_id: listing.seller_id, id: listing.id, book_id: listing.book_id }// Merge listing details
                         : null;
                 });
 
@@ -41,7 +41,6 @@ const MyBookOwnerListCard: React.FC = () => {
                 setLoading(false);
             }
         };
-
         fetchListings();
     }, []);
 
@@ -54,16 +53,9 @@ const MyBookOwnerListCard: React.FC = () => {
             ) : (
                 <div className="flex space-x-6 overflow-x-auto py-4 scrollbar-hide mx-3">
                     {bookList.map((book) => (
-                        <BookOwnerCard
+                        <SaleListingCard
                             key={book.id}
-                            id={book.id}
-                            title={book.title}
-                            author={book.author}
-                            cover_image_url={book.cover_image_url}
-                            rating={book.rating}
-                            price={book.price} // ✅ Send price from listing
-                            status={book.status} // ✅ Send listing status
-                            allow_offers={book.allow_offers}
+                            book={book}
                         />
                     ))}
                 </div>
@@ -72,4 +64,4 @@ const MyBookOwnerListCard: React.FC = () => {
     );
 };
 
-export default MyBookOwnerListCard;
+export default MyBookListCard;

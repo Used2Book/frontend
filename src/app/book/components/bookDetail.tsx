@@ -5,9 +5,10 @@ import { Book } from "@/types/book";
 import star_png from '@/assets/images/star.png';
 import { bookInitialWishlistStatus, bookWishlistStatus } from "@/services/user"; // Import both functions
 
+
 const BookDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => {
     const [inWishlist, setInWishlist] = useState<boolean | null>(null);
-
+    console.log("book genres:",bookDetail.genres)
     useEffect(() => {
         // Fetch the initial wishlist status when the component mounts
         const fetchInWishListStatus = async () => {
@@ -58,12 +59,13 @@ const BookDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => {
             </div>
 
             {/* Book Info Section */}
-            <div className="flex-2 justify-start space-y-2 text-sm p-4">
+            <div className="flex-2 justify-start space-y-5 text-sm p-4">
                 <p className="text-lg font-bold">{bookDetail.title}</p>
                 <p className='italic'>by {bookDetail.author}</p>
                 <div className="flex space-x-2 items-center">
                     <Image src={star_png} alt="rating" width={15} height={15} />
-                    <p>{bookDetail.rating}</p>
+                    <p>{bookDetail.average_rating}</p>
+                    <p className="text-zinc-400">({bookDetail.num_ratings})</p>
                 </div>
                 <p className="line-clamp-3">
                     {bookDetail.description}

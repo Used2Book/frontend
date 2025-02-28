@@ -1,14 +1,12 @@
 "use client"
 import React, { useState } from "react";
 import Link from "next/link";
-import BookOrderListCard from "./bookOrderList";
-import MyBookOwnerListCard from "./myBookOwnerList";
+import MyBookListCard from "./myBookList";
 import UserLibraryList from "@/app/user/components/userLibraryList";
 import MyWishList from "@/app/user/components/myWishList";
-import { User } from "@/types/user";
 import useAuthStore from "@/contexts/auth-store";
 import MyLibraryList from "@/app/user/components/myLibraryList";
-import UserBookOwnerListCard from "@/app/user/components/userBookOwnerList";
+import UserBookListCard from "@/app/user/components/userBookList";
 import UserWishList from "@/app/user/components/userWishList";
 
 
@@ -66,8 +64,8 @@ const ProfileNav: React.FC<{clientID: number}> = ({clientID}) => {
                         <p className="font-semibold text-lg py-5">All on Sale</p>
                         <div className="overflow-hidden min-h-0"> {/* ✅ Prevents extra height */}
                             {me?.id === clientID ?
-                                <MyBookOwnerListCard /> :
-                                <UserBookOwnerListCard clientID={clientID}/>
+                                <MyBookListCard /> :
+                                <UserBookListCard clientID={clientID}/>
                             }
                         </div>
                         <p className="font-semibold text-lg py-5">All WishList</p>
