@@ -250,11 +250,12 @@ export const userWishList = async (id: number) => {
 
 export async function becomeSeller() {
   try {
-    // Call your backend endpoint to create an Express account
-    const res = await httpClient.post("/user/api/stripe/create-express-account");
+    // ✅ Corrected API Endpoint (Switched to Omise)
+    const res = await httpClient.post("/payment/api/omise/create-account");
     const data = res.data;
+
     if (data.url) {
-      // Redirect the seller to Stripe's onboarding form
+      // ✅ Redirect seller to Omise's onboarding page
       window.location.href = data.url;
     } else {
       toast.error("Failed to obtain the onboarding link");
@@ -264,6 +265,7 @@ export async function becomeSeller() {
     toast.error("Error while becoming a seller");
   }
 }
+
 
 export async function buyListing(listingId: number) {
   const res = await httpClient.post("user/api/stripe/create-payment-intent", {listingId: listingId });
@@ -275,4 +277,40 @@ export async function buyListing(listingId: number) {
   return data.clientSecret
 }
 
+export async function processPayment(paymentData: {
+  listing_id: number;
+  token: string;
+}) {
+  try {
+    const res = await httpClient.post("/user/api/payment/charge", paymentData);
+    return res.data;
+  } catch (err) {
+    console.error("Payment failed:", err);
+    throw err;
+  }
+}
+
+export async function markListingAsSold(listingId: number, amount: number) {
+  try {
+      const res = await httpClient.post("/user/listing/sold", { listing_id: listingId, amount });
+
+      if (res.data.ok) {
+          alert("Listing marked as sold!");
+      } else {
+          alert("Error: " + res.data.message);
+      }
+  } catch (error) {
+      console.error("Failed to mark listing as sold:", error);
+  }
+}
+
+export const setUserPreferredGenres = async (genreIDs: number[]) => {
+  try {
+    const response = await api.post("/users/preferences", { genre_ids: genreIDs });
+    return response.data;
+  } catch (error) {
+    console.error("Error setting user preferences:", error);
+    return null;
+  }
+};
 
