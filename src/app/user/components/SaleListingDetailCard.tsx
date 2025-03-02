@@ -8,6 +8,7 @@ import { getListingByID } from "@/services/user";
 import toast from "react-hot-toast";
 import { getGenresBookByID } from "@/services/book";
 import { userProfile } from "@/services/user";
+import Link from "next/link";
 // export default function BookDetailCard({ bookId }: { bookId: string }) {
 //     const [book, setBook] = useState(null);
 
@@ -18,14 +19,14 @@ import { userProfile } from "@/services/user";
 //         .then((data) => setBook(data));
 //     }, [bookId]);
 
-const SaleListingDetailCard: React.FC<{ book_listing: string }> = ({ book_listing }) => {
+const SaleListingDetailCard: React.FC<{ book_listing: string, owner_id: number }> = ({ book_listing, owner_id }) => {
     const [bookId, listingId] = book_listing.split("_");
 
     const [listing, setListing] = useState<SaleBook | null>(null)
     const [loading, setLoading] = useState(true);
 
     const [seller, setSeller] = useState(null);
-    
+
 
     useEffect(() => {
         if (!book_listing) return;
@@ -76,9 +77,11 @@ const SaleListingDetailCard: React.FC<{ book_listing: string }> = ({ book_listin
                         }
                     </div>
                     <div className="w-full">
-                        <button className="bg-black text-white text-xxs font-bold w-full py-1 mt-2 rounded-sm shadow-md hover:bg-zinc-700 transition">
-                            Buy
-                        </button>
+                        <Link href={`/user/${owner_id}/book/${listingId}/payment`}>
+                            <div className="text-center bg-black text-white text-xxs font-bold w-full py-1 mt-2 rounded-sm shadow-md hover:bg-zinc-700 transition">
+                                Buy
+                            </div>
+                        </Link>
                         <div className="flex justify-center items-center mt-2 w-full space-x-1">
                             {/* <div>
                                 <button
@@ -135,9 +138,8 @@ const SaleListingDetailCard: React.FC<{ book_listing: string }> = ({ book_listin
                 </div>
                 <div className="flex flex-col space-y-1">
                     <p className="text-sm font-bold">Seller's Note</p>
-                    <p>No note yet</p>
+                    <p>No note yet ...</p>
                 </div>
-                <p>{seller?.first_name}</p>
 
             </div>
         </div>

@@ -1,5 +1,5 @@
 // services/authService.ts
-import httpClient from "@/lib/http-client";
+import {httpClient} from "@/lib/http-client";
 import useAuthStore from "@/contexts/auth-store";
 import { toast } from "react-hot-toast";
 import { getMe } from "@/services/user";
@@ -64,10 +64,11 @@ export const refreshToken = async () => {
 };
 
 // ✅ Send OTP Request
-export async function sendOTP(phone: string) {
+export async function sendOTP(phone_number: string) {
   try {
-    const res: any = await httpClient.post("auth/send-otp", { phone_number: phone })
-
+    console.log("phone:",phone_number)
+    const res = await httpClient.post("auth/send-otp", { phone_number: phone_number })
+    console.log("phone log res:", res)
     console.log("Response Status:", res.status); // Debugging
     console.log("Response Data:", res); // Debugging
 
@@ -125,3 +126,4 @@ export async function resendOTP(phone: string) {
     return { success: false, message: (error as Error).message };
   }
 }
+

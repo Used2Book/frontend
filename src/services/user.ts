@@ -2,6 +2,7 @@ import { httpClient} from "@/lib/http-client";
 import useAuthStore from "@/contexts/auth-store";
 import { toast } from "react-hot-toast";
 import uploadClient from "@/lib/upload-client";
+import { stripePromise } from "@/lib/stripe";
 // ✅ Get user info (without modifying token)
 export const getMe = async () => {
   try {
@@ -246,3 +247,32 @@ export const userWishList = async (id: number) => {
     return null
   }
 };
+
+export async function becomeSeller() {
+  try {
+    // Call your backend endpoint to create an Express account
+    const res = await httpClient.post("/user/api/stripe/create-express-account");
+    const data = res.data;
+    if (data.url) {
+      // Redirect the seller to Stripe's onboarding form
+      window.location.href = data.url;
+    } else {
+      toast.error("Failed to obtain the onboarding link");
+    }
+  } catch (error: any) {
+    console.error("Error in becomeSeller:", error);
+    toast.error("Error while becoming a seller");
+  }
+}
+
+export async function buyListing(listingId: number) {
+  const res = await httpClient.post("user/api/stripe/create-payment-intent", {listingId: listingId });
+  const data = await res.data;
+  if (!data.clientSecret) {
+    toast.error("Could not create payment intent");
+    return;
+  }
+  return data.clientSecret
+}
+
+
