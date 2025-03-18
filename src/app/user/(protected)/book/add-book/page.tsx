@@ -126,7 +126,7 @@ export default function AddBookPage() {
                                             <Image
                                                 alt="Book cover"
                                                 src={book?.cover_image_url}
-                                                layout="fill"
+                                                fill
                                                 objectFit="cover"
                                                 className="rounded-sm border border-zinc-300 shadow-md"
                                             />

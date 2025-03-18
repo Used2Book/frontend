@@ -15,7 +15,7 @@ const UserLibraryCard: React.FC<Book> = ({ title, author, cover_image_url, ratin
                     <Image
                         alt="Book cover"
                         src={cover_image_url}
-                        layout="fill"
+                        fill
                         objectFit="cover"
                         className="rounded-sm border-[1px] border-zinc-300 shadow-md"
                     />

@@ -12,16 +12,16 @@ interface AvatarProps {
 }
 
 const Avatar: FC<AvatarProps> = ({ user }) => {
-    const profilePicture = user?.picture_profile !== ""? user?.picture_profile: NoAvatar;
+    const profilePicture = user?.picture_profile !== "" ? user?.picture_profile : NoAvatar;
     console.log("Profile Picture URL:", profilePicture);
 
     return (
         <Image
             src={profilePicture}
             alt="Profile"
-            width={40}
-            height={40}
-            className="w-full h-full object-cover"
+            width={45}
+            height={45}
+            className='rounded-full'
         />
     );
 };

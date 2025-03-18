@@ -2,7 +2,6 @@ import { httpClient} from "@/lib/http-client";
 import useAuthStore from "@/contexts/auth-store";
 import { toast } from "react-hot-toast";
 import uploadClient from "@/lib/upload-client";
-import { stripePromise } from "@/lib/stripe";
 // ✅ Get user info (without modifying token)
 export const getMe = async () => {
   try {
@@ -130,6 +129,20 @@ export const userProfile = async (userID : number) => {
     return res.data.user
   } catch (err) {
     console.log("Get user profile unsuccessfully !")
+    return null
+  }
+};
+
+export const charge = async (listing_id: number, buyer_id: number) => {
+  try {
+    console.log("Fetching charge...");
+    console.log("listing_id:",listing_id,"buyer_id: ",buyer_id)
+    const res = await httpClient.post("/payment/charge",{listing_id: listing_id,buyer_id: buyer_id});
+  
+    console.log("charge data :", res.data)
+    return res.data
+  } catch (err) {
+    console.log("Get charge data user profile unsuccessfully !")
     return null
   }
 };
@@ -282,7 +295,7 @@ export async function processPayment(paymentData: {
   token: string;
 }) {
   try {
-    const res = await httpClient.post("/user/api/payment/charge", paymentData);
+    const res = await httpClient.post("/payment/charge", paymentData);
     return res.data;
   } catch (err) {
     console.error("Payment failed:", err);
@@ -295,22 +308,98 @@ export async function markListingAsSold(listingId: number, amount: number) {
       const res = await httpClient.post("/user/listing/sold", { listing_id: listingId, amount });
 
       if (res.data.ok) {
-          alert("Listing marked as sold!");
+          toast.success("Listing marked as sold!");
       } else {
-          alert("Error: " + res.data.message);
+          toast.error("Error: " + res.data.message);
       }
   } catch (error) {
       console.error("Failed to mark listing as sold:", error);
   }
 }
 
-export const setUserPreferredGenres = async (genreIDs: number[]) => {
+export async function setUserPreferredGenres(genreIDs: number[]) {
   try {
-    const response = await api.post("/users/preferences", { genre_ids: genreIDs });
-    return response.data;
+    const res = await httpClient.post("/user/preferences", { genre_ids: genreIDs });
+    return res.data.genres;
   } catch (error) {
     console.error("Error setting user preferences:", error);
     return null;
   }
 };
+
+
+
+export async function getAllUserGenres() {
+  try {
+    const res = await httpClient.get("/user/preferences");
+    return res.data.preferred_genres || []; // ✅ Ensures an empty array instead of `null`
+  } catch (error) {
+    console.error("Error fetching user preferences:", error);
+    return []; // ✅ Ensures it never returns `null`
+  }
+};
+
+export async function getUserGender() {
+  try {
+    const res = await httpClient.get("/user/gender");
+    return res.data.gender; // ✅ Ensures an empty array instead of `null`
+  } catch (error) {
+    console.error("Error fetching user gender:", error);
+    toast.error("error : " + error)
+  }
+};
+
+export async function updateGender(gender: string) {
+  try {
+    console.log("gender:", gender)
+    const res = await httpClient.post("/user/gender", {gender: gender});
+    console.log("res gender:", res)
+    return res.data
+  } catch (error) {
+    console.error("Error fetching user gender:", error);
+    toast.error("error : " + error)
+  }
+};
+
+export async function addCart(listingId: number) {
+  try {
+    console.log("listingId:", listingId)
+    const res = await httpClient.post("/user/cart", { listingId: listingId});
+    
+    console.log("res gender:", res)
+    return res.data
+  } catch (error) {
+    console.error("Error adding listing to cart:", error);
+    toast.error("error : " + error)
+  }
+};
+
+export async function getCart() {
+  try {
+    const res = await httpClient.get("/user/cart");
+    console.log("res carts:", res.data.carts)
+    return res.data.carts
+  } catch (error) {
+    console.error("Error getting listing to cart:", error);
+    toast.error("error : " + error)
+  }
+};
+
+export async function removeCart(listingId: number) {
+  try {
+    const res = await httpClient.post("/user/cart-rm",{listingId: listingId});
+    console.log("res gender:", res)
+    return res.data
+  } catch (error) {
+    console.error("Error remove listing to cart:", error);
+    toast.error("error : " + error)
+  }
+};
+
+
+
+
+
+
+
 

@@ -171,7 +171,7 @@ function ChatListItem({
                     <Image
                         src={profile?.picture_profile || NoAvatar.src}
                         alt={`${profile.first_name} ${profile.last_name}'s profile`}
-                        layout="fill"
+                        fill
                         objectFit="cover"
                     />
                 </div>

@@ -40,7 +40,7 @@ export default function NavLink() {
                         (<div>
                             <ul className="flex space-x-6 sm:space-x-10 md:space-x-12 items-center">
                                 <NavItemString href="/user/home" link_string="Home" />
-                                <NavItemString href="/" link_string="Web board" />
+                                <NavItemString href="/user/webboard" link_string="Web board" />
                                 <NavItemString href="/" link_string="Book hub" />
                                 {/* <NavItemString href="/" link_string="Library" /> */}
                             </ul>
@@ -70,9 +70,7 @@ export default function NavLink() {
                             <li>
                                 <Link href="/user/profile" className="cursor-pointer">
                                     <div className="bg-green-500 w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-gray-300 
-                                    transition-all duration-200 ease-in-out 
-                        transform hover:scale-105 active:scale-95 
-                        hover:border-blue-400 hover:border-2">
+                                    transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 hover:border-blue-400 hover:border-2">
                                         <Avatar user={user} />
                                     </div>
                                 </Link>

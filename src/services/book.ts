@@ -15,6 +15,18 @@ export const bookCount = async () => {
     }
 };
 
+export async function getAllGenres() {
+    try {
+      const res = await httpClient.get("/book/all-genres");
+      return res.data.genres || [];
+    } catch (error) {
+      console.error("Error setting user preferences:", error);
+      return null;
+    }
+  };
+
+
+
 export const getBookReview = async (book_id:number) => {
     try {
         console.log("Fetching book review...");
@@ -47,6 +59,18 @@ export const allBooks = async () => {
         const res = await httpClient.get("book/all-books");
         console.log("books:", res.data.books)
         return res.data.books
+    } catch (err) {
+        console.log("Get book count unsuccessfully !")
+        return null
+    }
+};
+
+export const getRecommendedBooks = async () => {
+    try {
+        console.log("Fetching recommended book ...");
+        const res = await httpClient.get("book/recommended-books");
+        console.log("books:", res.data.books)
+        return res.data.books.slice(0, 3)
     } catch (err) {
         console.log("Get book count unsuccessfully !")
         return null

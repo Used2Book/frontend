@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
 
 module.exports = {
   images: {
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://api.omise.co;",
     remotePatterns: [
       {
         protocol: 'https',

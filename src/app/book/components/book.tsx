@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 
 // export default function BookCard({ title, author, image, rating }: BookCardProps) {
-const BookCard: React.FC<Book> = ({ title, author, cover_image_url, rating, id }) => {
+const BookCard: React.FC<Book> = ({ title, author, cover_image_url, average_rating, id }) => {
     return (
         // <Link href={{ pathname: "/book/[id]", params: { id: id.toString() } }}>
         // <Link href="/book/[id]" as={`/book/${id}`}>
@@ -15,9 +15,10 @@ const BookCard: React.FC<Book> = ({ title, author, cover_image_url, rating, id }
                     <Image
                         alt="Book cover"
                         src={cover_image_url}
-                        layout="fill"
-                        objectFit="cover"
+                        sizes="100%"
+                        style={{objectFit:"cover"}}
                         className="rounded-sm border-[1px] border-zinc-300 shadow-md"
+                        fill
                     />
                 </div>
 
@@ -39,7 +40,7 @@ const BookCard: React.FC<Book> = ({ title, author, cover_image_url, rating, id }
                                 <Image src={star_png} alt="rating" width={10} height={10} />
                             </div>
                             <div>
-                                <p>{rating}</p>
+                                <p>{average_rating}</p>
                             </div>
                         </div>
                     </div>

@@ -57,13 +57,13 @@ const PreferrenceSettingPage: React.FC = () => {
         try {
             const uploadedUrl = await uploadProfileImage(file);
 
+            setProfilePicture(uploadedUrl);
             // ✅ Refresh user data in Zustand & UI
             const updatedUser = await getMe();
             if (updatedUser) {
                 setUser(updatedUser);
             }
 
-            setProfilePicture(uploadedUrl);
             toast.success("Profile Image Updated Successfully!");
         } catch (error) {
             toast.error("Profile Image Upload Failed");

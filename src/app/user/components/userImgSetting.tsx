@@ -6,7 +6,7 @@ import { Camera } from "lucide-react"; // Assuming you're using lucide-react for
 const BackgroundImageSection: React.FC<{ handleChangeBackgroundImage: (event: React.ChangeEvent<HTMLInputElement>) => void; userBackground: string; }> = ({ handleChangeBackgroundImage, userBackground }) => {
     return (
         <div className="relative w-full h-52 bg-orange-400">
-            <Image src={userBackground} alt="Background" layout="fill" objectFit="cover" className="object-cover" />
+            <Image src={userBackground} alt="Background" fill objectFit="cover" className="object-cover" />
             <input type="file" accept="image/*" className="hidden" id="background-upload" onChange={handleChangeBackgroundImage} />
             <label htmlFor="background-upload" className="absolute bottom-3 right-3 bg-gray-500 text-white p-2 rounded-md cursor-pointer">
                 <Camera className="h-4 w-4" /> Edit
@@ -20,7 +20,7 @@ const ProfileImageSection: React.FC<{ handleChangeProfileImage: (event: React.Ch
     return (
         <div className="relative">
             <div className="relative w-32 h-32 rounded-full border-4 border-white overflow-hidden -mt-16">
-                <Image src={userProfile} alt="Profile" layout="fill" objectFit="cover" className="object-cover" />
+                <Image src={userProfile} alt="Profile" fill objectFit="cover" className="object-cover" />
             </div>
             <input type="file" accept="image/*" className="hidden" id="profile-upload" onChange={handleChangeProfileImage} />
             <label htmlFor="profile-upload" className="absolute bottom-3 right-3 bg-gray-500 text-white p-2 rounded-full cursor-pointer">
@@ -36,7 +36,7 @@ const ProfileImageSection: React.FC<{ handleChangeProfileImage: (event: React.Ch
 //             <Image
 //                 src={userBackground}
 //                 alt="User background background"
-//                 layout="fill"
+//                 fill
 //                 objectFit="cover"
 //                 objectPosition="80% 80%"
 //                 className="object-cover"
@@ -61,7 +61,7 @@ const ProfileImageSection: React.FC<{ handleChangeProfileImage: (event: React.Ch
 //                 <Image
 //                     src={userProfile}
 //                     alt="User profile"
-//                     layout="fill"
+//                     fill
 //                     objectFit="cover"
 //                     className="object-cover"
 //                 />

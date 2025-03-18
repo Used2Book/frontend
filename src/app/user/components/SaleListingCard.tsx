@@ -29,7 +29,7 @@ const SaleListingCard: React.FC<{ book: SaleBook }> = ({ book }) => {
                     <Image
                         alt="Book cover"
                         src={book.cover_image_url}
-                        layout="fill"
+                        fill
                         objectFit="cover"
                         className="rounded-sm border-[1px] border-zinc-300 shadow-md"
                     />
@@ -51,12 +51,12 @@ const SaleListingCard: React.FC<{ book: SaleBook }> = ({ book }) => {
                     </div>
 
                     {/* Seller Profile */}
-                    <div className="flex justify-center items-center w-full py-1 mt-1 border-y-[1px] border-gray-200">
+                    {/* <div className="flex justify-center items-center w-full py-1 mt-1 border-y-[1px] border-gray-200">
                         <div className="w-4 h-4 rounded-full overflow-hidden">
                             <Image src={seller?.picture_profile ? seller?.picture_profile : NoAvatar} alt="Profile" width={30} height={30} />
                         </div>
                         <p className="ml-2 text-xxxs font-bold">{seller?.first_name}</p>
-                    </div>
+                    </div> */}
 
                     {/* Ownership and Price */}
                     <div className="flex justify-between w-full mt-1 text-black space-x-4 rounded-md py-1 px-2 bg-zinc-200">

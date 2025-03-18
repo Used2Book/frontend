@@ -94,7 +94,7 @@ export default function ProfilePage({ params }: { params: Promise<{ id: string }
                     <Image
                         src={backgroundPicture}
                         alt="User profile background"
-                        layout="fill"
+                        fill
                         objectFit="cover"
                         objectPosition="80% 80%"
                         className="object-cover"
@@ -108,7 +108,7 @@ export default function ProfilePage({ params }: { params: Promise<{ id: string }
                             <Image
                                 src={profilePicture}
                                 alt="User profile"
-                                layout="fill"
+                                fill
                                 objectFit="cover"
                                 className="object-cover"
                             />

@@ -38,8 +38,10 @@ const BookDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => {
                     <Image
                         alt="Book cover"
                         src={bookDetail.cover_image_url}
-                        layout="fill"
-                        objectFit="cover"
+                        fill
+                        style={{objectFit:"cover"}}
+                        sizes="100%"
+                        // objectFit="cover"
                         className="rounded-sm border border-zinc-300"
                     />
                 </div>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logout } from "@/services/auth";
-import { User, Settings, Mail, Key, Phone, ChevronDown, ChevronUp, PictureInPicture2, CircleArrowLeft, LogOut, CircleArrowRight } from "lucide-react";
+import { User, Settings, Mail, Key, Phone, ChevronDown, ChevronUp, PictureInPicture2, CircleArrowLeft, LogOut, CircleArrowRight, CreditCard, MapPinHouse} from "lucide-react";
 type Sublink = {
     href: string;
     label: string;
@@ -34,6 +34,8 @@ const links: LinkItem[] = [
             { href: "/settings/setting/email", label: "Update Email Address", icon: <Mail size={16} /> },
             { href: "/settings/setting/password", label: "Change Password", icon: <Key size={16} /> },
             { href: "/user/setting/phone-number", label: "Update Phone Number", icon: <Phone size={16} /> },
+            { href: "/user/setting/bank-account", label: "Update Bank Account", icon: <CreditCard size={16} /> },
+            { href: "/user/setting/address", label: "Update Bank Account", icon: <MapPinHouse size={16} /> },
         ],
     },
 ];

@@ -29,7 +29,7 @@ const BookOwnerDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => 
                         <Image
                             alt="Book cover"
                             src={bookDetail.cover_image_url}
-                            layout="fill"
+                            fill
                             objectFit="cover"
                             className="rounded-sm border border-zinc-300"
                         />

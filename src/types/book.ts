@@ -8,7 +8,7 @@ export interface Book {
   title: string;
   author: string;
   cover_image_url: string;
-  rating: number;
+  rating?: number;
   description?: string;
   genres?: string[]; // Array of genres
   accessibility?: boolean; // Indicates if the book is accessible

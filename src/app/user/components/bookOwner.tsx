@@ -2,7 +2,7 @@ import Image from "next/image";
 import star_png from "@/assets/images/star.png";
 import { Book } from "@/types/book";
 import Link from 'next/link';
-
+import { ShoppingBasket } from "lucide-react";
 
 const BookOwnerCard: React.FC<Book & { price: number; status: string }> = ({
     title,
@@ -20,7 +20,7 @@ const BookOwnerCard: React.FC<Book & { price: number; status: string }> = ({
                     <Image
                         alt="Book cover"
                         src={cover_image_url}
-                        layout="fill"
+                        fill
                         objectFit="cover"
                         className="rounded-sm border-[1px] border-zinc-300 shadow-md"
                     />

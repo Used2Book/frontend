@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { getMe } from "@/services/user"; // Assumes getMe returns the user profile including omise_account_id
-import BecomeSellerComponent from "@/components/become-seller";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { getMe } from "@/services/user";
 
-// This component will wrap pages that require the user to be a seller.
 const RequireSeller: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -24,27 +24,27 @@ const RequireSeller: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     fetchUser();
   }, []);
 
-  console.log("User Omise Account ID:", user?.omise_account_id?.String); // ✅ Correct log
+  // Redirect in an effect, not in render
+  useEffect(() => {
+    // Only run if loading is done and user is fetched
+    if (!loading && user && !user.omise_account_id?.String) {
+      router.push("/user/setting/bank-account");
+    }
+  }, [loading, user, router]);
 
+  // Show a loading state while fetching user
   if (loading) {
     return <p>Loading...</p>;
   }
-  
-  // If the user does not have an Omise account ID, show the Become Seller component
-  if (!user?.omise_account_id?.String) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
-  <div className="bg-white p-6 rounded-lg shadow-lg mx-auto w-full max-w-md">
-    <p className="mb-4 text-lg font-medium text-center">
-      You need to become a seller before you can create a listing.
-    </p>
-    <BecomeSellerComponent />
-  </div>
-</div>
 
-    );
+  // If the user has no Omise account, we might render a "Redirecting..." message
+  // but the actual push will happen in the useEffect above.
+  if (!user?.omise_account_id?.String) {
+    // We can just render null or some fallback UI, because the useEffect is handling the redirect
+    return <p>Redirecting...</p>;
   }
 
+  // If user has the Omise account, render children
   return <>{children}</>;
 };
 
