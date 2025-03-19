@@ -1,6 +1,9 @@
 import uploadClient from "@/lib/upload-client";
 import { httpClient } from "@/lib/http-client";
 import { Post } from "@/types/post";
+import { Comment } from "@/types/comment";
+import toast from "react-hot-toast";
+
 
 // Upload multiple images
 export const uploadPostImages = async (images: File[]): Promise<string[]> => {
@@ -41,8 +44,6 @@ export async function getAllPosts() {
   }
 };
 
-import { Comment } from "@/types/comment";
-
 export const createComment = async (postId: number, content: string): Promise<Comment> => {
     const formData = new FormData();
     formData.append("post_id", postId.toString());
@@ -59,10 +60,40 @@ export const createComment = async (postId: number, content: string): Promise<Co
 
 export const getCommentsByPostId = async (postId: number): Promise<Comment[]> => {
     try {
-        const res = await uploadClient.get(`/user/comments?post_id=${postId}`);
-        return res.data.comments;
+        const res = await uploadClient.get(`/user/comments/${postId}`);
+        return res.data.comments || [];
     } catch (err) {
         console.error("Get Comments Failed:", err);
         throw err;
+    }
+};
+
+export const toggleLike = async (postId: number) => {
+    try {
+        const res = await httpClient.post(`/user/like-toggle/${postId}`);
+        return res.data.is_liked;
+    } catch (err) {
+        console.error("Toggle Like Failed:", err);
+        throw err;
+    }
+};
+
+export const getLikeCount = async (postId: number) => {
+    try {
+        const res = await httpClient.get(`/user/like-count/${postId}`);
+        return res.data.like_count;
+    } catch (err) {
+        console.error("Get Like Count Failed:", err);
+        throw err;
+    }
+};
+
+export const getLikeStatus = async (postId: number) => {
+    try {
+        const res = await httpClient.get(`/user/like-check/${postId}`);
+        return res.data.is_liked;
+    } catch (err) {
+        console.error("Get Like Status Failed:", err);
+        return false; // Default to false on error
     }
 };

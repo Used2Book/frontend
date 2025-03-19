@@ -70,7 +70,7 @@ export default function WebBoardPage() {
             {postList ? (
                 <>
                     <div className="p-4 sm:p-8 md:p-16 lg:p-24 w-full">
-                        <p className="text-xl sm:text-2xl font-bold mb-4">WebBoardPage</p>
+                        <p className="text-xl sm:text-2xl font-bold mb-10 px-12">WebBoardPage</p>
                         <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-3 w-full">
                             <div className="flex-1 flex flex-col space-y-5">
                                 {postList.map((post) => (
