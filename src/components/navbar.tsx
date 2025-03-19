@@ -69,7 +69,7 @@ export default function NavLink() {
                             </li>
                             <li>
                                 <Link href="/user/profile" className="cursor-pointer">
-                                    <div className="bg-green-500 w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-gray-300 
+                                    <div className="bg-white w-10 h-10 rounded-full overflow-hidden border border-gray-300 
                                     transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 hover:border-blue-400 hover:border-2">
                                         <Avatar user={user} />
                                     </div>

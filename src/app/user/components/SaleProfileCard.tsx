@@ -77,9 +77,12 @@ const SaleProfileCard: React.FC<{ id: number }> = ({ id }) => {
                     </div>
                     <p className="flex justify-start ml-2 text-sm py-1 font-bold">{seller?.first_name} {seller?.last_name}</p>
                 </div>
-                <div>
-                    {chatButton }
-                </div>
+                {
+                    user?.id !== id &&
+                    <div>
+                        {chatButton }
+                    </div>
+                }
             </div>
         </div>
     );

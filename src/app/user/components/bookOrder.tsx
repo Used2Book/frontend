@@ -22,7 +22,8 @@ const BookOrderCard: React.FC<Book> = ({ title, author, cover_image_url, rating 
                                 alt="Book cover"
                                 src={cover_image_url}
                                 fill
-                                objectFit="cover"
+                                sizes="100%"
+                                style={{ objectFit: "cover" }}
                                 className="border border-gray-300 shadow-md"
                             />
                         </div>

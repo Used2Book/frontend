@@ -16,8 +16,9 @@ const Avatar: FC<AvatarProps> = ({ user }) => {
     console.log("Profile Picture URL:", profilePicture);
 
     return (
+
         <Image
-            src={profilePicture}
+            src={profilePicture || NoAvatar}
             alt="Profile"
             width={45}
             height={45}

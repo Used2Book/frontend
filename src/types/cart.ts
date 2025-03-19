@@ -6,7 +6,9 @@ export interface Cart {
     book_id: number;
     price?: number;
     allow_offers?: boolean;
-    title: string;
-    author: string;
+    book_title: string;
+    book_author: string;
     cover_image_url: string;
+    image_url: string;
   }
+

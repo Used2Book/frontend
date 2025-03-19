@@ -94,18 +94,22 @@ export const editPreferrence = async (userInfo: {
 };
 
 export const userAddLibrary = async (LibraryInfo: {
-  book_id: number,
-  status: string,
-  price: number,
-  allow_offers: boolean,
-}) => {
+  book_id: number;
+  status: string;
+  price: number;
+  allow_offers: boolean;
+  seller_note: string
+}, images: File[]) => {
+  const formData = new FormData();
+  formData.append("data", JSON.stringify(LibraryInfo));
+  images.forEach((image) => formData.append("images", image));
+
   try {
-    console.log(LibraryInfo)
-    const res = await httpClient.post("/user/add-library", LibraryInfo);
-    return res.data;
+      const res = await uploadClient.post("/user/add-library", formData);
+      return res.data;
   } catch (err) {
-    console.error("Add book Failed:", err);
-    throw err;
+      console.error("Add book Failed:", err);
+      throw err;
   }
 };
 

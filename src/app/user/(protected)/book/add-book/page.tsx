@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { allBooks } from "@/services/book";
@@ -9,27 +8,25 @@ import { getMe } from "@/services/user";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/contexts/auth-store";
 import RequireSeller from "@/components/require-seller";
+
 const Label = ({ label }: { label: string }) => (
     <label className="block text-base font-medium mb-2">{label}</label>
 );
 
 export default function AddBookPage() {
     const router = useRouter();
-
     const setUser = useAuthStore((state) => state.setUser);
 
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
     const [genre, setGenre] = useState("");
     const [price, setPrice] = useState<number>(0);
+    const [note, setNote] = useState<string>("");
     const [books, setBooks] = useState([]);
-    const [isOwned, setIsOwned] = useState(false); // Default: Not Owned
+    const [isOwned, setIsOwned] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [bookID, setBookID] = useState<number | null>(null);
-    // Inside your functional component (AddBookPage)
-    const [allowOffers, setAllowOffers] = useState<boolean>(false); // Tracks if offers are allowed
-
-
+    const [allowOffers, setAllowOffers] = useState<boolean>(false);
     const [images, setImages] = useState<File[]>([]);
     const [previewImages, setPreviewImages] = useState<string[]>([]);
 
@@ -38,45 +35,41 @@ export default function AddBookPage() {
             const books = await allBooks();
             setBooks(books);
         };
-
         fetchBooks();
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!bookID) {
+            toast.error("Please select a book");
+            return;
+        }
         try {
             await userAddLibrary({
-                book_id: bookID,            // Ensure bookID is a number
-                status: isOwned ? "owned" : "not_own",         // String: 'own', 'not_own', 'wishlist'
-                price: isOwned ? price : 0, // Number: Assign 0 if not owned
-                allow_offers: allowOffers,  // Boolean
-            });
-
+                book_id: bookID,
+                status: isOwned ? "owned" : "not_own",
+                price: isOwned ? price : 0,
+                allow_offers: allowOffers,
+                seller_note: note,
+            }, images);
 
             toast.success("Add Book to Library Successfully!");
-
-            // ✅ Wait for 1 second, then navigate
             setTimeout(async () => {
                 const updatedUser = await getMe();
                 if (updatedUser) {
                     setUser(updatedUser);
-                    router.push("/user/profile"); // 🔹 Navigate after toast
+                    router.push("/user/profile");
                 }
             }, 1000);
-
         } catch (error) {
-            toast.error("Failed to Update Profile Info");
+            toast.error("Failed to Add Book");
         }
     };
 
-
-
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) return;
-
         const selectedFiles = Array.from(e.target.files);
         setImages((prevImages) => [...prevImages, ...selectedFiles]);
-
         const newPreviews = selectedFiles.map((file) => URL.createObjectURL(file));
         setPreviewImages((prevPreviews) => [...prevPreviews, ...newPreviews]);
     };
@@ -92,12 +85,9 @@ export default function AddBookPage() {
 
     return (
         <RequireSeller>
-
             <div className="max-w-xl mx-48 my-5 p-6">
                 <h2 className="text-2xl font-bold mb-6">Add to My Reads</h2>
-
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    {/* Book Title Search */}
                     <div>
                         <Label label="Book Title" />
                         <input
@@ -133,9 +123,7 @@ export default function AddBookPage() {
                                         </div>
                                         <div className="flex flex-col">
                                             <p className="text-xs font-semibold text-black truncate">
-                                                {book?.title.length > 50
-                                                    ? `${book?.title.slice(0, 50)}...`
-                                                    : book?.title}
+                                                {book?.title.length > 50 ? `${book?.title.slice(0, 50)}...` : book?.title}
                                             </p>
                                             <p className="text-xxs">by {book?.author}</p>
                                         </div>
@@ -144,8 +132,6 @@ export default function AddBookPage() {
                             </ul>
                         )}
                     </div>
-
-                    {/* Ownership Toggle */}
                     <div>
                         <Label label="Ownership" />
                         <select
@@ -161,42 +147,35 @@ export default function AddBookPage() {
                             <option value="owned">Owned</option>
                         </select>
                     </div>
-
-                    {/* Show these fields only if the book is "Owned" */}
                     {isOwned && (
                         <>
-                            {/* Upload Images */}
-                            {/* <div>
-                            <Label label="Book Photos" />
-                            <div className="grid grid-cols-5 gap-2 mt-2">
-                                {previewImages.map((src, index) => (
-                                    <div key={index} className="relative w-24 h-32 border rounded-lg overflow-hidden">
-                                        <img src={src} alt="Book Cover" className="w-full h-full object-cover" />
-                                        <button
-                                            type="button"
-                                            onClick={() => removeImage(index)}
-                                            className="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full px-1 hover:bg-red-600"
-                                        >
-                                            ✕
-                                        </button>
-                                    </div>
-                                ))}
-
-                                <label className="w-24 h-32 border border-gray-300 rounded-lg flex justify-center items-center cursor-pointer bg-gray-100 hover:bg-gray-200">
-                                    <span className="text-2xl text-gray-500">+</span>
-                                    <input
-                                        type="file"
-                                        multiple
-                                        className="hidden"
-                                        onChange={handleImageChange}
-                                        accept="image/*"
-                                    />
-                                </label>
+                            <div>
+                                <Label label="Book Photos" />
+                                <div className="grid grid-cols-5 gap-2 mt-2">
+                                    {previewImages.map((src, index) => (
+                                        <div key={index} className="relative w-24 h-32 border rounded-lg overflow-hidden">
+                                            <img src={src} alt="Book Cover" className="w-full h-full object-cover" />
+                                            <button
+                                                type="button"
+                                                onClick={() => removeImage(index)}
+                                                className="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full px-1 hover:bg-red-600"
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <label className="w-24 h-32 border border-gray-300 rounded-lg flex justify-center items-center cursor-pointer bg-gray-100 hover:bg-gray-200">
+                                        <span className="text-2xl text-gray-500">+</span>
+                                        <input
+                                            type="file"
+                                            multiple
+                                            className="hidden"
+                                            onChange={handleImageChange}
+                                            accept="image/*"
+                                        />
+                                    </label>
+                                </div>
                             </div>
-                        </div> */}
-
-
-                            {/* Price */}
                             <div>
                                 <Label label="Price ($)" />
                                 <input
@@ -207,8 +186,16 @@ export default function AddBookPage() {
                                     required
                                 />
                             </div>
-
-                            {/* Offer Selection */}
+                            <div className="">
+                                <Label label="Note" />
+                                <textarea
+                                    className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 resize-none h-32 text-lg"
+                                    value={note}
+                                    placeholder="describe your book ..."
+                                    onChange={(e) => setNote(e.target.value)}
+                                    required
+                                />
+                            </div>
                             <div>
                                 <Label label="Accept Offers?" />
                                 <div className="flex space-x-4">
@@ -223,7 +210,6 @@ export default function AddBookPage() {
                                         />
                                         <span>Yes</span>
                                     </label>
-
                                     <label className="flex items-center space-x-2">
                                         <input
                                             type="radio"
@@ -240,8 +226,6 @@ export default function AddBookPage() {
 
                         </>
                     )}
-
-                    {/* Submit Button */}
                     <button
                         type="submit"
                         className="w-1/4 bg-black text-white py-2 rounded-xl hover:bg-zinc-700 transition shadow-xl"

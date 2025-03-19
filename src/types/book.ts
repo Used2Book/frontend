@@ -33,7 +33,7 @@ export interface SaleBook {
   accessibility?: boolean; // Indicates if the book is accessible
   offer?: boolean; // Indicates if the book is on offer
   price?: number;
-  sellerNote?: string;
+  seller_note?: string;
   allow_offers?: boolean;
   status?: string;
   seller_id: number;
