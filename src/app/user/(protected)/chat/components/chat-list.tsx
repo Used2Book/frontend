@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from "react";
 import useAuthStore from "@/contexts/auth-store";
-import chatService from "@/services/chat"; // Your socket + HTTP service
+import chatService from "@/services/chat";
 import Link from "next/link";
 import Image from "next/image";
 import NoAvatar from "@/assets/images/no-avatar.png";
 import { Message } from "@/types/chat";
 import { User } from "@/types/user";
 import { userProfile } from "@/services/user";
+
 interface Chat {
-    _id: string;  // e.g. "1-2"
+    _id: string;
     lastMessage: {
         senderId: string;
         content: string;
@@ -18,91 +19,121 @@ interface Chat {
     };
 }
 
-// Example ChatList as a stand-alone component
+interface Notification {
+    chatId: string;
+    type: string;
+}
+
 export default function ChatList() {
     const user = useAuthStore((state) => state.user);
     const [chats, setChats] = useState<Chat[]>([]);
+    const [unreadChatIds, setUnreadChatIds] = useState<Set<string>>(new Set());
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!user) return;
-
-        // 1) Connect to Socket.IO once
-        const socket = chatService.connect();
-
-        // 2) Fetch initial list of chats from server
+    
+        const { socket, notiSocket } = chatService.connect();
+    
         fetchChats();
-
-        // 3) On new messages, update lastMessage in local state
+    
         const handleNewMessage = (message: Message) => {
-            // Only update if it's in the user's chat
+            console.log("ChatList received message:", message);
             const isInvolved =
                 message.senderId === String(user.id) ||
                 message.receiverId === String(user.id);
             if (!isInvolved) return;
-
-            // Update the local `chats` array so its lastMessage is this new message
+    
             setChats((prevChats) => {
-                // Find the chat that matches message.chatId
                 const idx = prevChats.findIndex((c) => c._id === message.chatId);
-                if (idx < 0) {
-                    // If that chat is not in the list, you can either:
-                    //  - ignore, or
-                    //  - create a new one (not shown)
-                    return prevChats;
-                }
-
-                // Copy the chat that needs updating
-                const chatToUpdate = { ...prevChats[idx] };
+                const chatToUpdate = idx >= 0 ? { ...prevChats[idx] } : {
+                    _id: message.chatId,
+                    lastMessage: { senderId: "", content: "", timestamp: "" }
+                };
                 chatToUpdate.lastMessage = {
                     senderId: message.senderId,
                     content: message.content,
                     timestamp: message.timestamp,
                 };
-
-                // Move that updated chat to the front (optional)
-                const newChats = [...prevChats];
-                newChats.splice(idx, 1);           // remove old position
-                newChats.unshift(chatToUpdate);    // put updated chat at front
-
-                if (message.chatId && (message.senderId === String(user?.id) || message.receiverId === String(user?.id))) {
-                    fetchChats();  // re-fetch entire list from DB
+    
+                const newChats = idx >= 0 ? [...prevChats] : [chatToUpdate, ...prevChats];
+                if (idx >= 0) {
+                    newChats.splice(idx, 1);
+                    newChats.unshift(chatToUpdate);
                 }
-
+    
+                if (message.senderId !== String(user.id)) {
+                    setUnreadChatIds((prev) => new Set(prev).add(message.chatId));
+                }
                 return newChats;
             });
         };
-
-        // Listen for both 'receiveMessage' and 'messageSent' if you still use both
-        socket.on("receiveMessage", handleNewMessage);
-        socket.on("messageSent", handleNewMessage);
-
-        // Cleanup on unmount
+    
+        const handleChatNotification = ({ chat }: { chat: number }) => {
+            console.log("ChatList unread_counts:", chat);
+            fetchUnreadChats();
+        };
+    
+        chatService.onMessage(handleNewMessage);
+        chatService.onSent(handleNewMessage);
+        chatService.onChatNotification(handleChatNotification);
+    
+        // Join all chat rooms after fetching chats
+        const joinChatRooms = async () => {
+            const userChats = await chatService.getUserChats(String(user.id));
+            userChats.forEach(chat => chatService.joinChat(chat._id));
+        };
+        joinChatRooms();
+    
         return () => {
-            socket.off("receiveMessage", handleNewMessage);
+            notiSocket.off("receiveMessage", handleNewMessage);
             socket.off("messageSent", handleNewMessage);
-            chatService.disconnect();
+            notiSocket.off("unread_counts", handleChatNotification);
         };
     }, [user]);
 
-    // Separate function to fetch chats from the server
     const fetchChats = async () => {
         if (!user) return;
         try {
             const userChats = await chatService.getUserChats(String(user.id));
             setChats(userChats);
             setError(null);
+            await fetchUnreadChats();
         } catch (err: any) {
             if (err.message?.includes("No chats found")) {
                 setError("You have no active chats yet.");
             } else {
-                setError("Failed to fetch chats. Please try again.");
+                setError("Failed to fetch chats.");
             }
             setChats([]);
         }
     };
 
-
+    const fetchUnreadChats = async () => {
+        if (!user) return;
+        try {
+            const response = await fetch(`http://localhost:5001/notifications/unread?user_id=${user.id}`, {
+                headers: { Authorization: `Bearer ${useAuthStore.getState().token}` },
+            });
+            const { chat } = await response.json();
+            console.log("Unread chat count:", chat);
+            if (chat > 0) {
+                const unreadNotis = await fetch(`http://localhost:5001/notifications/unread-details?user_id=${user.id}`, {
+                    headers: { Authorization: `Bearer ${useAuthStore.getState().token}` },
+                });
+                const notis: Notification[] = await unreadNotis.json();
+                console.log("Unread notifications:", notis);
+                const unreadIds = new Set<string>(notis.filter(n => n.type === "chat").map(n => n.chatId));
+                console.log("Unread chat IDs:", Array.from(unreadIds));
+                setUnreadChatIds(unreadIds);
+            } else {
+                setUnreadChatIds(new Set());
+            }
+        } catch (err) {
+            console.error("Error fetching unread chats:", err);
+            setUnreadChatIds(new Set());
+        }
+    };
 
     return (
         <div className="p-4 h-screen bg-gray-200">
@@ -114,15 +145,12 @@ export default function ChatList() {
             ) : (
                 <ul className="mt-4 space-y-2">
                     {chats.map((chat) => {
-                        // Extract other user ID (e.g., if "_id" = "3-7", you are "3", then other is "7")
-                        // This depends on how you generate your chatId
-                        // For simplicity, we do:
                         const [u1, u2] = chat._id.split("-");
                         const UserId = u1 === String(user?.id) ? u2 : u1;
 
                         return (
                             <li key={chat._id}>
-                                <ChatListItem chat={chat} UserId={UserId} />
+                                <ChatListItem chat={chat} UserId={UserId} isUnread={unreadChatIds.has(chat._id)} />
                             </li>
                         );
                     })}
@@ -132,25 +160,22 @@ export default function ChatList() {
     );
 }
 
-/** Child component that shows the other user's avatar, name, and last message. */
 function ChatListItem({
     chat,
     UserId,
+    isUnread,
 }: {
     chat: Chat;
     UserId: string;
+    isUnread: boolean;
 }) {
-    // Show the last message snippet
     const { senderId, content, timestamp } = chat.lastMessage;
     const timeStr = new Date(timestamp).toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
     });
-    const [profile, setProfile] = useState<User | null>(null)
-    // For the other user's profile, you can do a custom hook or a separate fetch:
-    // Example placeholder usage
-    // (You might do a custom <Avatar userId={otherUserId} /> that fetches or uses some store.)
-    // For brevity, let's assume you have the data or do a minimal fetch.
+    const [profile, setProfile] = useState<User | null>(null);
+
     useEffect(() => {
         const fetchProfile = async () => {
             try {
@@ -161,12 +186,14 @@ function ChatListItem({
             }
         };
         fetchProfile();
+        console.log("Chat ID:", chat._id, "isUnread:", isUnread);
     }, [UserId]);
 
     if (!profile) return null;
+
     return (
         <Link href={`/user/chat/${chat._id}`}>
-            <div className="flex items-center gap-3 hover:bg-gray-100 rounded-md px-2 py-1">
+            <div className={`flex items-center gap-3 hover:bg-gray-100 rounded-md px-2 py-1 ${isUnread ? "bg-blue-200" : ""}`}>
                 <div className="relative w-12 h-12 rounded-full overflow-hidden">
                     <Image
                         src={profile?.picture_profile || NoAvatar.src}
@@ -176,20 +203,19 @@ function ChatListItem({
                     />
                 </div>
                 <div className="flex-1 flex justify-between p-2">
-                    <div className="flex-col space-y-1">
-                        <p className="text-sm font-semibold text-ellipsis overflow-hidden whitespace-nowrap">
+                    <div className="flex-col space-y-1 relative">
+                        <p className={`text-sm font-semibold text-ellipsis overflow-hidden whitespace-nowrap ${isUnread ? "font-bold" : ""}`}>
                             {`${profile.first_name} ${profile.last_name}`.length > 13
                                 ? `${profile.first_name} ${profile.last_name}`.slice(0, 13) + "..."
                                 : `${profile.first_name} ${profile.last_name}`}
                         </p>
-                        <p className="text-gray-500 text-xs">
+                        <p className={`text-xs ${isUnread ? "font-bold text-blue-500" : "text-gray-500"}`}>
                             {content.length > 20 ? content.slice(0, 20) + "..." : content}
                         </p>
                     </div>
                     <p className="text-xxs text-gray-500 py-1">{timeStr}</p>
                 </div>
             </div>
-            
         </Link>
     );
 }

@@ -12,7 +12,7 @@ function getToken() {
 }
 
 const chatHttpClient = axios.create({
-  baseURL: "http://localhost:5000/",
+  baseURL: "http://localhost:5002/",
   withCredentials: true, // Important for sending cookies
   headers: {
     "Content-Type": "application/json",

@@ -17,7 +17,6 @@ interface Message {
 }
 
 export default function ChatPage({ params }: { params: Promise<{ chatID: string }> }) {
-    // 1) Resolve the route params (be sure you actually need this 'Promise' usage).
     const resolvedParams = use(params);
     const chatId = resolvedParams.chatID;
 
@@ -29,17 +28,13 @@ export default function ChatPage({ params }: { params: Promise<{ chatID: string 
     const [error, setError] = useState<string | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    // Derive other user ID from chatId
-    const otherUserId =
-        chatId.split("-").find((id) => id !== String(user?.id)) || "";
+    const otherUserId = chatId.split("-").find((id) => id !== String(user?.id)) || "";
 
-    // Basic validation
     if (!chatId.includes("-")) {
-        setError("Invalid chat ID format. Please check the conversation link.");
+        setError("Invalid chat ID format.");
         return null;
     }
 
-    // 2) Fetch other user's profile
     useEffect(() => {
         if (!chatId || !user || !otherUserId) return;
 
@@ -57,18 +52,15 @@ export default function ChatPage({ params }: { params: Promise<{ chatID: string 
         fetchProfile();
     }, [chatId, user, otherUserId]);
 
-    // 3) Connect socket, join chat room, fetch initial messages, set up listeners
     useEffect(() => {
         if (!chatId || !user) return;
 
-        // Connect to Socket.IO
-        const socket = chatService.connect();
-        console.log("Connected to chat with chatId:", chatId, "userId:", user.id);
+        const { socket, notiSocket } = chatService.connect();
+        console.log("ChatPage connected:", chatId, "userId:", user.id);
 
-        // **Join** the room named by `chatId`
         socket.emit("joinChat", chatId);
+        chatService.joinChat(chatId); // Ensure notiSocket joins the room
 
-        // Fetch existing messages
         chatService
             .getChatMessages(chatId)
             .then((initialMessages) => {
@@ -76,66 +68,67 @@ export default function ChatPage({ params }: { params: Promise<{ chatID: string 
                 setError(null);
             })
             .catch((err: any) => {
-                console.log(
-                    "Chat ID causing error:",
-                    chatId,
-                    "User ID:",
-                    user?.id,
-                    "Error:",
-                    err
-                );
+                console.log("Chat ID:", chatId, "User ID:", user?.id, "Error:", err);
                 if (err.response?.status === 403) {
-                    setError(`Unauthorized access: ${err.response.data.error || "Forbidden"}`);
-                } else if (err.message.includes("Invalid chat ID format")) {
-                    setError("Invalid chat ID. Please check the conversation link.");
+                    setError(`Unauthorized: ${err.response.data.error || "Forbidden"}`);
                 } else {
-                    setError("Failed to load chat. Please try again.");
+                    setError("Failed to load chat.");
                 }
                 setMessages([]);
             });
 
-        // **Listen** for messages in this chat room
         const handleNewMessage = (message: Message) => {
-            // Make sure it's for our current chat
+            console.log("ChatPage received message:", message);
             if (message.chatId === chatId) {
                 setMessages((prev) => [...prev, message]);
+                // Mark as read if user is currently viewing this chat
+                if (user?.id) {
+                    markMessageAsRead(user?.id, chatId);
+                }
             }
         };
 
-        socket.on("receiveMessage", handleNewMessage);
+        chatService.onMessage(handleNewMessage);
 
-        // You can keep "handleSentMessage" if you want to handle the "messageSent" event
-        const handleSentMessage = (message: Message) => {
-            if (message.chatId === chatId) {
-                setMessages((prev) => [...prev, message]);
-            }
-        };
-        // socket.on("messageSent", handleSentMessage);
-
-        // Listen for errors
-        socket.on("error", (errMsg: string) => {
-            console.error("Socket error:", errMsg);
-            setError(errMsg);
-        });
-
-        // Cleanup on unmount
         return () => {
             socket.off("receiveMessage", handleNewMessage);
-            socket.off("messageSent", handleSentMessage);
-            socket.off("error");
-            chatService.disconnect();
         };
     }, [chatId, user]);
 
-    // 4) Auto-scroll to bottom when messages change
+    const markMessageAsRead = async (userId: string, chatId: string) => {
+        const token = useAuthStore.getState().token;
+        if (!token) {
+            console.warn("No token available to mark message as read");
+            return;
+        }
+        try {
+            console.log("Marking new message as read:", { userId, chatId });
+            const response = await fetch("http://localhost:5001/notifications/mark-chat-read", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ user_id: userId, chatId }),
+            });
+            if (!response.ok) {
+                console.error(`Failed to mark message as read: ${response.status} - ${await response.text()}`);
+            } else {
+                console.log("Message marked as read successfully");
+                chatService.connect().notiSocket?.emit("chatRead", { userId, chatId });
+            }
+        } catch (err) {
+            console.error("Error marking message as read:", err);
+        }
+    };
+
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-    // 5) Send messages
     const handleSend = () => {
         if (!user || !input.trim() || !otherUserId) {
-            setError("Cannot send message: Invalid user or recipient.");
+            setError("Cannot send message.");
             return;
         }
         chatService.sendMessage(otherUserId, input, chatId);
@@ -143,7 +136,6 @@ export default function ChatPage({ params }: { params: Promise<{ chatID: string 
         setError(null);
     };
 
-    // If there's an error, render an error UI
     if (error) {
         return (
             <div className="h-screen flex flex-col">
@@ -155,9 +147,7 @@ export default function ChatPage({ params }: { params: Promise<{ chatID: string 
                     )}
                     <p className="text-red-500">{error}</p>
                 </div>
-                <div className="flex-1 overflow-y-auto mt-4 px-4 items-center">
-                    {/* Placeholder for error state */}
-                </div>
+                <div className="flex-1 overflow-y-auto mt-4 px-4 items-center"></div>
                 <div className="flex p-4">
                     <input
                         value={input}
@@ -166,10 +156,7 @@ export default function ChatPage({ params }: { params: Promise<{ chatID: string 
                         className="flex-1 p-2 border rounded-l"
                         disabled
                     />
-                    <button
-                        className="p-2 bg-blue-500 text-white rounded-r"
-                        disabled
-                    >
+                    <button className="p-2 bg-blue-500 text-white rounded-r" disabled>
                         Send
                     </button>
                 </div>
@@ -177,21 +164,16 @@ export default function ChatPage({ params }: { params: Promise<{ chatID: string 
         );
     }
 
-    // 6) Main chat UI
     return (
-        <div className="h-screen flex flex-col ">
+        <div className="h-screen flex flex-col">
             <div className="bg-gray-200 p-4">
                 <h1 className="text-base font-bold">
-                    {profile
-                        ? `${profile.first_name} ${profile.last_name}`
-                        : `Chat: ${chatId}`}
+                    {profile ? `${profile.first_name} ${profile.last_name}` : `Chat: ${chatId}`}
                 </h1>
             </div>
-
             <div className="flex-1 overflow-y-auto mt-4 px-4 scrollbar-hide">
                 {messages.map((msg, index) => {
                     const isCurrentUser = msg.senderId === String(user?.id);
-
                     return (
                         <div key={index} className="mb-2">
                             {!isCurrentUser && profile && (
@@ -217,7 +199,6 @@ export default function ChatPage({ params }: { params: Promise<{ chatID: string 
                                     </div>
                                 </div>
                             )}
-
                             {isCurrentUser && (
                                 <div className="flex items-end justify-end gap-2">
                                     <span className="text-xxxs text-gray-500">
@@ -236,8 +217,6 @@ export default function ChatPage({ params }: { params: Promise<{ chatID: string 
                 })}
                 <div ref={messagesEndRef} />
             </div>
-
-            {/* <div className="flex px-4 pb-20 sticky"> */}
             <div className="sticky bottom-0 left-0 right-0 bg-white px-4 py-2 flex pb-24">
                 <input
                     value={input}
