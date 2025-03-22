@@ -1,48 +1,44 @@
-// src/app/user/[id]/book/[book_listing]/payment/page.tsx
+// src/app/user/offers/[offerId]/payment/page.tsx
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { getListingByID, userProfile } from "@/services/user";
+import { charge, userProfile } from "@/services/user";
+import { getAcceptedOffer} from "@/services/offer";
 import NoBackGround from "@/assets/images/no-background.jpg";
 import NoAvatar from "@/assets/images/no-avatar.png";
-import { charge } from "@/services/user";
 import useAuthStore from "@/contexts/auth-store";
 
-export default function PaymentPage({ params }: { params: Promise<{ book_listing: string }> }) {
+export default function PaymentPage({ params }: { params: Promise<{ offerId: string }> }) {
   const user = useAuthStore((state) => state.user);
   const resolvedParams = React.use(params);
-  const book_listing = resolvedParams.book_listing;
+  const offerId = parseInt(resolvedParams.offerId);
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [listing, setListing] = useState<any>(null);
+  const [offer, setOffer] = useState<any>(null);
   const [seller, setSeller] = useState<any>(null);
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
 
-  // Fetch listing and seller data
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        if (!book_listing) {
-          toast.error("Invalid book listing ID.");
+        if (!offerId) {
+          toast.error("Invalid offer ID.");
           return;
         }
-        const listingId = parseInt(book_listing);
-        const fetchedListing = await getListingByID(listingId);
-        console.log("Fetched Listing:", fetchedListing);
-        if (!fetchedListing) {
-          toast.error("Listing not found");
+        const fetchedOffer = await getAcceptedOffer(offerId);
+        if (!fetchedOffer) {
+          toast.error("Offer not found or not accepted");
           return;
         }
-        setListing(fetchedListing);
+        setOffer(fetchedOffer);
 
-        const sellerProfile = await userProfile(fetchedListing.seller_id);
-        console.log("Seller Profile:", sellerProfile);
+        const sellerProfile = await userProfile(fetchedOffer.seller_id);
         setSeller(sellerProfile);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -53,9 +49,8 @@ export default function PaymentPage({ params }: { params: Promise<{ book_listing
     };
 
     fetchData();
-  }, [book_listing]);
+  }, [offerId]);
 
-  // Countdown timer for QR code expiration
   useEffect(() => {
     if (expiresAt) {
       const interval = setInterval(() => {
@@ -76,9 +71,7 @@ export default function PaymentPage({ params }: { params: Promise<{ book_listing
   const handlePayment = async () => {
     setLoading(true);
     try {
-      const listingId = parseInt(book_listing);
-      const data = await charge(listingId, user?.id); // No offerId for direct purchase
-
+      const data = await charge(offer.listing_id, user?.id, offerId);
       if (data && data.success) {
         setQrCodeUrl(data.qr_code);
         setExpiresAt(data.expires_at);
@@ -100,22 +93,22 @@ export default function PaymentPage({ params }: { params: Promise<{ book_listing
     <div className="bg-white mt-10 mx-36 p-6 border border-gray-300 rounded-lg shadow-lg">
       <div className="flex p-10 justify-center">
         <div className="flex space-x-5 w-full">
-          <div className="relative w-8 sm:w-20 md:w-24 lg:w-40 h-24 sm:h-36 md:h-44 lg:h-64">
+          <div className="relative w-24 sm:w-36 md:w-44 lg:w-64 h-24 sm:h-36 md:h-44 lg:h-64">
             <Image
               alt="Book cover"
-              src={listing?.cover_image_url || NoBackGround}
+              src={offer?.image_url || NoBackGround}
               fill
               objectFit="cover"
               className="rounded-sm border border-zinc-300"
             />
           </div>
           <div className="flex flex-col justify-start space-y-3 text-sm p-4">
-            <p className="text-2xl font-bold">{listing?.title || "Unknown Title"}</p>
+            <p className="text-xl font-bold">{offer?.book_title || "Unknown Title"}</p>
             <p className="flex space-x-2 items-center text-zinc-400 italic">
-              {listing?.author
-                ? listing.author.length > 50
-                  ? `${listing.author.slice(0, 50)}...`
-                  : listing.author
+              {offer?.book_author
+                ? offer.book_author.length > 50
+                  ? `${offer.book_author.slice(0, 50)}...`
+                  : offer.book_author
                 : "Unknown Author"}
             </p>
             <div className="flex space-x-2 items-center py-2">
@@ -132,7 +125,7 @@ export default function PaymentPage({ params }: { params: Promise<{ book_listing
               </p>
             </div>
             <p className="font-medium text-2xl">
-              {listing?.price ? `฿${listing.price}` : "Not available"}
+              {offer?.offered_price ? `฿ ${offer.offered_price}` : "Not available"}
             </p>
           </div>
         </div>
@@ -167,7 +160,7 @@ export default function PaymentPage({ params }: { params: Promise<{ book_listing
             <button
               onClick={handlePayment}
               className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-700 transition"
-              disabled={loading || !listing || listing.status !== "for_sale"}
+              disabled={loading}
             >
               {loading ? "Processing..." : "Generate QR Code"}
             </button>

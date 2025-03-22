@@ -1,8 +1,8 @@
 "use client"
-import BookListCard from "@/app/book/components/bookList";
+import BookListCard from "@/app/book/components/book-list";
 import { use } from "react"
-import SaleListingDetailCard from "@/app/user/components/SaleListingDetailCard";
-import SaleProfileCard from "@/app/user/components/SaleProfileCard";
+import SaleListingDetailCard from "@/app/user/components/sale-listing-detail-card";
+import SaleProfileCard from "@/app/user/components/sale-profile-card";
 // Use async function to support dynamic params
 
 export default function BookPage({ params }: { params: Promise<{ book_listing: string, id: string }> }) {

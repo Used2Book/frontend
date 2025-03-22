@@ -6,7 +6,7 @@ import useAuthStore from "@/contexts/auth-store";
 import 'react-international-phone/style.css';
 import { getMe } from "@/services/user";
 import { uploadProfileImage, uploadBackgroundImage, editPreferrence } from "@/services/user";
-import UserImgSetting from "@/app/user/components/userImgSetting";
+import UserImgSetting from "@/app/user/components/user-img-setting";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

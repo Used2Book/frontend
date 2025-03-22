@@ -29,6 +29,7 @@ export default function AddBookPage() {
     const [allowOffers, setAllowOffers] = useState<boolean>(false);
     const [images, setImages] = useState<File[]>([]);
     const [previewImages, setPreviewImages] = useState<string[]>([]);
+    const [isSubmitting, setIsSubmitting] = useState(false); // New: Track submission state
 
     useEffect(() => {
         const fetchBooks = async () => {
@@ -40,10 +41,15 @@ export default function AddBookPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (isSubmitting) return; // Prevent submission if already in progress
+        setIsSubmitting(true); // Disable button
+
         if (!bookID) {
             toast.error("Please select a book");
+            setIsSubmitting(false); // Re-enable button on validation failure
             return;
         }
+
         try {
             await userAddLibrary({
                 book_id: bookID,
@@ -60,9 +66,11 @@ export default function AddBookPage() {
                     setUser(updatedUser);
                     router.push("/user/profile");
                 }
+                setIsSubmitting(false); // Re-enable button after navigation (optional, since page changes)
             }, 1000);
         } catch (error) {
             toast.error("Failed to Add Book");
+            setIsSubmitting(false); // Re-enable button on error
         }
     };
 
@@ -223,14 +231,18 @@ export default function AddBookPage() {
                                     </label>
                                 </div>
                             </div>
-
                         </>
                     )}
                     <button
                         type="submit"
-                        className="w-1/4 bg-black text-white py-2 rounded-xl hover:bg-zinc-700 transition shadow-xl"
+                        className={`w-1/4 py-2 rounded-xl transition shadow-xl ${
+                            isSubmitting
+                                ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+                                : "bg-black text-white hover:bg-zinc-700"
+                        }`}
+                        disabled={isSubmitting}
                     >
-                        Add
+                        {isSubmitting ? "Adding..." : "Add"}
                     </button>
                 </form>
             </div>

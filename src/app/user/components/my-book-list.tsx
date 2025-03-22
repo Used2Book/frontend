@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { SaleBook } from "@/types/book";
 import { myListing } from "@/services/user";
 import { getBookByID } from "@/services/book"; // Fetch book details by ID
-import SaleListingCard from "@/app/user/components/SaleListingCard";
+import SaleListingCard from "@/app/user/components/sale-listing-card";
 const MyBookListCard: React.FC = () => {
     const [bookList, setBookList] = useState<SaleBook[]>([]); // ✅ Store real book data
     const [loading, setLoading] = useState(true);
@@ -23,7 +23,7 @@ const MyBookListCard: React.FC = () => {
                 const bookDetailsPromises = myListings.map(async (listing) => {
                     const book = await getBookByID(listing.book_id);
                     return book
-                        ? { ...book, price: listing.price, status: listing.status, allow_offers: listing.allow_offers, seller_id: listing.seller_id, id: listing.id, book_id: listing.book_id }// Merge listing details
+                        ? { ...book, price: listing.price, status: listing.status, allow_offers: listing.allow_offers, seller_id: listing.seller_id, id: listing.id, book_id: listing.book_id, image_urls: listing.image_urls }// Merge listing details
                         : null;
                 });
 

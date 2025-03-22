@@ -3,11 +3,13 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import star_png from "@/assets/images/star.png";
 import { SaleBook } from "@/types/book";
-import { addCart, getListingByID, userProfile } from "@/services/user";
+import { getListingByID, userProfile } from "@/services/user";
+import { addCart } from "@/services/cart";
+import { addOffer } from "@/services/offer";
 import { getGenresBookByID } from "@/services/book";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import { ShoppingBasket, ChevronLeft, ChevronRight } from "lucide-react";
+import { ShoppingBasket, ChevronLeft, ChevronRight, Handshake } from "lucide-react";
 import useAuthStore from "@/contexts/auth-store";
 
 const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }> = ({ book_listing, owner_id }) => {
@@ -18,6 +20,8 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
   const [error, setError] = useState<string | null>(null);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
+  const [offeredPrice, setOfferedPrice] = useState<number | "">("");
 
   const user = useAuthStore((state) => state.user);
 
@@ -58,10 +62,26 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
   const handleAddToCart = async () => {
     try {
       const res = await addCart(parseInt(listingId));
-      toast.success("Added to cart successfully");
+      toast.success("Added to cart successfully:", res);
     } catch (err) {
       console.error("Error updating cart:", err);
       toast.error("Failed to add to cart");
+    }
+  };
+
+  const handleAddOffer = async () => {
+    if (offeredPrice === "" || offeredPrice <= 0) {
+      toast.error("Please enter a valid offer price");
+      return;
+    }
+    try {
+      const res = await addOffer(parseInt(listingId), offeredPrice);
+      toast.success("Offer submitted successfully");
+      setIsOfferModalOpen(false);
+      setOfferedPrice("");
+    } catch (err) {
+      console.error("Error submitting offer:", err);
+      toast.error("Failed to submit offer");
     }
   };
 
@@ -91,6 +111,7 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
   const mainImage = listing?.image_urls?.[0];
   const subImages = listing?.image_urls?.slice(1, maxGridImages) || [];
   const extraImages = imageCount > maxGridImages ? imageCount - maxGridImages : 0;
+  const isSold = listing?.status === "sold"; // Check if listing is sold
 
   return (
     <div className="w-full justify-start items-center pb-3">
@@ -110,6 +131,11 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
               ) : (
                 <p className="text-center text-gray-400">No Image</p>
               )}
+              {isSold && (
+                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-lg font-bold rounded-sm">
+                  Sold Out
+                </div>
+              )}
             </div>
 
             {/* Sub Images */}
@@ -119,7 +145,7 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
                   <div
                     key={i}
                     className="relative w-12 h-16 cursor-pointer"
-                    onClick={() => openImageModal(i + 1)} // i + 1 because main image is 0
+                    onClick={() => openImageModal(i + 1)}
                   >
                     <Image
                       alt={`Listing image ${i + 1}`}
@@ -143,7 +169,9 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
         {/* Book Info Section */}
         <div className="flex flex-col justify-start space-y-3 text-sm p-4">
           <div>
-            <Link href={`/book/${listing?.book_id}`} className="text-3xl font-bold hover:underline">{listing?.title || "Unknown Title"}</Link>
+            <Link href={`/book/${listing?.book_id}`} className="text-3xl font-bold hover:underline">
+              {listing?.title || "Unknown Title"}
+            </Link>
           </div>
 
           <div className="flex space-x-2 items-center text-zinc-400 italic">
@@ -167,39 +195,45 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
             </ul>
           </div>
 
-          {/* <div className="flex space-x-2 items-center">
-            <Image src={star_png} alt="rating" width={15} height={15} />
-            <p>{listing?.average_rating || "N/A"}</p>
-            <p className="text-zinc-400">({listing?.num_ratings || 0} reviews)</p>
-          </div> */}
-
-          <div className="flex space-x-2 items-center">
-            <p className="font-bold text-2xl text-orange-500 my-5">{listing?.price ? `${listing.price} ฿` : "Not available"}</p>
-            {user?.id !== owner_id && (
-              <button className="text-xs mt-2 text-blue-500 transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-90 font-medium hover:underline">
-                ( Make an Offer )
-              </button>
-            )}
-          </div>
-
-          <div className="flex flex-col space-y-2">
-            <h5>Seller Note</h5>
+          <div className="flex flex-col space-y-2 my-2">
+            <h4 className="font-medium">Seller Note</h4>
             <p className="text-gray-600 text-sm sm:text-base">{listing?.seller_note}</p>
           </div>
 
+          <div className="flex space-x-2 items-center">
+            <p className={`font-bold text-2xl my-5 ${isSold ? "text-gray-500 line-through" : "text-orange-500"}`}>
+              {listing?.price ? `${listing.price} ฿` : "Not available"}
+            </p>
+            {user?.id !== owner_id && listing?.allow_offers && !isSold && (
+              <button
+                className="flex items-center space-x-1 text-xs mt-2 text-blue-500 transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-90 font-medium hover:underline"
+                onClick={() => setIsOfferModalOpen(true)}
+              >
+                <Handshake size={16} />
+                <span>( Make an Offer )</span>
+              </button>
+            )}
+            {isSold && (
+              <span className="text-red-500 font-medium text-sm mt-2">Sold Out</span>
+            )}
+          </div>
 
           {user?.id !== owner_id && (
             <div className="flex space-x-3 w-60">
               <button
-                className="flex justify-center items-center space-x-3 text-center font-bold text-xs rounded-sm border-[1.5px] border-black whitespace-nowrap shadow-md hover:bg-zinc-100 w-full px-10 py-2 transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-90"
+                className={`flex justify-center items-center space-x-3 text-center font-bold text-xs rounded-sm border-[1.5px] border-black whitespace-nowrap shadow-md w-full px-10 py-2 transition-all duration-200 ease-in-out transform ${isSold ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "hover:bg-zinc-100 hover:scale-105 active:scale-90"}`}
                 onClick={handleAddToCart}
+                disabled={isSold}
               >
-                <ShoppingBasket color="black" size={18} />
-                <p>Add To Cart</p>
+                <ShoppingBasket color={isSold ? "gray" : "black"} size={18} />
+                <p>{isSold ? "Sold" : "Add To Cart"}</p>
               </button>
               <Link href={`/user/${owner_id}/book/${listingId}/payment`} className="w-full">
-                <button className="text-center bg-black text-white text-xs font-bold rounded-sm shadow-md hover:bg-zinc-700 px-20 py-2 border-[1.5px] border-black w-full transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-90">
-                  Buy
+                <button
+                  className={`text-center text-xs font-bold rounded-sm shadow-md w-full px-20 py-2 border-[1.5px] border-black transition-all duration-200 ease-in-out transform ${isSold ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-black text-white hover:bg-zinc-700 hover:scale-105 active:scale-90"}`}
+                  disabled={isSold}
+                >
+                  {isSold ? "Sold" : "Buy"}
                 </button>
               </Link>
             </div>
@@ -242,6 +276,53 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
             </button>
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-sm px-2 py-1 rounded">
               {currentImageIndex + 1} / {imageCount}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Offer Modal */}
+      {isOfferModalOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          onClick={() => setIsOfferModalOpen(false)}
+        >
+          <div
+            className="bg-white rounded-lg p-6 w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-xl font-bold mb-4">Make an Offer</h2>
+            <p className="text-sm text-gray-600 mb-2">
+              Listing Price: <span className="font-bold">{listing?.price} ฿</span>
+            </p>
+            <div className="mb-4">
+              <label htmlFor="offerPrice" className="block text-sm font-medium text-gray-700">
+                Your Offer (฿)
+              </label>
+              <input
+                type="number"
+                id="offerPrice"
+                value={offeredPrice}
+                onChange={(e) => setOfferedPrice(e.target.value === "" ? "" : Number(e.target.value))}
+                min="1"
+                step="1"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter your offer"
+              />
+            </div>
+            <div className="flex justify-end space-x-3">
+              <button
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                onClick={() => setIsOfferModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                onClick={handleAddOffer}
+              >
+                Submit Offer
+              </button>
             </div>
           </div>
         </div>

@@ -1,22 +1,20 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import MyBookListCard from "./myBookList";
-import UserLibraryList from "@/app/user/components/userLibraryList";
-import MyWishList from "@/app/user/components/myWishList";
+import MyBookListCard from "./my-book-list";
+import UserLibraryList from "@/app/user/components/user-library-list";
+import MyWishList from "@/app/user/components/my-wish-list";
 import useAuthStore from "@/contexts/auth-store";
-import MyLibraryList from "@/app/user/components/myLibraryList";
-import UserBookListCard from "@/app/user/components/userBookList";
-import UserWishList from "@/app/user/components/userWishList";
+import MyLibraryList from "@/app/user/components/my-library-list";
+import UserBookListCard from "@/app/user/components/user-book-list";
+import UserWishList from "@/app/user/components/user-wish-list";
 
-
-
-const ProfileNav: React.FC<{clientID: number}> = ({clientID}) => {
-    const me = useAuthStore((state) => state.user)
-    const [activeTab, setActiveTab] = useState<string>("Library"); // Track active tab
+const ProfileNav: React.FC<{ clientID: number }> = ({ clientID }) => {
+    const me = useAuthStore((state) => state.user);
+    const [activeTab, setActiveTab] = useState<string>("Library");
 
     const handleTabClick = (tab: string) => {
-        setActiveTab(tab); // Set the clicked tab as active
+        setActiveTab(tab);
     };
 
     return (
@@ -24,20 +22,18 @@ const ProfileNav: React.FC<{clientID: number}> = ({clientID}) => {
             <div className="w-full flex px-16 bg-white shadow-sm rounded-lg border border-gray-200">
                 <ul className="flex space-x-6 sm:space-x-10 md:space-x-12 items-center w-full">
                     <li
-                        className={`p-3 text-xs md:text-sm cursor-pointer ${activeTab === "Library"
-                            ? "border-b-4 border-black"
-                            : "hover:bg-zinc-300"
-                            }`}
-                        onClick={() => handleTabClick("Library")} // Set "My Library" as active
+                        className={`p-3 text-xs md:text-sm cursor-pointer ${
+                            activeTab === "Library" ? "border-b-4 border-black" : "hover:bg-zinc-300"
+                        }`}
+                        onClick={() => handleTabClick("Library")}
                     >
                         <Link href="#">Library</Link>
                     </li>
                     <li
-                        className={`p-3 text-xs md:text-sm cursor-pointer ${activeTab === "Post"
-                            ? "border-b-4 border-black"
-                            : "hover:bg-zinc-300"
-                            }`}
-                        onClick={() => handleTabClick("Post")} // Set "My Post" as active
+                        className={`p-3 text-xs md:text-sm cursor-pointer ${
+                            activeTab === "Post" ? "border-b-4 border-black" : "hover:bg-zinc-300"
+                        }`}
+                        onClick={() => handleTabClick("Post")}
                     >
                         <Link href="#">Post</Link>
                     </li>
@@ -47,33 +43,29 @@ const ProfileNav: React.FC<{clientID: number}> = ({clientID}) => {
             <div className="p-12 overflow-hidden min-h-0">
                 {activeTab === "Library" && (
                     <div className="flex flex-col space-y-5">
-                        <div className="flex justify-between py-5">
-                            <p className="font-semibold text-lg">All My Reads</p>
-                            {me?.id === clientID ?
-                                <Link href="/user/book/add-book" className="text-white bg-black rounded-md px-10 py-2 text-sm">
-                                    Add Book
-                                </Link>
-                                : <></>}
-                        </div>
-                        <div className="overflow-hidden min-h-0"> {/* ✅ Prevents extra height */}
-                            {me?.id === clientID ?
-                                <MyLibraryList /> :
+                        <p className="font-semibold text-lg py-5">All My Reads</p>
+                        <div className="overflow-hidden min-h-0">
+                            {me?.id === clientID ? (
+                                <MyLibraryList />
+                            ) : (
                                 <UserLibraryList clientID={clientID} />
-                            }
+                            )}
                         </div>
                         <p className="font-semibold text-lg py-5">All on Sale</p>
-                        <div className="overflow-hidden min-h-0"> {/* ✅ Prevents extra height */}
-                            {me?.id === clientID ?
-                                <MyBookListCard /> :
-                                <UserBookListCard clientID={clientID}/>
-                            }
+                        <div className="overflow-hidden min-h-0">
+                            {me?.id === clientID ? (
+                                <MyBookListCard />
+                            ) : (
+                                <UserBookListCard clientID={clientID} />
+                            )}
                         </div>
                         <p className="font-semibold text-lg py-5">All WishList</p>
-                        <div className="overflow-hidden min-h-0"> {/* ✅ Prevents extra height */}
-                            {me?.id === clientID ?
-                                <MyWishList /> :
+                        <div className="overflow-hidden min-h-0">
+                            {me?.id === clientID ? (
+                                <MyWishList />
+                            ) : (
                                 <UserWishList clientID={clientID} />
-                            }
+                            )}
                         </div>
                     </div>
                 )}

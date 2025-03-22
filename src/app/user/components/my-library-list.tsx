@@ -3,14 +3,12 @@ import React, { useState, useEffect } from "react";
 import BookCard from "@/app/book/components/book";
 import { Book } from "@/types/book";
 import { mockBookList } from "@/assets/mockData/books";
-import BookOrderCard from "@/app/user/components/bookOrder";
+import BookOrderCard from "@/app/user/components/book-order";
 import { mockBookCarouselList } from "@/assets/mockData/books";
-import UserLibraryCard from "@/app/user/components/userLibraryCard";
-import { myLibrary, myListing, userLibrary } from "@/services/user";
+import UserLibraryCard from "@/app/user/components/user-library-card";
+import { myLibrary, myListing } from "@/services/user";
 import { getBookByID } from "@/services/book";
-
-
-const UserLibraryList: React.FC<{clientID: number}> = ({clientID}) => {
+const myLibraryList: React.FC = () => {
     const [bookList, setBookList] = useState<Book[]>([]); // ✅ Store real book data
     const [loading, setLoading] = useState(true);
 
@@ -18,15 +16,15 @@ const UserLibraryList: React.FC<{clientID: number}> = ({clientID}) => {
         const fetchLibrary = async () => {
             try {
                 // Step 1: Fetch user library (only book IDs)
-                const clientLibrary = await userLibrary(clientID);
+                const myLibrary_ = await myLibrary();
 
-                if (!clientLibrary || clientLibrary.length === 0) {
+                if (!myLibrary_ || myLibrary_.length === 0) {
                     setLoading(false);
                     return;
                 }
 
                 // Step 2: Fetch full book details for each book_id
-                const bookDetailsPromises = clientLibrary.map((libraryItem) =>
+                const bookDetailsPromises = myLibrary_.map((libraryItem) =>
                     getBookByID(libraryItem.book_id)
                 );
 
@@ -75,4 +73,4 @@ const UserLibraryList: React.FC<{clientID: number}> = ({clientID}) => {
     );
 };
 
-export default UserLibraryList;
+export default myLibraryList;

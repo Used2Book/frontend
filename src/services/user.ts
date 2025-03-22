@@ -137,17 +137,21 @@ export const userProfile = async (userID : number) => {
   }
 };
 
-export const charge = async (listing_id: number, buyer_id: number) => {
+// src/services/user.ts
+export const charge = async (listingId: number, buyerId: number, offerId?: number) => {
   try {
     console.log("Fetching charge...");
-    console.log("listing_id:",listing_id,"buyer_id: ",buyer_id)
-    const res = await httpClient.post("/payment/charge",{listing_id: listing_id,buyer_id: buyer_id});
-  
-    console.log("charge data :", res.data)
-    return res.data
+    console.log("listingId:", listingId, "buyerId:", buyerId, "offerId:", offerId);
+    const res = await httpClient.post("/payment/charge", {
+      listing_id: listingId,
+      buyer_id: buyerId,
+      offer_id: offerId, // Optional
+    });
+    console.log("charge data:", res.data);
+    return res.data;
   } catch (err) {
-    console.log("Get charge data user profile unsuccessfully !")
-    return null
+    console.log("Get charge data unsuccessful!");
+    return null;
   }
 };
 
@@ -170,7 +174,7 @@ export const bookWishlistStatus = async (bookID : number) => {
 
 export const bookInitialWishlistStatus = async (bookID : number) => {
   try {
-    console.log("Fetching user profile...");
+    console.log("Fetching wishlist ...");
     const res = await httpClient.get(`user/book-is-in-wishlist/${bookID}`);
     console.log("user is_in_wishlist :", res.data.in_wishlist)
     return res.data.in_wishlist
@@ -192,6 +196,17 @@ export const myLibrary = async () => {
   }
 };
 
+export const removeListing = async (listingId: number) => {
+  try {
+    console.log("remove listing ...");
+    const res = await httpClient.post(`/user/listing/remove/${listingId}`);
+    console.log("remove listing :", res.data)
+    return res.data.success
+  } catch (err) {
+    console.log("remove listing unsuccessfully !")
+    return null
+  }
+};
 
 export const myListing = async () => {
   try {
@@ -364,46 +379,4 @@ export async function updateGender(gender: string) {
     toast.error("error : " + error)
   }
 };
-
-export async function addCart(listingId: number) {
-  try {
-    console.log("listingId:", listingId)
-    const res = await httpClient.post("/user/cart", { listingId: listingId});
-    
-    console.log("res gender:", res)
-    return res.data
-  } catch (error) {
-    console.error("Error adding listing to cart:", error);
-    toast.error("error : " + error)
-  }
-};
-
-export async function getCart() {
-  try {
-    const res = await httpClient.get("/user/cart");
-    console.log("res carts:", res.data.carts)
-    return res.data.carts
-  } catch (error) {
-    console.error("Error getting listing to cart:", error);
-    toast.error("error : " + error)
-  }
-};
-
-export async function removeCart(listingId: number) {
-  try {
-    const res = await httpClient.post("/user/cart-rm",{listingId: listingId});
-    console.log("res gender:", res)
-    return res.data
-  } catch (error) {
-    console.error("Error remove listing to cart:", error);
-    toast.error("error : " + error)
-  }
-};
-
-
-
-
-
-
-
 

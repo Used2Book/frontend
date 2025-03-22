@@ -1,3 +1,4 @@
+// tailwind.config.ts
 import type { Config } from "tailwindcss";
 
 export default {
@@ -14,15 +15,23 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
-      fontWeight: {
-      },
+      fontWeight: {},
       fontSize: {
-        xxs: "0.65rem", 
+        xxs: "0.65rem",
         xxxs: "0.545rem",
-        xxxxs: "0.445rem"
+        xxxxs: "0.445rem",
+      },
+      // Add animation and keyframes for wobble
+      animation: {
+        wobble: "wobble 0.5s ease-in-out infinite",
+      },
+      keyframes: {
+        wobble: {
+          "0%, 100%": { transform: "rotate(-5deg)" },
+          "50%": { transform: "rotate(5deg)" },
+        },
       },
     },
   },
-  plugins: [
-  ],
+  plugins: [],
 } satisfies Config;

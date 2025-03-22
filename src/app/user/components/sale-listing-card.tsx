@@ -26,13 +26,18 @@ const SaleListingCard: React.FC<{ book: SaleBook }> = ({ book }) => {
         <Link href={`/user/${book.seller_id}/book/${book.book_id}_${book.id}`}>
             <div className="flex flex-col p-3 bg-white rounded-md w-20 sm:w-24 md:w-28 lg:w-28 shadow-md">
                 <div className="w-full max-w-sm h-20 sm:h-24 md:h-28 lg:h-32 relative">
+                    {
+                        book?.image_urls[0] ?
                     <Image
                         alt="Book cover"
-                        src={book.cover_image_url}
+                        src={book?.image_urls[0]}
                         fill
                         objectFit="cover"
                         className="rounded-sm border-[1px] border-zinc-300 shadow-md"
                     />
+                    :
+                    <p className="text-center text-gray-400">No Image</p>
+                }
                 </div>
 
                 <div className="flex flex-col mt-2 space-y-1 text-xxxs">
@@ -45,8 +50,8 @@ const SaleListingCard: React.FC<{ book: SaleBook }> = ({ book }) => {
                             {book.author.length > 9 ? `${book.author.slice(0, 9)}...` : book.author}
                         </p>
                         <div className="flex space-x-1">
-                            <Image src={star_png} alt="rating" width={10} height={10} />
-                            <p>{book.rating}</p>
+                            {/* <Image src={star_png} alt="rating" width={10} height={10} />
+                            <p>{book.rating}</p> */}
                         </div>
                     </div>
 

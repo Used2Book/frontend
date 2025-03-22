@@ -1,11 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { SaleBook } from "@/types/book";
-import { getBookByID, getBookListingByID } from "@/services/book"; // Fetch book details by ID
-import SaleListingCard from "@/app/user/components/SaleListingCard";
-
-
-const SaleListingList: React.FC<{bookID: number}> = ({bookID}) => {
+import { myListing, userListing} from "@/services/user";
+import { getBookByID } from "@/services/book"; // Fetch book details by ID
+import SaleListingCard from "@/app/user/components/sale-listing-card";
+const UserBookListCard: React.FC<{clientID: number}> = ({clientID}) => {
     const [bookList, setBookList] = useState<SaleBook[]>([]); // ✅ Store real book data
     const [loading, setLoading] = useState(true);
 
@@ -13,25 +12,22 @@ const SaleListingList: React.FC<{bookID: number}> = ({bookID}) => {
         const fetchListings = async () => {
             try {
                 // Step 1: Fetch user listings (only book IDs & prices)
-                const bookIDListings = await getBookListingByID(bookID);
-                console.log("listing:", bookIDListings)
-                if (!bookIDListings || bookIDListings.length === 0) {
+                const userListings = await userListing(clientID);
+                if (!userListings || userListings.length === 0) {
                     setLoading(false);
                     return;
                 }
 
                 // Step 2: Fetch full book details for each book_id
-                const bookDetailsPromises = bookIDListings.map(async (listing) => {
+                const bookDetailsPromises = userListings.map(async (listing) => {
                     const book = await getBookByID(listing.book_id);
-                    console.log("mare book:", book)
                     return book
-                        ? { ...book, price: listing.price, status: listing.status, allow_offers: listing.allow_offers, seller_id: listing.seller_id, id: listing.id, book_id: listing.book_id } // Merge listing details
+                        ? { ...book, price: listing.price, status: listing.status, allow_offers: listing.allow_offers, seller_id: listing.seller_id, id: listing.id, book_id: listing.book_id, image_urls: listing.image_urls  } // Merge listing details
                         : null;
                 });
+
                 // Step 3: Resolve all book fetches
                 const books = await Promise.all(bookDetailsPromises);
-
-                console.log("hey:",books)
 
                 // Step 4: Filter out any failed fetches (null results)
                 const validBooks = books.filter((book) => book !== null);
@@ -68,4 +64,4 @@ const SaleListingList: React.FC<{bookID: number}> = ({bookID}) => {
     );
 };
 
-export default SaleListingList;
+export default UserBookListCard;

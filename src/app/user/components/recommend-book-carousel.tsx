@@ -1,5 +1,5 @@
 "use client";
-import RecommendBookCard from "@/app/user/components/recommendBook";
+import RecommendBookCard from "@/app/user/components/recommend-book-card";
 import { Book } from "@/types/book";
 import { Carousel } from "@material-tailwind/react";
 import { useState, useEffect } from "react";

@@ -1,10 +1,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import BookCard from "@/app/book/components/book";
 import { Book } from "@/types/book";
-import UserLibraryCard from "@/app/user/components/userLibraryCard";
-import { userWishList } from "@/services/user";
-
-const UserWishList: React.FC<{clientID: number}> = ({clientID}) => {
+import { mockBookList } from "@/assets/mockData/books";
+import BookOrderCard from "@/app/user/components/book-order";
+import { mockBookCarouselList } from "@/assets/mockData/books";
+import UserLibraryCard from "@/app/user/components/user-library-card";
+import { myLibrary, myListing, myWishList } from "@/services/user";
+import { getBookByID } from "@/services/book";
+const MyWishList: React.FC = () => {
     const [bookList, setBookList] = useState<Book[]>([]); // ✅ Store real book data
     const [loading, setLoading] = useState(true);
 
@@ -12,14 +16,14 @@ const UserWishList: React.FC<{clientID: number}> = ({clientID}) => {
         const fetchLibrary = async () => {
             try {
                 // Step 1: Fetch user library (only book IDs)
-                const userWishList_ = await userWishList(clientID);
+                const myWishList_ = await myWishList();
 
-                if (!userWishList_ || userWishList_.length === 0) {
+                if (!myWishList_ || myWishList_.length === 0) {
                     setLoading(false);
                     return;
                 }
 
-                setBookList(userWishList_);
+                setBookList(myWishList_);
             } catch (error) {
                 console.error("Error fetching library:", error);
             } finally {
@@ -57,4 +61,4 @@ const UserWishList: React.FC<{clientID: number}> = ({clientID}) => {
     );
 };
 
-export default UserWishList;
+export default MyWishList;

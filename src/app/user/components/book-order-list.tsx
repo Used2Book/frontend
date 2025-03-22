@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import BookOrderCard from "@/app/user/components/bookOrder";
+import BookOrderCard from "@/app/user/components/book-order";
 import { mockBookCarouselList } from "@/assets/mockData/books";
 import { Book } from "@/types/book";
 

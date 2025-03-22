@@ -1,7 +1,7 @@
 "use client"
-import BookListCard from "@/app/book/components/bookList";
-import RecommendBookCarouselCard from "../../components/recommendBookCarousel";
-import BookHomeSearchBar from '@/app/user/components/bookHomeSearchBar'
+import BookListCard from "@/app/book/components/book-list";
+import RecommendBookCarouselCard from "../../components/recommend-book-carousel";
+import BookHomeSearchBar from '@/app/user/components/book-home-search-bar'
 import { useEffect, useState } from 'react';
 import { allBooks, getRecommendedBooks } from '@/services/book';
 import { Book } from '@/types/book';

@@ -6,7 +6,7 @@ import Logo from "@/assets/images/used2book-logo.png";
 import useStore from "@/contexts/useStore";
 import useAuthStore from "@/contexts/auth-store";
 import Avatar from "./avatar";
-import { Bell, ShoppingCart, MessageCircleMore } from "lucide-react";
+import { Bell, ShoppingCart, MessageCircleMore, Handshake } from "lucide-react";
 import chatService from "@/services/chat";
 
 const NavItemString = ({ href, link_string }: { href: string; link_string: string }) => (
@@ -35,22 +35,18 @@ export default function NavLink() {
     useEffect(() => {
         if (!user) return;
 
-        // Establish connection to chat and notification services
         chatService.connect();
 
-        // Fetch initial unread chat count
         const fetchInitialCount = async () => {
             const chatCount = await chatService.getUnreadChatCount(user?.id.toString());
             setChatCount(chatCount);
         };
         fetchInitialCount();
 
-        // Listen for real-time updates
         chatService.onChatNotification(({ chat }) => {
             setChatCount(chat);
         });
 
-        // Cleanup on unmount
         return () => chatService.disconnect();
     }, [user]);
 
@@ -58,28 +54,27 @@ export default function NavLink() {
         <nav className="bg-black top-0 left-0 w-full z-10 px-4 sm:px-10 py-3 text-xs md:text-sm font-medium text-white">
             <div className="flex flex-col lg:flex-row xl:flex-row flex-wrap justify-center md:justify-between lg:justify-between items-center">
                 <div className="flex flex-col lg:flex-row xl:flex-row flex-wrap justify-center md:justify-between lg:justify-between items-center space-x-2 md:space-x-10">
-                    {/* Logo */}
                     <Link href="/user/profile" className="w-auto max-w-[40px] sm:max-w-[60px] md:max-w-[80px] cursor-pointer">
                         <Image src={Logo} alt="Used2Book Logo" layout="responsive" />
                     </Link>
 
-                    {/* Navigation Links */}
                     {user ? (
                         <div>
                             <ul className="flex space-x-6 sm:space-x-10 md:space-x-12 items-center">
                                 <NavItemString href="/user/home" link_string="Home" />
                                 <NavItemString href="/user/webboard" link_string="Web board" />
-                                <NavItemString href="/" link_string="Book hub" />
+                                {/* <NavItemString href="/" link_string="Book hub" /> */}
+                                <NavItemString href="/user/store" link_string="Store" /> {/* Added Store link */}
                             </ul>
                         </div>
                     ) : null}
                 </div>
 
-                {/* Right Icons */}
                 <div>
                     {user ? (
                         <ul className="flex space-x-3 sm:space-x-5 items-center">
                             <NavItemIcon href="/user/cart" icon={<ShoppingCart size={20} />} />
+                            <NavItemIcon href="/user/offer" icon={<Handshake size={20} />} />
                             <NavItemIcon href="/user/chat" icon={<MessageCircleMore size={20} />} count={chatCount} />
                             <NavItemIcon href="/notification" icon={<Bell size={20} />} />
                             <li>

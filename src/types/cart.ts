@@ -10,5 +10,6 @@ export interface Cart {
     book_author: string;
     cover_image_url: string;
     image_url: string;
+    status: string;
   }
 

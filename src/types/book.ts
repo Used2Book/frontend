@@ -40,6 +40,7 @@ export interface SaleBook {
   book_id?: number;
   average_rating?: number;
   num_ratings?: number;
+  image_urls?: string[];
 }
 
 

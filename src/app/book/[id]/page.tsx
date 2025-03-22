@@ -2,11 +2,11 @@
 import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
 import { getBookByID, getGenresBookByID } from "@/services/book";
-import BookDetailCard from "@/app/book/components/bookDetail";
+import BookDetailCard from "@/app/book/components/book-detail";
 import { Book } from "@/types/book";
 import { use } from "react";
-import SaleListingList from "@/app/user/components/SaleListingList";
-import ReviewListCard from "@/app/user/components/reviewList";
+import SaleListingList from "@/app/user/components/sale-listing-list";
+import ReviewListCard from "@/app/user/components/review-list";
 // import { submitReview } from "@/services/review"; // Import review service
 import { FaStar } from "react-icons/fa"; // Import star icons
 import { addBookReview } from "@/services/book";

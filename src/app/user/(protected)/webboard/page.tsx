@@ -1,5 +1,5 @@
 "use client";
-import PostCard from "@/app/user/components/postCard";
+import PostCard from "@/app/user/components/post-card";
 import { Post } from "@/types/post";
 import { useState, useEffect } from "react";
 import { notFound } from "next/navigation";
