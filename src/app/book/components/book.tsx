@@ -10,7 +10,7 @@ const BookCard: React.FC<Book> = ({ title, author, cover_image_url, average_rati
         // <Link href={{ pathname: "/book/[id]", params: { id: id.toString() } }}>
         // <Link href="/book/[id]" as={`/book/${id}`}>
         <Link href={`/book/${id}`} passHref>
-            <div className="flex flex-col p-3 bg-white rounded-md w-20 sm:w-24 md:w-28 lg:w-28 shadow-md">
+            <div className="flex flex-col p-3 bg-white rounded-md w-20 sm:w-24 md:w-28 lg:w-28 shadow-md border border-gray-100">
                 <div className="w-full max-w-sm h-20 sm:h-24 md:h-28 lg:h-32 relative">
                     <Image
                         alt="Book cover"

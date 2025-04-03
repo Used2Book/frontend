@@ -11,7 +11,7 @@ export default function RecommendBookCarouselCard() {
     useEffect(() => {
         const fetchRecommendedBooks = async () => {
             try {
-                const recommendBook = await getRecommendedBooks();
+                const recommendBook = await getRecommendedBooks(4);
                 console.log("Recommended books:", recommendBook);
                 setRecommendedBookList(recommendBook);
             } catch (error) {
@@ -28,6 +28,7 @@ export default function RecommendBookCarouselCard() {
                 autoplayDelay={3000}
                 loop
                 className="h-[24rem] sm:h-[28rem] md:h-[32rem] lg:h-[24rem]"
+                transition={{ type: "tween", duration: 0.5 }}
             >
                 {recommendedBookList?.length > 0 ? (
                     recommendedBookList?.map((book) => (

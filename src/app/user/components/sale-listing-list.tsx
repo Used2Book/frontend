@@ -21,7 +21,7 @@ const SaleListingList: React.FC<{bookID: number}> = ({bookID}) => {
                 }
 
                 // Step 2: Fetch full book details for each book_id
-                const bookDetailsPromises = bookIDListings.map(async (listing) => {
+                const bookDetailsPromises = bookIDListings.map(async (listing: any) => {
                     const book = await getBookByID(listing.book_id);
                     console.log("mare book:", book)
                     return book
@@ -49,13 +49,13 @@ const SaleListingList: React.FC<{bookID: number}> = ({bookID}) => {
     }, []);
 
     return (
-        <div className="w-full bg-zinc-100 shadow-sm rounded-md">
+        <div className="w-full rounded-md">
             {loading ? (
-                <p className="text-center py-4">Loading your listings...</p>
+                <p className="text-center text-zinc-400 py-4">Loading your listings...</p>
             ) : bookList.length === 0 ? (
-                <p className="text-center py-4">No books listed for sale.</p>
+                <p className="text-center text-zinc-400 py-4">No books listed for sale.</p>
             ) : (
-                <div className="flex space-x-6 overflow-x-auto py-4 scrollbar-hide mx-3">
+                <div className="flex space-x-6 overflow-x-auto py-4 scrollbar-hide mx-3 px-1">
                     {bookList.map((book) => (
                         <SaleListingCard
                             key={book.id}

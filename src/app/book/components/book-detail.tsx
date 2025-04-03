@@ -4,11 +4,11 @@ import Image from "next/image";
 import { Book } from "@/types/book";
 import star_png from '@/assets/images/star.png';
 import { bookInitialWishlistStatus, bookWishlistStatus } from "@/services/user"; // Import both functions
-
+import { Heart } from "lucide-react";
 
 const BookDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => {
     const [inWishlist, setInWishlist] = useState<boolean | null>(null);
-    console.log("book genres:",bookDetail.genres)
+    console.log("book genres:", bookDetail.genres)
     useEffect(() => {
         // Fetch the initial wishlist status when the component mounts
         const fetchInWishListStatus = async () => {
@@ -34,34 +34,41 @@ const BookDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => {
         <div className="flex relative h-full w-full justify-start px-24 py-12 space-x-6 border-b-[1px] border-zinc-200 mb-5">
             {/* Book Cover Section */}
             <div className="flex-1 flex-col justify-start rounded-sm max-w-sm">
-                <div className="relative w-8 sm:w-20 md:w-24 lg:w-40 h-24 sm:h-36 md:h-44 lg:h-64">
-                    <Image
-                        alt="Book cover"
-                        src={bookDetail.cover_image_url}
-                        fill
-                        style={{objectFit:"cover"}}
-                        sizes="100%"
-                        // objectFit="cover"
-                        className="rounded-sm border border-zinc-300"
-                    />
+                <div className="w-8 sm:w-20 md:w-24 lg:w-40">
+                    {/* Image Container */}
+                    <div className="relative h-24 sm:h-36 md:h-44 lg:h-64">
+                        <Image
+                            alt="Book cover"
+                            src={bookDetail.cover_image_url}
+                            fill
+                            style={{ objectFit: "cover" }}
+                            sizes="100%"
+                            className="rounded-sm border border-zinc-300"
+                        />
+                    </div>
+                    {/* Button matching image width */}
+                    <button
+                        onClick={handleWishlistToggle}
+                        className={`
+                            w-full text-sm mt-2 px-4 py-2 text-white rounded-md 
+                            ${inWishlist ? "bg-red-500" : "bg-black"} 
+                            transition-all duration-200 ease-in-out 
+                            transform hover:scale-105 active:scale-95 
+                            hover:bg-red-400 active:bg-red-600
+                        `}
+                    >
+                        <div className="flex justify-center items-center space-x-2">
+                            <Heart size={14} color="white" fill="white" />
+                            <p>
+                                {inWishlist ? "Wishlisted" : "Add to Wishlist"}
+                            </p>
+                        </div>
+                    </button>
                 </div>
-                <button
-                    onClick={handleWishlistToggle} // Handle button click to toggle wishlist status
-                    // className={`w-full text-sm mt-2 px-4 py-2 text-white rounded-md ${inWishlist ? "bg-red-500" : "bg-black"}`}
-                    className={`
-                        w-full text-sm mt-2 px-4 py-2 text-white rounded-md 
-                        ${inWishlist ? "bg-red-500" : "bg-black"} 
-                        transition-all duration-200 ease-in-out 
-                        transform hover:scale-105 active:scale-95 
-                        hover:bg-red-400 active:bg-red-600
-                      `}
-                >
-                    {inWishlist ? "Wishlisted" : "Add to Wishlist"}
-                </button>
             </div>
 
             {/* Book Info Section */}
-            <div className="flex-2 justify-start space-y-5 text-sm p-4">
+            <div className="flex flex-col justify-start space-y-5 text-sm p-4">
                 <p className="text-lg font-bold">{bookDetail.title}</p>
                 <p className='italic'>by {bookDetail.author}</p>
                 <div className="flex space-x-2 items-center">

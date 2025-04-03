@@ -1,6 +1,7 @@
 import { httpClient} from "@/lib/http-client";
 import useAuthStore from "@/contexts/auth-store";
 import { toast } from "react-hot-toast";
+import uploadClient from "@/lib/upload-client";
 
 // ✅ Get user info (without modifying token)
 export const bookCount = async () => {
@@ -65,12 +66,12 @@ export const allBooks = async () => {
     }
 };
 
-export const getRecommendedBooks = async () => {
+export const getRecommendedBooks = async (num : number) => {
     try {
         console.log("Fetching recommended book ...");
         const res = await httpClient.get("book/recommended-books");
         console.log("books:", res.data.books)
-        return res.data.books.slice(0, 3)
+        return res.data.books.slice(0, num)
     } catch (err) {
         console.log("Get book count unsuccessfully !")
         return null
@@ -114,3 +115,38 @@ export const getBookListingByID = async (bookID: any) => {
         return null;
     }
 };
+
+export interface BookGenre {
+    book_id: number;
+    genre_id: number;
+  }
+export const getAllBookGenres = async (): Promise<BookGenre[]> => {
+    try {
+      const res = await httpClient.get("/book/all-book-genres");
+      return res.data.book_genres; // Extract "book_genres" from response
+    } catch (error) {
+      console.error("Failed to fetch book genres:", error);
+      throw error;
+    }
+  };
+
+
+  export const insertBook = async (bookData: {
+    title: string;
+    author: string;
+    description?: string;
+    language?: string;
+    isbn?: string;
+    publisher?: string;
+    publish_date?: string;
+    genres: string[];
+  }, coverImage?: File): Promise<number> => {
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(bookData));
+    if (coverImage) {
+      formData.append("cover_image", coverImage);
+    }
+  
+    const res = await uploadClient.post("/book/insert-book", formData);
+    return res.data.book_id;
+  };

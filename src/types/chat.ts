@@ -8,6 +8,6 @@ export interface Message {
 }
 
 export interface Chat {
-    _id: string;
+    id: string;
     lastMessage: Message;
 }

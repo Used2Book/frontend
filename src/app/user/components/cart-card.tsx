@@ -74,11 +74,10 @@ const CartCard: React.FC<CartCardProps> = ({ cartDetail, onDelete }) => {
 
   const chatButton = (
     <div
-      className={`py-1 px-4 rounded-md border-2 transition-all duration-200 ease-in-out transform ${
-        isSold
+      className={`py-1 px-4 rounded-md border-2 transition-all duration-200 ease-in-out transform ${isSold
           ? "bg-gray-300 border-gray-400 cursor-not-allowed"
           : "hover:bg-sky-100 hover:border-sky-400 border-sky-200 hover:scale-105 active:scale-95"
-      }`}
+        }`}
     >
       {chatLink ? (
         <Link href={chatLink} prefetch={false}>
@@ -97,12 +96,11 @@ const CartCard: React.FC<CartCardProps> = ({ cartDetail, onDelete }) => {
 
   return (
     <div
-      className={`flex w-full space-x-2 rounded-r-lg p-4 border-l-[12px] shadow-md ${
-        isSold ? "bg-gray-100 border-gray-500" : "bg-white border-black"
-      }`}
+      className={`flex w-full space-x-2 rounded-r-lg p-4 border-l-[10px] shadow-md ${isSold ? "bg-gray-100 border-red-500" : "bg-white border-gray-400"
+        }`}
     >
       <Link href={`/user/${seller?.id}/book/${cartDetail.book_id}_${cartDetail.listing_id}`}>
-        <div className="relative w-6 sm:w-6 md:w-14 lg:w-16 h-10 sm:h-10 md:h-20 lg:h-24 ml-5">
+        <div className="relative w-6 sm:w-10 md:w-16 lg:w-20 h-10 sm:h-14 md:h-24 lg:h-28 ml-5">
           <Image
             alt="Book cover"
             src={cartDetail.image_url || "/placeholder.jpg"}
@@ -125,22 +123,22 @@ const CartCard: React.FC<CartCardProps> = ({ cartDetail, onDelete }) => {
             </p>
           </Link>
           <p
-            className={`text-xs italic text-ellipsis overflow-hidden whitespace-nowrap ${
-              isSold ? "text-gray-400" : ""
-            }`}
+            className={`text-xs italic text-ellipsis overflow-hidden whitespace-nowrap ${isSold ? "text-gray-500" : ""
+              }`}
           >
             {cartDetail.book_author.length > 50
               ? `${cartDetail.book_author.slice(0, 50)}...`
               : cartDetail.book_author}
           </p>
+          <p className={`font-bold ${isSold ? "text-gray-500 line-through" : ""}`}>
+            {cartDetail.price} ฿
+          </p>
           {seller && (
             <Link href={`/user/${seller.id}`}>
               <div
-                className={`flex justify-center items-center py-1 pl-1 pr-2 rounded-r-md transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100 hover:pr-5 ${
-                  isSold ? "bg-gray-600" : "bg-black"
-                }`}
+                className={`flex justify-center items-center py-1 pl-1 pr-2 rounded-md transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100 hover:pr-5 ${isSold ? "bg-gray-600" : "bg-gray-600"
+                  }`}
               >
-                <div className="border-l-2 border-white">.</div>
                 <div className="w-5 h-5 rounded-full overflow-hidden">
                   <Image
                     src={seller.picture_profile || NoAvatar}
@@ -151,9 +149,8 @@ const CartCard: React.FC<CartCardProps> = ({ cartDetail, onDelete }) => {
                   />
                 </div>
                 <p
-                  className={`flex justify-start ml-2 text-xxs font-bold text-ellipsis overflow-hidden whitespace-nowrap ${
-                    isSold ? "text-gray-300" : "text-white"
-                  }`}
+                  className={`flex justify-start ml-2 text-xxs font-bold text-ellipsis overflow-hidden whitespace-nowrap ${isSold ? "text-gray-300" : "text-white"
+                    }`}
                 >
                   {seller.first_name} {seller.last_name}
                 </p>
@@ -161,17 +158,12 @@ const CartCard: React.FC<CartCardProps> = ({ cartDetail, onDelete }) => {
             </Link>
           )}
         </div>
-        <div className="flex items-center space-x-4">
-          <p className={`font-bold ${isSold ? "text-gray-500 line-through" : ""}`}>
-            {cartDetail.price} ฿
-          </p>
+        <div className="flex items-center">
           <button
             onClick={handleDeleteCart}
-            className={`transition-all duration-200 ease-in-out ${
-              isSold ? "text-gray-400 cursor-not-allowed" : "text-red-500 hover:text-red-700"
-            }`}
+            className="transition-all duration-200 ease-in-out text-gray-500 hover:text-red-700 hover:bg-red-200 p-2 bg-slate-100 rounded-md"
             title="Remove from Cart"
-            disabled={isSold}
+          // disabled={isSold}
           >
             <Trash2 size={18} />
           </button>

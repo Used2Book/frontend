@@ -20,19 +20,31 @@ export const uploadPostImages = async (images: File[]): Promise<string[]> => {
 };
 
 // Create a new post
-export const createPost = async (content: string, imageUrls: string[]): Promise<Post> => {
-    const formData = new FormData();
-    formData.append("content", content);
-    imageUrls.forEach((url) => formData.append("image_urls", url)); // Send as multiple fields
+export const createPost = async (
+  content: string,
+  imageUrls: string[],
+  genreId?: number | null,
+  bookId?: number | null
+): Promise<Post> => {
+  const formData = new FormData();
+  formData.append("content", content);
+  imageUrls.forEach((url) => formData.append("image_urls", url)); // Send as multiple fields
+  if (genreId !== undefined && genreId !== null) {
+    formData.append("genre_id", String(genreId));
+  }
+  if (bookId !== undefined && bookId !== null) {
+    formData.append("book_id", String(bookId));
+  }
 
-    try {
-        const res = await uploadClient.post("/user/post-create", formData);
-        return res.data.post; // Expecting Post object
-    } catch (err) {
-        console.error("Create Post Failed:", err);
-        throw err;
-    }
+  try {
+    const res = await uploadClient.post("/user/post-create", formData);
+    return res.data.post; // Expecting Post object under "post" key
+  } catch (err) {
+    console.error("Create Post Failed:", err);
+    throw err
+  }
 };
+
 
 export async function getAllPosts() {
   try {
@@ -97,3 +109,13 @@ export const getLikeStatus = async (postId: number) => {
         return false; // Default to false on error
     }
 };
+
+export const getPostsByUserID = async (userID: number): Promise<Post[]> => {
+    try {
+      const res = await uploadClient.get(`/user/user-posts/${userID}`);
+      return res.data.posts; // Expecting array of Post objects under "posts" key
+    } catch (err) {
+      console.error("Get Posts By User ID Failed:", err);
+      throw err
+    }
+  };

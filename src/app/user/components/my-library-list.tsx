@@ -1,12 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import BookCard from "@/app/book/components/book";
 import { Book } from "@/types/book";
-import { mockBookList } from "@/assets/mockData/books";
-import BookOrderCard from "@/app/user/components/book-order";
-import { mockBookCarouselList } from "@/assets/mockData/books";
 import UserLibraryCard from "@/app/user/components/user-library-card";
-import { myLibrary, myListing } from "@/services/user";
+import { myLibrary} from "@/services/user";
 import { getBookByID } from "@/services/book";
 const myLibraryList: React.FC = () => {
     const [bookList, setBookList] = useState<Book[]>([]); // ✅ Store real book data
@@ -24,9 +20,16 @@ const myLibraryList: React.FC = () => {
                 }
 
                 // Step 2: Fetch full book details for each book_id
-                const bookDetailsPromises = myLibrary_.map((libraryItem) =>
-                    getBookByID(libraryItem.book_id)
+                const bookDetailsPromises = myLibrary_.map(async (libraryItem : any) => {
+                    const book = await getBookByID(libraryItem.book_id)
+                    console.log("library book:", book)
+                    console.log("library Item:", libraryItem)
+                    return libraryItem ? {...book, reading_status: libraryItem.reading_status, library_id: libraryItem.id} : null;
+                }
                 );
+
+
+                                
 
                 // Step 3: Resolve all book fetches
                 const books = await Promise.all(bookDetailsPromises);
@@ -48,7 +51,7 @@ const myLibraryList: React.FC = () => {
 
     return (
         // <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 place-items-center">
-        <div className="w-full bg-zinc-100 shadow-sm rounded-md min-h-0 overflow-hidden">
+        <div className="w-full shadow-sm rounded-md min-h-0 overflow-hidden">
             {loading ? (
                 <p className="text-center py-4">Loading your library ...</p>
             ) : bookList.length === 0 ? (
@@ -63,7 +66,8 @@ const myLibraryList: React.FC = () => {
                             title={book.title}
                             author={book.author}
                             cover_image_url={book.cover_image_url}
-                            rating={book.rating}
+                            average_rating={book.average_rating}
+                            reading_status={book.reading_status}
                         />
                     ))}
                 </div>

@@ -39,11 +39,11 @@ export default function CartPage() {
   if (loading) return <p className="text-center py-4">Loading...</p>;
 
   return (
-    <div className="w-full bg-slate-100 h-screen px-32 py-10">
+    <div className="w-full h-screen px-32 py-10">
+      <div className="text-xl font-semibold">My Cart</div>
       <div className="flex items-center space-x-3 mb-5">
-        <div className="text-3xl font-bold">My Cart</div>
-        <ShoppingCart size={25} />
-        <p>...</p>
+        {/* <ShoppingCart size={25} />
+        <p>...</p> */}
       </div>
       <div className="flex flex-col w-full space-y-1">
         {carts.length === 0 ? (

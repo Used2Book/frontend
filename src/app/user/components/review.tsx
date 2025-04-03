@@ -37,7 +37,7 @@ const ReviewCard: React.FC<{ reviewDetail: Review }> = ({ reviewDetail }) => {
         calculateDaysAgo();
     }, [reviewDetail]);
     return (
-        <div className="flex relative h-full w-full mx-auto space-x-4 py-3 border-b-[1px] border-zinc-200 bg-sky-50 shadow-sm rounded-md p-5">
+        <div className="flex relative h-full w-full mx-auto space-x-4 py-3 border-b-[1px] border-zinc-200 bg-slate-50 shadow-sm rounded-md p-5">
             {/* Profile Section */}
             <div className="flex-shrink-0 flex justify-center rounded-sm">
                 <div className="w-12 h-12 rounded-full overflow-hidden">

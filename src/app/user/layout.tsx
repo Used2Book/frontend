@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
       {/* Main Content Area */}
       <div className="flex flex-1 overflow-hidden">
-        {user && <SettingsSidebar />} 
+        {/* {user && <SettingsSidebar />}  */}
 
         {/* Page Content */}
         <div className="flex-1 overflow-y-auto">

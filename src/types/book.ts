@@ -20,6 +20,7 @@ export interface Book {
   seller_id?: number;
   average_rating?: number;
   num_ratings?: number;
+  reading_status?: number;
 }
 
 export interface SaleBook {

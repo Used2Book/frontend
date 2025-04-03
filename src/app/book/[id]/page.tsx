@@ -10,6 +10,7 @@ import ReviewListCard from "@/app/user/components/review-list";
 // import { submitReview } from "@/services/review"; // Import review service
 import { FaStar } from "react-icons/fa"; // Import star icons
 import { addBookReview } from "@/services/book";
+import MyRecommendedBookList from "@/app/user/components/my-recommendation-list";
 
 export default function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = use(params);
@@ -23,7 +24,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
     const [hover, setHover] = useState<number | null>(null);
     const [reviewText, setReviewText] = useState("");
     const [refreshReviews, setRefreshReviews] = useState(false);
-    
+
     useEffect(() => {
         if (!bookID) return;
 
@@ -57,7 +58,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
         }
 
         try {
-            await addBookReview({book_id:bookID, rating:rating, comment:reviewText});
+            await addBookReview({ book_id: bookID, rating: rating, comment: reviewText });
             setIsModalOpen(false);
             setReviewText("");
             setRating(0);
@@ -77,11 +78,11 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
             {book ? (
                 <>
                     <BookDetailCard bookDetail={book} />
-                    <div className="border-b-[1px] border-zinc-200">
+                    <div className="">
                         <div className="px-20 py-2 space-y-6 mt-5">
                             <div className="flex justify-between">
-                                <p className="font-bold text-xl">Ratings & Reviews</p>
-                                <button 
+                                <p className="font-semibold text-lg">Ratings & Reviews</p>
+                                <button
                                     className="px-5 py-2 bg-black text-white text-sm rounded-md shadow-sm 
                                               transition-all duration-200 ease-in-out 
                                               transform hover:scale-105 active:scale-95 
@@ -95,9 +96,14 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
                         </div>
                     </div>
                     <div className="px-20 py-2 space-y-6">
-                        <p className="font-bold text-lg">Someone who has the book</p>
+                        <p className="font-semibold text-lg">Someone who has the book</p>
                         <SaleListingList bookID={bookID} />
                     </div>
+                    <div className="px-20 py-2 space-y-6 mb-20">
+                        <p className="font-semibold text-lg">Recommended Similar Books</p>
+                        <MyRecommendedBookList/>
+                    </div>
+
 
                     {/* Review Modal */}
                     {isModalOpen && (
@@ -127,13 +133,13 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
                                     onChange={(e) => setReviewText(e.target.value)}
                                 />
                                 <div className="flex justify-end space-x-3">
-                                    <button 
+                                    <button
                                         className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
                                         onClick={() => setIsModalOpen(false)}
                                     >
                                         Cancel
                                     </button>
-                                    <button 
+                                    <button
                                         className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
                                         onClick={handleReviewSubmit}
                                     >

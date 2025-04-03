@@ -115,8 +115,8 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
 
   return (
     <div className="w-full justify-start items-center pb-3">
-      <div className="flex relative h-full space-x-6 p-8 shadow-sm rounded-md bg-white">
-        <div className="flex justify-start rounded-sm max-w-sm">
+      <div className="flex justify-center items-center relative h-full space-x-6 p-8 shadow-sm rounded-md bg-white">
+        <div className="flex rounded-sm max-w-sm">
           <div className="flex flex-col space-y-4">
             {/* Main Image */}
             <div className="relative w-52 h-72 cursor-pointer" onClick={() => openImageModal(0)}>
@@ -167,14 +167,14 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
         </div>
 
         {/* Book Info Section */}
-        <div className="flex flex-col justify-start space-y-3 text-sm p-4">
+        <div className="flex flex-col justify-start space-y-4 text-sm p-4">
           <div>
             <Link href={`/book/${listing?.book_id}`} className="text-3xl font-bold hover:underline">
               {listing?.title || "Unknown Title"}
             </Link>
           </div>
 
-          <div className="flex space-x-2 items-center text-zinc-400 italic">
+          <div className="flex space-x-2 items-center text-zinc-600 italic">
             <p>{listing?.author || "Unknown"}</p>
           </div>
 
@@ -196,12 +196,12 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
           </div>
 
           <div className="flex flex-col space-y-2 my-2">
-            <h4 className="font-medium">Seller Note</h4>
+            <h4 className="text-base font-normal">Seller Note</h4>
             <p className="text-gray-600 text-sm sm:text-base">{listing?.seller_note}</p>
           </div>
 
           <div className="flex space-x-2 items-center">
-            <p className={`font-bold text-2xl my-5 ${isSold ? "text-gray-500 line-through" : "text-orange-500"}`}>
+            <p className={`font-bold text-2xl my-3 ${isSold ? "text-gray-500 line-through" : "text-orange-500"}`}>
               {listing?.price ? `${listing.price} ฿` : "Not available"}
             </p>
             {user?.id !== owner_id && listing?.allow_offers && !isSold && (

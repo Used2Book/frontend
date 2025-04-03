@@ -5,12 +5,20 @@ import Link from 'next/link';
 
 
 // export default function UserLibraryCard({ title, author, image, rating }: BookCardProps) {
-const UserLibraryCard: React.FC<Book> = ({ title, author, cover_image_url, rating, id }) => {
+const UserLibraryCard: React.FC<Book> = ({ title, author, cover_image_url, id,  average_rating, reading_status}) => {
+    
+    const statusStyles: { [key: number]: string } = {
+        1: "bg-green-100 text-green-800",
+        0: "bg-orange-100 text-orange-800",
+        
+    };
+
+    console.log(title, "reading_status: " ,reading_status)
     return (
         // <Link href={{ pathname: "/book/[id]", params: { id: id.toString() } }}>
         // <Link href="/book/[id]" as={`/book/${id}`}>
         <Link href={`/book/${id}`} passHref>
-            <div className="flex flex-col p-3 bg-white rounded-md w-20 sm:w-24 md:w-28 lg:w-28 shadow-md">
+            <div className="flex flex-col p-3 bg-white rounded-md w-20 sm:w-24 md:w-28 lg:w-28 shadow-md border border-gray-100">
                 <div className="w-full max-w-sm h-20 sm:h-24 md:h-28 lg:h-32 relative">
                     <Image
                         alt="Book cover"
@@ -39,10 +47,17 @@ const UserLibraryCard: React.FC<Book> = ({ title, author, cover_image_url, ratin
                                 <Image src={star_png} alt="rating" width={10} height={10} />
                             </div>
                             <div>
-                                <p>{rating}</p>
+                                <p>{average_rating}</p>
                             </div>
                         </div>
                     </div>
+                    <span
+                        className={`inline-block px-1 py-0.5 text-xxxs font-medium rounded-full text-center ${statusStyles[reading_status] || "bg-gray-100 text-gray-800"
+                            }`}
+                    >
+                        {reading_status === 0 ? "Currently Reading" : "Finished Reading"}
+                    </span>
+                    
                 </div>
             </div>
         </Link>

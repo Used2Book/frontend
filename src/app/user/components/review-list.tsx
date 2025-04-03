@@ -31,7 +31,7 @@ const ReviewListCard: React.FC<{ bookID: number; refreshTrigger: boolean }> = ({
         <div className="w-full bg-white">
             <div className="w-full flex flex-col space-y-1 max-h-[300px] overflow-y-auto scrollbar-hide overflow-x-hidden py-4">
                 {reviewList.length === 0 ? (
-                    <p className="text-center text-red-500">No reviews available</p>
+                    <p className="text-center text-zinc-400">No reviews available</p>
                 ) : (
                     reviewList
                         .slice(0, showAll ? reviewList.length : 1) // Show one or all reviews

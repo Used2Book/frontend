@@ -13,6 +13,16 @@
     --foreground: #ededed;
   }
 } */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
 html, body {
   overflow-x: hidden; /* ✅ Prevents entire page from scrolling in X direction */
 }

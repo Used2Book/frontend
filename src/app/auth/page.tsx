@@ -4,7 +4,7 @@ import { login, loginWithGoogle, signup } from "@/services/auth";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/contexts/auth-store";
 import Image from "next/image";
-import Cat from "@/assets/images/used2book-logo.png";
+import Logo from "@/assets/images/used2book-logo.png";
 import { Icons } from "@/components/icons";
 import { useEffect } from "react";
 export default function AuthPage() {
@@ -82,7 +82,7 @@ export default function AuthPage() {
         <div className="flex h-screen">
             {/* Left Half with Image */}
             <div className="bg-black w-1/2 flex items-center justify-center">
-                <Image src={Cat} alt="Description of Image" width={300} height={300} />
+                <Image src={Logo} alt="Description of Image" width={300} height={300} />
             </div>
 
             {/* Right Half with Login/Signup Form */}
@@ -118,7 +118,7 @@ export default function AuthPage() {
                                 <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
                                 <input
                                     type="name"
-                                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     value={firstName}
                                     onChange={(e) => setFirstName(e.target.value)}
                                     required
@@ -128,7 +128,7 @@ export default function AuthPage() {
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
                                 <input
                                     type="name"
-                                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     value={lastName}
                                     onChange={(e) => setLastName(e.target.value)}
                                     required
@@ -141,7 +141,7 @@ export default function AuthPage() {
                             <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                             <input
                                 type="email"
-                                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
@@ -152,7 +152,7 @@ export default function AuthPage() {
                             <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
                             <input
                                 type="password"
-                                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required

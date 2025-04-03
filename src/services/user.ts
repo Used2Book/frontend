@@ -23,6 +23,15 @@ export const getMe = async () => {
   }
 };
 
+export const getAllUsers = async () => {
+  try {
+    const res = await httpClient.get("/user/all");
+    return res.data.users; // Extract "users" from response
+  } catch (err) {
+    console.error("Get All Users Failed:", err);
+    throw err;
+  }
+};
 
 // ✅ Upload Profile Image
 export const uploadProfileImage = async (image: File) => {
@@ -93,9 +102,21 @@ export const editPreferrence = async (userInfo: {
   }
 };
 
-export const userAddLibrary = async (LibraryInfo: {
+export const userAddLibrary = async (userInfo: {
   book_id: number;
-  status: string;
+  reading_status: number;
+}) => {
+  try {
+    const res = await httpClient.post("/user/add-library", userInfo);
+    return res.data;
+  } catch (err) {
+    console.error("add book in library Failed:", err);
+    throw err;
+  }
+};
+
+export const userAddListing = async (LibraryInfo: {
+  book_id: number;
   price: number;
   allow_offers: boolean;
   seller_note: string
@@ -105,10 +126,10 @@ export const userAddLibrary = async (LibraryInfo: {
   images.forEach((image) => formData.append("images", image));
 
   try {
-      const res = await uploadClient.post("/user/add-library", formData);
+      const res = await uploadClient.post("/user/add-listing", formData);
       return res.data;
   } catch (err) {
-      console.error("Add book Failed:", err);
+      console.error("Add book to listing Failed:", err);
       throw err;
   }
 };
@@ -236,7 +257,7 @@ export const myWishList = async () => {
   try {
     console.log("Fetching user library...");
     const res = await httpClient.get("user/get-wishlist");
-    console.log("user listing :", res.data.wishlist)
+    console.log("user wishlist :", res.data.wishlist)
     return res.data.wishlist
   } catch (err) {
     console.log("Get user wishlist unsuccessfully !")
@@ -272,7 +293,7 @@ export const userWishList = async (id: number) => {
   try {
     console.log("Fetching user library...");
     const res = await httpClient.get(`user/get-wishlist/${id}`);
-    console.log("user listing :", res.data.wishlist)
+    console.log("user wishlist :", res.data.wishlist)
     return res.data.wishlist
   } catch (err) {
     console.log("Get user wishlist unsuccessfully !")

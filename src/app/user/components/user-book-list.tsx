@@ -19,7 +19,7 @@ const UserBookListCard: React.FC<{clientID: number}> = ({clientID}) => {
                 }
 
                 // Step 2: Fetch full book details for each book_id
-                const bookDetailsPromises = userListings.map(async (listing) => {
+                const bookDetailsPromises = userListings.map(async (listing : any) => {
                     const book = await getBookByID(listing.book_id);
                     return book
                         ? { ...book, price: listing.price, status: listing.status, allow_offers: listing.allow_offers, seller_id: listing.seller_id, id: listing.id, book_id: listing.book_id, image_urls: listing.image_urls  } // Merge listing details
@@ -45,7 +45,7 @@ const UserBookListCard: React.FC<{clientID: number}> = ({clientID}) => {
     }, []);
 
     return (
-        <div className="w-full bg-zinc-100 shadow-sm rounded-md">
+        <div className="w-full shadow-sm rounded-md">
             {loading ? (
                 <p className="text-center py-4">Loading your listings...</p>
             ) : bookList.length === 0 ? (

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logout } from "@/services/auth";
-import { User, Settings, Mail, Key, Phone, ChevronDown, ChevronUp, PictureInPicture2, CircleArrowLeft, LogOut, CircleArrowRight, CreditCard, MapPinHouse} from "lucide-react";
+import { User, Settings, Mail, Key, Phone, ChevronDown, ChevronUp, PictureInPicture2, CircleArrowLeft, LogOut, CircleArrowRight, CreditCard, MapPinHouse, Book, CircleFadingPlus, UserRound, UserRoundSearch, BookCopy} from "lucide-react";
 type Sublink = {
     href: string;
     label: string;
@@ -18,29 +18,25 @@ type LinkItem = {
 
 const links: LinkItem[] = [
     {
-        href: "/settings/profile",
-        label: "User Profile",
-        icon: <User size={18} />,
+        href: "/admin/user-management",
+        label: "User Management",
+        icon: <UserRound size={18}/>,
         sublinks: [
-            { href: "/user/setting/username", label: "Change Name", icon: <User size={16} /> },
-            { href: "/user/setting/preferrence", label: "Update Preferences", icon: <PictureInPicture2 size={16} /> },
+            { href: "/admin/user-management/user-list", label: "User List", icon: <UserRoundSearch size={18}/>},
         ],
     },
     {
-        href: "/settings/account",
-        label: "Account Management",
-        icon: <Settings size={18} />,
+        href: "/admin/book-management",
+        label: "Book Management",
+        icon: <Book size={18} />,
         sublinks: [
-            // { href: "/settings/setting/email", label: "Update Email Address", icon: <Mail size={16} /> },
-            // { href: "/settings/setting/password", label: "Change Password", icon: <Key size={16} /> },
-            { href: "/user/setting/phone-number", label: "Update Phone Number", icon: <Phone size={16} /> },
-            { href: "/user/setting/bank-account", label: "Update Bank Account", icon: <CreditCard size={16} /> },
-            // { href: "/user/setting/address", label: "Update Bank Account", icon: <MapPinHouse size={16} /> },
+            { href: "/admin/book-management/book-list", label: "Book List", icon: <BookCopy size={16}/> },
+            { href: "/admin/book-management/insert-book", label: "Insert Book", icon: <CircleFadingPlus size={16}/> },
         ],
     },
 ];
 
-const SettingsSidebar: React.FC = () => {
+const AdminSettingsSidebar: React.FC = () => {
     const pathname = usePathname();
     const [openLinks, setOpenLinks] = useState<string[]>([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -142,4 +138,4 @@ const SettingsSidebar: React.FC = () => {
     );
 };
 
-export default SettingsSidebar;
+export default AdminSettingsSidebar;
