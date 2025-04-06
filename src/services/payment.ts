@@ -2,8 +2,15 @@ import { httpClient } from "@/lib/http-client";
 // src/services/notification.ts
 import { io, Socket } from "socket.io-client";
 import useAuthStore from "@/contexts/auth-store";
+import { loadStripe } from '@stripe/stripe-js';
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const NOTIFICATION_SOCKET_URL = "http://localhost:5001";
+
+const STRIPE_PUBLIC_KEY = process.env.STRIPE_PUBLIC_KEY || ""; 
+
+
 
 class paymentService {
     private notiSocket: Socket | null = null;
@@ -66,16 +73,47 @@ class paymentService {
 
 export default new paymentService();
 
-export async function createOmiseAccount(data: {
-  bank_account_number: string;
-  bank_account_name: string;
-  bank_code: string;
-}) {
-  try {
-    const res = await httpClient.post("/payment/api/omise/create-account", data);
-    return res.data;
-  } catch (error) {
-    console.error("Error creating Omise account:", error);
-    throw error;
-  }
-}
+export const checkout = async (listingId: number, buyerId: number, offerId?: number) => {
+    try {
+        console.log("Fetching charge...");
+        console.log("listingId:", listingId, "buyerId:", buyerId, "offerId:", offerId);
+
+        const res = await httpClient.post("/payment/check-out", {
+            listing_id: listingId,
+            buyer_id: buyerId,
+            offer_id: offerId, // Optional
+        });
+
+        console.log("charge data:", res.data);
+        const stripe = await loadStripe("pk_test_51R9WTyEA0LxvmLp3Hm8XqTjlsEfaLFAB99gvl0YKPWpk3Ql89zEEotwQPdks8YjhWxiAPrDcrE5eSCFrkupw4HHe00rNfITV80");
+
+        if (!stripe) {
+            console.error("Stripe failed to load");
+            return;
+        }
+
+        await stripe.redirectToCheckout({ sessionId: res.data.session_id });
+
+    } catch (err) {
+        // Axios-style error handling
+        if (axios.isAxiosError(err)) {
+            const status = err.response?.status;
+            const message = err.response?.data?.message || err.message;
+
+            // console.error(`HTTP error ${status}: ${message}`);
+
+            if (status === 500) {
+                toast.error("⚠️ This item currently reserved. Please try again later.");
+            } else if (status === 400) {
+                toast.error("❌ Invalid request. Please check the form and try again.");
+            } else {
+                toast.error("Something went wrong. Please try again.");
+            }
+        } else {
+            console.error("Unknown error:", err);
+            toast.error("Unexpected error occurred.");
+        }
+
+        return null;
+    }
+};

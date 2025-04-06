@@ -132,7 +132,7 @@ export default function WebBoardPage() {
   const selectedUser = selectedItem?.type === "user" ? users.find((u) => u.id === selectedItem.id) : null;
 
   return (
-    <div className="min-h-screen p-4 sm:p-8 md:p-16 lg:p-24">
+    <div className="min-h-screen py-10 px-4 sm:px-8 md:px-16 lg:px-24">
       <h1 className="text-xl sm:text-2xl font-bold mb-10">WebBoard</h1>
       {/* Tabbed Search and Add Button */}
       <div className="flex justify-start mb-6 space-x-16">

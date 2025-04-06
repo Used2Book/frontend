@@ -49,7 +49,7 @@ const UserBookListCard: React.FC<{clientID: number}> = ({clientID}) => {
             {loading ? (
                 <p className="text-center py-4">Loading your listings...</p>
             ) : bookList.length === 0 ? (
-                <p className="text-center py-4">No books listed for sale.</p>
+                <p className="text-center py-4 text-gray-400">No books listed for sale ...</p>
             ) : (
                 <div className="flex space-x-6 overflow-x-auto py-4 scrollbar-hide mx-3">
                     {bookList.map((book) => (

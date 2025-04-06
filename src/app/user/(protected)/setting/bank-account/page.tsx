@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { createOmiseAccount } from "@/services/payment";
+import { createBankAccount } from "@/services/user";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { bankLists } from "@/utils/bank_icon";
@@ -33,20 +33,20 @@ const BankAccount: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await createOmiseAccount({
+      const response = await createBankAccount({
         bank_account_number: bankAccountNumber,
         bank_account_name: bankAccountName,
         bank_code: bankCode,
       });
 
       if (response.success) {
-        toast.success("Omise account created successfully!");
+        toast.success("account created successfully!");
         router.back()
       } else {
-        toast.error("Failed to create Omise account.");
+        toast.error("Failed to create account.");
       }
     } catch (error) {
-      toast.error("Error creating Omise account.");
+      toast.error("Error creating account.");
     } finally {
       setLoading(false);
     }

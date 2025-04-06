@@ -11,7 +11,8 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { ShoppingBasket, ChevronLeft, ChevronRight, Handshake } from "lucide-react";
 import useAuthStore from "@/contexts/auth-store";
-
+import SaleProfileCard from "@/app/user/components/sale-profile-card";
+import { checkout } from "@/services/payment";
 const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }> = ({ book_listing, owner_id }) => {
   const [bookId, listingId] = book_listing.split("_");
   const [listing, setListing] = useState<SaleBook | null>(null);
@@ -69,6 +70,22 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
     }
   };
 
+  const handleCheckout = async () => {
+    try {
+      if (!user?.id) {
+        toast.error("User ID not available.");
+        return;
+      }
+      
+      await checkout(parseInt(listingId), user?.id, 0); // 0 for no offerId
+
+      toast.success("Redirect !!!");
+    } catch (err) {
+      console.error("Error to redirect:");
+      toast.error("Failed to Redirect TT");
+    }
+  };
+
   const handleAddOffer = async () => {
     if (offeredPrice === "" || offeredPrice <= 0) {
       toast.error("Please enter a valid offer price");
@@ -84,6 +101,8 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
       toast.error("Failed to submit offer");
     }
   };
+
+
 
   const openImageModal = (index: number) => {
     setCurrentImageIndex(index);
@@ -114,12 +133,13 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
   const isSold = listing?.status === "sold"; // Check if listing is sold
 
   return (
-    <div className="w-full justify-start items-center pb-3">
-      <div className="flex justify-center items-center relative h-full space-x-6 p-8 shadow-sm rounded-md bg-white">
-        <div className="flex rounded-sm max-w-sm">
+    <div className="w-full items-center pb-3">
+      <div className="flex justify-center space-x-6 p-8  shadow-sm rounded-md bg-white">
+      {/* <div className="flex justify-center relative h-full space-x-6 p-8 shadow-sm rounded-md bg-white"> */}
+        <div className="flex-1 flex justify-end rounded-sm max-w-sm ">
           <div className="flex flex-col space-y-4">
             {/* Main Image */}
-            <div className="relative w-52 h-72 cursor-pointer" onClick={() => openImageModal(0)}>
+            <div className="relative justify-center w-52 h-72 cursor-pointer" onClick={() => openImageModal(0)}>
               {mainImage ? (
                 <Image
                   alt="Listing main image"
@@ -163,45 +183,49 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
                 ))}
               </div>
             )}
+          {user?.id !== owner_id && (
+            <div className="flex space-x-2">
+              <button
+                className={`flex-1 flex justify-center items-center space-x-3 text-center font-bold text-xxs rounded-md border-[1.5px] border-black whitespace-nowrap shadow-md w-full p-1 transition-all duration-200 ease-in-out transform ${isSold ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "hover:bg-zinc-100 hover:scale-105 active:scale-90"}`}
+                onClick={handleAddToCart}
+                disabled={isSold}
+              >
+                <ShoppingBasket color={isSold ? "gray" : "black"} size={18} />
+                <p>{isSold ? "Sold" : "Cart"}</p>
+              </button>
+                <button
+                  className={`flex-1 w-full text-center text-xxs font-bold rounded-md shadow-md p-1 border-[1.5px] border-black transition-all duration-200 ease-in-out transform ${isSold ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-black text-white hover:bg-zinc-700 hover:scale-105 active:scale-90"}`}
+                  disabled={isSold}
+                  onClick={handleCheckout}
+                >
+                  {isSold ? "Sold" : "Buy"}
+                </button>
+              {/* <Link href={`/user/${owner_id}/book/${listingId}/payment`} className="flex-1 w-full">
+              </Link> */}
+            </div>
+          )}
           </div>
         </div>
 
         {/* Book Info Section */}
-        <div className="flex flex-col justify-start space-y-4 text-sm p-4">
+        <div className="flex-1 flex-col justify-start space-y-4 text-sm p-4">
           <div>
-            <Link href={`/book/${listing?.book_id}`} className="text-3xl font-bold hover:underline">
+            <Link href={`/book/${listing?.book_id}`} className="text-xl font-bold hover:underline">
               {listing?.title || "Unknown Title"}
             </Link>
           </div>
 
-          <div className="flex space-x-2 items-center text-zinc-600 italic">
+          <div className="flex space-x-2 items-center text-zinc-600 italic mb-5">
             <p>{listing?.author || "Unknown"}</p>
           </div>
+          
+          <div>
+            <SaleProfileCard id={owner_id} />
+          </div>
+          
 
           <div className="flex space-x-2 items-center">
-            <ul className="flex space-x-2">
-              {Array.isArray(listing?.genres) && listing.genres.length > 0 ? (
-                listing.genres.map((genre, index) => (
-                  <li
-                    key={index}
-                    className="bg-zinc-500 px-2 py-1 rounded-lg text-white text-xxs inline-block whitespace-nowrap"
-                  >
-                    {genre}
-                  </li>
-                ))
-              ) : (
-                <p className="text-gray-400">No genres available</p>
-              )}
-            </ul>
-          </div>
-
-          <div className="flex flex-col space-y-2 my-2">
-            <h4 className="text-base font-normal">Seller Note</h4>
-            <p className="text-gray-600 text-sm sm:text-base">{listing?.seller_note}</p>
-          </div>
-
-          <div className="flex space-x-2 items-center">
-            <p className={`font-bold text-2xl my-3 ${isSold ? "text-gray-500 line-through" : "text-orange-500"}`}>
+            <p className={`font-bold text-xl my-3 ${isSold ? "text-gray-500 line-through" : "text-black"}`}>
               {listing?.price ? `${listing.price} ฿` : "Not available"}
             </p>
             {user?.id !== owner_id && listing?.allow_offers && !isSold && (
@@ -218,26 +242,14 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
             )}
           </div>
 
-          {user?.id !== owner_id && (
-            <div className="flex space-x-3 w-60">
-              <button
-                className={`flex justify-center items-center space-x-3 text-center font-bold text-xs rounded-sm border-[1.5px] border-black whitespace-nowrap shadow-md w-full px-10 py-2 transition-all duration-200 ease-in-out transform ${isSold ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "hover:bg-zinc-100 hover:scale-105 active:scale-90"}`}
-                onClick={handleAddToCart}
-                disabled={isSold}
-              >
-                <ShoppingBasket color={isSold ? "gray" : "black"} size={18} />
-                <p>{isSold ? "Sold" : "Add To Cart"}</p>
-              </button>
-              <Link href={`/user/${owner_id}/book/${listingId}/payment`} className="w-full">
-                <button
-                  className={`text-center text-xs font-bold rounded-sm shadow-md w-full px-20 py-2 border-[1.5px] border-black transition-all duration-200 ease-in-out transform ${isSold ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-black text-white hover:bg-zinc-700 hover:scale-105 active:scale-90"}`}
-                  disabled={isSold}
-                >
-                  {isSold ? "Sold" : "Buy"}
-                </button>
-              </Link>
-            </div>
-          )}
+          <div className="flex flex-col space-y-3 my-2 pr-52">
+            <h4 className="text-base font-semibold">Seller Note</h4>
+            <hr className="border-gray-200"/>
+            <p className="text-gray-600 text-sm sm:text-base">{listing?.seller_note}</p>
+          </div>
+
+
+          
         </div>
       </div>
 

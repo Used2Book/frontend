@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Book } from "@/types/book";
 import UserLibraryCard from "@/app/user/components/user-library-card";
 import { getRecommendedBooks } from "@/services/book";
-
+import BookCard from "@/app/book/components/book";
 const MyRecommendedBookList: React.FC = () => {
   const [bookList, setBookList] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,13 +36,12 @@ const MyRecommendedBookList: React.FC = () => {
       ) : (
         <div className="flex space-x-6 overflow-x-auto py-4 scrollbar-hide mx-3">
           {bookList.map((book) => (
-            <UserLibraryCard
+            <BookCard
               key={book.id}
               id={book.id}
               title={book.title}
               author={book.author}
               cover_image_url={book.cover_image_url}
-              rating={book.rating}
               average_rating={book.average_rating}
             />
           ))}

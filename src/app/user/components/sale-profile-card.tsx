@@ -8,6 +8,7 @@ import useAuthStore from "@/contexts/auth-store";
 import chatHttpClient from "@/lib/chat-http-client";
 import Link from "next/link";
 import { MessageCircleMore } from "lucide-react";
+import { Play } from "lucide-react";
 const SaleProfileCard: React.FC<{ id: number }> = ({ id }) => {
     const [seller, setSeller] = useState(null);
 
@@ -69,22 +70,24 @@ const SaleProfileCard: React.FC<{ id: number }> = ({ id }) => {
     );
 
     return (
-        <div className="w-full bg-white px-8 py-3 shadow-sm rounded-md mb-2">
-            <div className="flex justify-between w-full mt-1 border-gray-200">
-                <div className="flex space-x-5 items-center">
-                    <div className="flex justify-start w-10 h-10 rounded-full overflow-hidden">
+        <Link href={`/user/${id}`} className="">
+            <div className="flex space-x-3 items-center mt-1">
+                <div className="flex space-x-3 items-center">
+                    <div className="flex justify-start w-7 h-7 rounded-full overflow-hidden">
                         <Image src={seller?.picture_profile ? seller?.picture_profile : NoAvatar} alt="Profile" width={50} height={50} />
                     </div>
-                    <p className="flex justify-start ml-2 text-sm py-1 font-bold">{seller?.first_name} {seller?.last_name}</p>
+                    <p className="flex justify-start ml-2 text-xxs py-1 font-semibold hover:underline">{seller?.first_name} {seller?.last_name}</p>
                 </div>
-                {
+
+                <Play size={10} color="black" className="fill-black"/>
+                {/* {
                     user?.id !== id &&
                     <div>
                         {chatButton }
                     </div>
-                }
+                } */}
             </div>
-        </div>
+        </Link>
     );
 }
 

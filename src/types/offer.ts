@@ -3,6 +3,7 @@ export interface Offer {
     listing_id: number;
     buyer_id: number;
     offered_price: number;
+    initial_price: number;
     status: "pending" | "accepted" | "rejected";
     book_id: number;
     book_title: string;
@@ -13,4 +14,5 @@ export interface Offer {
     buyer_first_name?: string; 
     buyer_last_name?: string; 
     buyer_picture_profile?: string; 
+    avaibility?: string;
   }

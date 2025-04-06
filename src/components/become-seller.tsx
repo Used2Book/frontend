@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { createOmiseAccount } from "@/services/payment";
+import { createBankAccount } from "@/services/user";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
@@ -32,7 +32,7 @@ const BecomeSellerComponent: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await createOmiseAccount({
+      const response = await createBankAccount({
         bank_account_number: bankAccountNumber,
         bank_account_name: bankAccountName,
         bank_code: bankCode,

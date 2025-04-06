@@ -159,22 +159,22 @@ export const userProfile = async (userID : number) => {
 };
 
 // src/services/user.ts
-export const charge = async (listingId: number, buyerId: number, offerId?: number) => {
-  try {
-    console.log("Fetching charge...");
-    console.log("listingId:", listingId, "buyerId:", buyerId, "offerId:", offerId);
-    const res = await httpClient.post("/payment/charge", {
-      listing_id: listingId,
-      buyer_id: buyerId,
-      offer_id: offerId, // Optional
-    });
-    console.log("charge data:", res.data);
-    return res.data;
-  } catch (err) {
-    console.log("Get charge data unsuccessful!");
-    return null;
-  }
-};
+// export const charge = async (listingId: number, buyerId: number, offerId?: number) => {
+//   try {
+//     console.log("Fetching charge...");
+//     console.log("listingId:", listingId, "buyerId:", buyerId, "offerId:", offerId);
+//     const res = await httpClient.post("/payment/charge", {
+//       listing_id: listingId,
+//       buyer_id: buyerId,
+//       offer_id: offerId, // Optional
+//     });
+//     console.log("charge data:", res.data);
+//     return res.data;
+//   } catch (err) {
+//     console.log("Get charge data unsuccessful!");
+//     return null;
+//   }
+// };
 
 export const bookWishlistStatus = async (bookID : number) => {
   try {
@@ -301,24 +301,19 @@ export const userWishList = async (id: number) => {
   }
 };
 
-export async function becomeSeller() {
+export async function createBankAccount(data: {
+  bank_account_number: string;
+  bank_account_name: string;
+  bank_code: string;
+}) {
   try {
-    // ✅ Corrected API Endpoint (Switched to Omise)
-    const res = await httpClient.post("/payment/api/omise/create-account");
-    const data = res.data;
-
-    if (data.url) {
-      // ✅ Redirect seller to Omise's onboarding page
-      window.location.href = data.url;
-    } else {
-      toast.error("Failed to obtain the onboarding link");
-    }
-  } catch (error: any) {
-    console.error("Error in becomeSeller:", error);
-    toast.error("Error while becoming a seller");
+    const res = await httpClient.post("/user/create-bank-account", data);
+    return res.data;
+  } catch (error) {
+    console.error("Error - bank account:", error);
+    throw error;
   }
 }
-
 
 export async function buyListing(listingId: number) {
   const res = await httpClient.post("user/api/stripe/create-payment-intent", {listingId: listingId });
@@ -330,18 +325,18 @@ export async function buyListing(listingId: number) {
   return data.clientSecret
 }
 
-export async function processPayment(paymentData: {
-  listing_id: number;
-  token: string;
-}) {
-  try {
-    const res = await httpClient.post("/payment/charge", paymentData);
-    return res.data;
-  } catch (err) {
-    console.error("Payment failed:", err);
-    throw err;
-  }
-}
+// export async function processPayment(paymentData: {
+//   listing_id: number;
+//   token: string;
+// }) {
+//   try {
+//     const res = await httpClient.post("/payment/charge", paymentData);
+//     return res.data;
+//   } catch (err) {
+//     console.error("Payment failed:", err);
+//     throw err;
+//   }
+// }
 
 export async function markListingAsSold(listingId: number, amount: number) {
   try {

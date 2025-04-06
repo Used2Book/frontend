@@ -52,7 +52,7 @@ const UserLibraryList: React.FC<{clientID: number}> = ({clientID}) => {
             {loading ? (
                 <p className="text-center py-4">Loading your library ...</p>
             ) : bookList.length === 0 ? (
-                <p className="text-center py-4">Adding some book ...</p>
+                <p className="text-center py-4text-gray-400">Adding some book ...</p>
             ) : (
                 <div className="flex space-x-6 overflow-x-auto py-4 scrollbar-hide mx-3">
 

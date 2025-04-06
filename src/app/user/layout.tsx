@@ -4,7 +4,7 @@ import NavLinkNoAuth from "@/components/navbar-signup";
 import NavLink from "@/components/navbar";
 import useAuthStore from "@/contexts/auth-store";
 import { Toaster } from "react-hot-toast";
-import SettingsSidebar from "@/components/sidebar";
+import SettingsSidebar from "@/components/sidebar-old-version";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const user = useAuthStore((state) => state.user);

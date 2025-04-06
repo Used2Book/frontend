@@ -53,7 +53,7 @@ const SaleListingList: React.FC<{bookID: number}> = ({bookID}) => {
             {loading ? (
                 <p className="text-center text-zinc-400 py-4">Loading your listings...</p>
             ) : bookList.length === 0 ? (
-                <p className="text-center text-zinc-400 py-4">No books listed for sale.</p>
+                <p className="text-center text-zinc-400 py-4">No books listed for sale ...</p>
             ) : (
                 <div className="flex space-x-6 overflow-x-auto py-4 scrollbar-hide mx-3 px-1">
                     {bookList.map((book) => (

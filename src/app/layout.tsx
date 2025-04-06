@@ -19,7 +19,6 @@ export default function RootLayout({
       <body >
         {children}
       </body>
-      {/* <Script src="https://cdn.omise.co/omise.js" /> */}
     </html>
   );
 }

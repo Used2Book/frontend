@@ -40,7 +40,7 @@ export default function OfferPage() {
   if (loading) return <p className="text-center py-4">Loading...</p>;
 
   return (
-    <div className="w-full bg-slate-100 h-screen px-32 py-10">
+    <div className="w-full h-screen px-32 py-10">
       <div className="flex items-center space-x-3 mb-5">
         <div className="text-3xl font-bold">Offers</div>
         <Handshake size={25} />
@@ -49,18 +49,31 @@ export default function OfferPage() {
       {/* Tabs */}
       <div className="flex space-x-4 mb-6">
         <button
-          className={`px-4 py-2 rounded-md ${activeTab === "buyer" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"}`}
+          className={`flex py-2 px-10 text-sm font-semibold rounded-md ${activeTab === "buyer" ? "bg-blue-200 text-blue-900 rounded-md" : "text-gray-500"}`}
+          
+          
           onClick={() => setActiveTab("buyer")}
         >
           My Offers ({buyerOffers.length})
         </button>
         <button
-          className={`px-4 py-2 rounded-md ${activeTab === "seller" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"}`}
+          className={`flex py-2 px-10 text-sm font-semibold rounded-md ${activeTab === "seller" ? "bg-blue-200 text-blue-900 rounded-md" : "text-gray-500"}`}
           onClick={() => setActiveTab("seller")}
         >
           Offers to Me ({sellerOffers.length})
         </button>
       </div>
+
+      <div className="flex justify-center items-center space-x-3 mb-1 text-gray-500">
+        {/* <ShoppingCart size={25} />*/}
+        <p className="flex-1 text-center">Item</p>
+        <p className="flex-1 text-center">Avaibility</p>
+        <p className="flex-1 text-center">Price</p>
+        <p className="flex-1 text-center">Offer Status</p>
+
+      </div>
+
+      <hr className="border-gray-200 mb-5"/>
 
       {/* Offer List */}
       <div className="flex flex-col w-full space-y-1">
@@ -71,7 +84,7 @@ export default function OfferPage() {
             buyerOffers.map((offer) => (
               <div
                 key={offer.id}
-                className="p-3 text-sm font-medium transition-all duration-200"
+                className="py-3 text-sm font-medium transition-all duration-200"
               >
                 <OfferCard offerDetail={offer} onUpdate={handleUpdate} isBuyer={true} />
               </div>

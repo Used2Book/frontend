@@ -74,14 +74,14 @@ const ProfileNav: React.FC<{ clientID: number }> = ({ clientID }) => {
                 </ul>
             </div>
 
-            <div className="p-12 overflow-hidden min-h-0">
+            <div className="px-12 overflow-hidden min-h-0">
                 {activeTab === "Library" && (
                     <div className="flex flex-col space-y-5">
-                        <div className="flex justify-between py-5">
-                            <p className="font-semibold text-lg">All My Reads</p>
+                        <div className="flex justify-end py-2">
+                            {/* <p className="font-semibold text-lg">All My Reads</p> */}
                             {me?.id === clientID ? (
                                 <Link href="/user/book/add-library-book" className="">
-                                    <p className="text-center text-xs font-bold rounded-md shadow-md w-full px-20 py-2 border-[1.5px] transition-all duration-200 ease-in-out transform bg-black text-white hover:bg-zinc-700 hover:scale-105 active:scale-90">
+                                    <p className="text-center text-xs font-bold rounded-md shadow-md w-full px-10 py-2 mt-3 border-[1.5px] transition-all duration-200 ease-in-out transform bg-black text-white hover:bg-zinc-700 hover:scale-105 active:scale-90">
                                         Add to My Reads
                                     </p>
                                 </Link>
@@ -95,16 +95,16 @@ const ProfileNav: React.FC<{ clientID: number }> = ({ clientID }) => {
                     </div>
                 )}
                 {activeTab === "Wishlist" && (
-                    <div className="flex flex-col space-y-5">
-                        <p className="font-semibold text-lg py-5">All WishList</p>
+                    <div className="flex flex-col space-y-5 mt-10">
+                        {/* <p className="font-semibold text-lg py-5">All WishList</p> */}
                         <div className="overflow-hidden min-h-0">
                             {me?.id === clientID ? <MyWishList /> : <UserWishList clientID={clientID} />}
                         </div>
                     </div>
                 )}
                 {activeTab === "Store" && (
-                    <div className="flex flex-col space-y-5">
-                        <p className="font-semibold text-lg py-5">All on Sale</p>
+                    <div className="flex flex-col space-y-5 mt-10">
+                        {/* <p className="font-semibold text-lg py-5">All on Sale</p> */}
                         <div className="overflow-hidden min-h-0">
                             {me?.id === clientID ? (
                                 <MyBookListCard />
@@ -115,7 +115,7 @@ const ProfileNav: React.FC<{ clientID: number }> = ({ clientID }) => {
                     </div>
                 )}
                 {activeTab === "Post" && (
-                    <div className="flex flex-col space-y-5">
+                    <div className="flex flex-col space-y-5 mt-10">
                         {posts?.length > 0 ? (
                             posts.map((post) => (
                                 <PostCard key={post.id} postDetail={post} books={books} genres={genres} />

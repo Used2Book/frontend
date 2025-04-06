@@ -18,11 +18,9 @@ export default function BookPage({ params }: { params: Promise<{ book_listing: s
 
 
     return (
-        <div className="w-full bg-slate-100 px-10 pt-10 pb-1">
+        <div className="w-full px-10 pt-10 pb-1">
             <SaleListingDetailCard book_listing={book_listing} owner_id={owner_id} />
-            <div>
-                <SaleProfileCard id={owner_id} />
-            </div>
+            
             {/* <BookDetailCard bookId={params.id} /> */}
 
             <div className="px-10 py-2 space-y-6 mt-10">

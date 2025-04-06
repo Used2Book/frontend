@@ -1,15 +1,17 @@
 // src/components/NavLink.tsx
 "use client";
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
+
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "@/assets/images/used2book-logo-black.png";
 import useStore from "@/contexts/useStore";
 import useAuthStore from "@/contexts/auth-store";
 import Avatar from "./avatar";
-import { Bell, ShoppingCart, MessageCircleMore, Handshake } from "lucide-react";
+import { Bell, ShoppingCart, MessageCircleMore, Handshake, LogOut, User, Settings } from "lucide-react";
 import chatService from "@/services/chat";
 import paymentService from "@/services/payment";
+import { logout } from "@/services/auth";
 
 const NavItemString = ({ href, link_string }: { href: string; link_string: string }) => (
     <li className="p-2 hover:bg-zinc-200 rounded-full text-xs md:text-sm cursor-pointer font-sans text-gray-600">
@@ -34,6 +36,23 @@ export default function NavLink() {
     const user = useStore(useAuthStore, (state) => state.user);
     const [chatCount, setChatCount] = useState(0);
     const [paymentCount, setPaymentCount] = useState(0);
+    const [showDropdown, setShowDropdown] = useState(false);
+
+    const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setShowDropdown(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
 
     useEffect(() => {
         if (!user) return;
@@ -78,16 +97,64 @@ export default function NavLink() {
                 <div>
                     {user ? (
                         <ul className="flex space-x-3 sm:space-x-5 items-center">
-                            <NavItemIcon href="/user/cart" icon={<ShoppingCart size={20} color="#4b5563"/>} />
-                            <NavItemIcon href="/user/offer" icon={<Handshake size={20} color="#4b5563"/>} />
-                            <NavItemIcon href="/user/chat" icon={<MessageCircleMore size={20} color="#4b5563"/>} count={chatCount} />
-                            <NavItemIcon href="/notification" icon={<Bell size={20} color="#4b5563"/>} count={paymentCount} />
-                            <li>
-                                <Link href="/user/profile" className="cursor-pointer">
-                                    <div className="bg-white w-10 h-10 rounded-full overflow-hidden border border-gray-300 ml-4">
-                                        <Avatar user={user} />
+                            <NavItemIcon href="/user/cart" icon={<ShoppingCart size={20} color="#4b5563" />} />
+                            <NavItemIcon href="/user/offer" icon={<Handshake size={20} color="#4b5563" />} />
+                            <NavItemIcon href="/user/chat" icon={<MessageCircleMore size={20} color="#4b5563" />} count={chatCount} />
+                            <NavItemIcon href="/notification" icon={<Bell size={20} color="#4b5563" />} count={paymentCount} />
+                            <li className="relative" ref={dropdownRef}>
+                                <button
+                                    onClick={() => setShowDropdown(!showDropdown)}
+                                    className="flex items-center justify-center bg-white w-10 h-10 rounded-full overflow-hidden border border-gray-300 ml-4 focus:outline-none"
+                                >
+                                    <Avatar user={user} />
+                                </button>
+
+                                {showDropdown && (
+                                    <div className="absolute right-0 mt-2 w-44 bg-white divide-y divide-gray-100 rounded-lg shadow-sm z-50 border-2 border-gray-200">
+                                        <ul className="py-2 text-sm text-gray-700">
+                                            <li>
+                                                <Link href="/user/profile" className="flex space-x-2 px-4 py-2 hover:bg-gray-100" onClick={() => setShowDropdown(false)}>
+                                                    <User size={18} />
+                                                    <p>
+                                                    My Profile
+                                                    </p>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link href="/user/setting" className="flex space-x-2 px-4 py-2 hover:bg-gray-100" onClick={() => setShowDropdown(false)}>
+                                                    <Settings size={18}/>
+                                                    <p>
+                                                    Settings
+                                                    </p>
+                                                </Link>
+                                            </li>
+                                        </ul>
+                                        <div className="py-2">
+                                            {/* <button
+                                                onClick={() => {
+                                                    useAuthStore.getState().logout();
+                                                    setShowDropdown(false);
+                                                }}
+                                                className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                            >
+                                                Logout
+                                            </button> */}
+
+                                            <Link
+                                                href="/auth"
+                                                className="flex space-x-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                onClick={async (e) => {
+                                                    e.preventDefault(); // ✅ Prevent default link behavior
+                                                    await logout(); // ✅ Pass router as a parameter
+                                                }}
+                                            >
+                                                <LogOut size={18} />
+                                                <span className="">Log Out</span>
+                                            </Link>
+
+                                        </div>
                                     </div>
-                                </Link>
+                                )}
                             </li>
                         </ul>
                     ) : (
