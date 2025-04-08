@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logout } from "@/services/auth";
-import { User, Settings, Mail, Key, Phone, ChevronDown, ChevronUp, PictureInPicture2, CircleArrowLeft, LogOut, CircleArrowRight, CreditCard, MapPinHouse, ShoppingBag } from "lucide-react";
+import { User, Settings, Mail, Key, Phone, ChevronDown, ChevronUp, PictureInPicture2, CircleArrowLeft, LogOut, CircleArrowRight, CreditCard, MapPinHouse, ShoppingBag, BookUp, BookmarkCheck, BookHeart } from "lucide-react";
 type Sublink = {
     href: string;
     label: string;
@@ -18,26 +18,19 @@ type LinkItem = {
 
 const links: LinkItem[] = [
 
-    { href: "/user/account/profile", label: "Profile Setting", icon: <User size={16} /> },
-    { href: "/user/account/purchase", label: "My Purchase", icon: <ShoppingBag size={16} />},
-
-
-    { href: "/user/account/username", label: "Change Name", icon: <User size={16} /> },
-    { href: "/user/account/preferrence", label: "Update Preferences", icon: <PictureInPicture2 size={16} /> },
-    { href: "/user/account/phone-number", label: "Update Phone Number", icon: <Phone size={16} /> },
-    { href: "/user/account/bank-account", label: "Update Bank Account", icon: <CreditCard size={16} /> },
-
+    { href: "/user/sale/my-sale", label: "My Sales", icon: <BookUp  size={16}/> },
+    { href: "/user/sale/my-order", label: "My Orders", icon: <BookmarkCheck size={16} />},
 
 ];
 
-const SettingsSidebar: React.FC = () => {
+const SaleSettingsSidebar: React.FC = () => {
     const pathname = usePathname();
 
     return (
         <div className="relative h-full">
             <div className="flex flex-col h-full w-64 shadow-md px-8 py-5 transition-all duration-300">
                 <div className="font-semibold text-xl mb-5">
-                    <p>Settings</p>
+                    <p>Sale Management</p>
                 </div>
                 <div className="flex flex-col justify-between h-full">
                     <div>
@@ -65,4 +58,4 @@ const SettingsSidebar: React.FC = () => {
     );
 };
 
-export default SettingsSidebar;
+export default SaleSettingsSidebar;

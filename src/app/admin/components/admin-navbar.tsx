@@ -41,7 +41,7 @@ export default function AdminNavLink() {
                             <ul className="flex space-x-6 sm:space-x-10 md:space-x-12 items-center">
                                 <NavItemString href="/admin" link_string="Home" />
                                 {/* <NavItemString href="/user/webboard" link_string="Web board" />
-                                <NavItemString href="/user/store" link_string="Store" /> */}
+                                <NavItemString href="/user/sale" link_string="Store" /> */}
                             </ul>
                         </div>
                     ) : null}

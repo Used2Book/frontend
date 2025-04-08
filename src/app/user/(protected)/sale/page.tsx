@@ -107,7 +107,7 @@ const StorePage = () => {
     return (
         <div className="max-w-auto mx-20 my-5 p-6">
             {/* Header */}
-            <h1 className="text-2xl font-semibold mb-10">My Store</h1>
+            <h1 className="text-2xl font-semibold mb-10">My Sales</h1>
             <div className="flex justify-between items-center mb-6">
                 <div className="relative w-full max-w-xs">
                     <select

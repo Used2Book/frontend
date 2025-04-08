@@ -34,7 +34,7 @@ const MenuDropdown = () => {
             {isOpen && (
                 <div className="absolute right-0 mt-2 z-10 bg-white rounded-lg shadow-md w-44">
                     <ul className="py-2 text-sm text-gray-700 divide-y divide-gray-200">
-                        <MenuItem href="/user/setting/profile" link_string="Setting"/>
+                        <MenuItem href="/user/account/profile" link_string="Setting"/>
                         <MenuItem href="/auth" link_string="Sign out"/>
                     </ul>
                 </div>

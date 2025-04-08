@@ -132,6 +132,7 @@ class ChatService {
     async getUserChats(userId: string): Promise<Chat[]> {
         try {
             const response = await chatHttpClient.get(`/chat/user/${userId}`);
+            console.log("get user chat:", response.data)
             return response.data;
         } catch (error: any) {
             if (error.response?.status === 403) {

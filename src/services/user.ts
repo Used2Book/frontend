@@ -89,15 +89,20 @@ export const editUsername = async (userInfo: {
   }
 };
 
-export const editPreferrence = async (userInfo: {
+export const editProfile = async (userInfo: {
+  first_name: string;
+  last_name: string;
+  address: string;
   quote: string;
   bio: string;
 }) => {
   try {
-    const res = await httpClient.post("/user/edit-preferrence", userInfo);
+    console.log("userInfo:", userInfo)
+    const res = await httpClient.post("/user/edit-profile", userInfo);
+    toast.success("Edit Account Profile Successfully !")
     return res.data;
   } catch (err) {
-    console.error("Edit Account Preferrence Failed:", err);
+    console.error("Edit Account Profile Failed:", err);
     throw err;
   }
 };
@@ -158,23 +163,18 @@ export const userProfile = async (userID : number) => {
   }
 };
 
-// src/services/user.ts
-// export const charge = async (listingId: number, buyerId: number, offerId?: number) => {
-//   try {
-//     console.log("Fetching charge...");
-//     console.log("listingId:", listingId, "buyerId:", buyerId, "offerId:", offerId);
-//     const res = await httpClient.post("/payment/charge", {
-//       listing_id: listingId,
-//       buyer_id: buyerId,
-//       offer_id: offerId, // Optional
-//     });
-//     console.log("charge data:", res.data);
-//     return res.data;
-//   } catch (err) {
-//     console.log("Get charge data unsuccessful!");
-//     return null;
-//   }
-// };
+export const getUserWishlistByBookId = async (bookID : number) => {
+  try {
+    console.log("Fetching users wishlist by book id...");
+    const res = await httpClient.get(`user/user-wishlist/${bookID}`);
+    console.log("getUserWishlistByBookId :", res.data.users)
+    console.log("get user wishlist by book id successfully !");
+    return res.data.users
+  } catch (err) {
+    console.log("get user wishlist by book id unsuccessfully !")
+    return null
+  }
+};
 
 export const bookWishlistStatus = async (bookID : number) => {
   try {
@@ -231,12 +231,36 @@ export const removeListing = async (listingId: number) => {
 
 export const myListing = async () => {
   try {
-    console.log("Fetching user library...");
+    console.log("Fetching my listing ...");
     const res = await httpClient.get("user/get-listing");
     console.log("user listing :", res.data.listing)
     return res.data.listing
   } catch (err) {
     console.log("Get user listing unsuccessfully !")
+    return null
+  }
+};
+
+export const myPurchaseListing = async () => {
+  try {
+    console.log("Fetching user purchase listing...");
+    const res = await httpClient.get("user/purchase-listing");
+    console.log("user purchase listing :", res.data.listing)
+    return res.data.listing
+  } catch (err) {
+    console.log("Get user listing unsuccessfully !")
+    return null
+  }
+};
+
+export const myOrders = async () => {
+  try {
+    console.log("Fetching my orders ...");
+    const res = await httpClient.get("user/my-orders");
+    console.log("my orders :", res.data.orders)
+    return res.data.orders
+  } catch (err) {
+    console.log("Get my orders unsuccessfully !")
     return null
   }
 };

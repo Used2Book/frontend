@@ -18,24 +18,24 @@ type LinkItem = {
 
 const links: LinkItem[] = [
     {
-        href: "/settings/profile",
+        href: "/accounts/profile",
         label: "User Profile",
         icon: <User size={18} />,
         sublinks: [
-            { href: "/user/setting/username", label: "Change Name", icon: <User size={16} /> },
-            { href: "/user/setting/preferrence", label: "Update Preferences", icon: <PictureInPicture2 size={16} /> },
+            { href: "/user/account/username", label: "Change Name", icon: <User size={16} /> },
+            { href: "/user/account/preferrence", label: "Update Preferences", icon: <PictureInPicture2 size={16} /> },
         ],
     },
     {
-        href: "/settings/account",
+        href: "/accounts/account",
         label: "Account Management",
         icon: <Settings size={18} />,
         sublinks: [
-            // { href: "/settings/setting/email", label: "Update Email Address", icon: <Mail size={16} /> },
-            // { href: "/settings/setting/password", label: "Change Password", icon: <Key size={16} /> },
-            { href: "/user/setting/phone-number", label: "Update Phone Number", icon: <Phone size={16} /> },
-            { href: "/user/setting/bank-account", label: "Update Bank Account", icon: <CreditCard size={16} /> },
-            // { href: "/user/setting/address", label: "Update Bank Account", icon: <MapPinHouse size={16} /> },
+            // { href: "/accounts/account/email", label: "Update Email Address", icon: <Mail size={16} /> },
+            // { href: "/accounts/account/password", label: "Change Password", icon: <Key size={16} /> },
+            { href: "/user/account/phone-number", label: "Update Phone Number", icon: <Phone size={16} /> },
+            { href: "/user/account/bank-account", label: "Update Bank Account", icon: <CreditCard size={16} /> },
+            // { href: "/user/account/address", label: "Update Bank Account", icon: <MapPinHouse size={16} /> },
         ],
     },
 ];

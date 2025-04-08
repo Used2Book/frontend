@@ -8,8 +8,11 @@ const BackgroundImageSection: React.FC<{ handleChangeBackgroundImage: (event: Re
         <div className="relative w-full h-52 bg-orange-400">
             <Image src={userBackground} alt="Background" fill objectFit="cover" className="object-cover" />
             <input type="file" accept="image/*" className="hidden" id="background-upload" onChange={handleChangeBackgroundImage} />
-            <label htmlFor="background-upload" className="absolute bottom-3 right-3 bg-gray-500 text-white p-2 rounded-md cursor-pointer">
-                <Camera className="h-4 w-4" /> Edit
+            <label htmlFor="background-upload" className="absolute bottom-3 right-3 flex space-x-2 justify-center items-center bg-gray-500 text-white p-2 rounded-md cursor-pointer">
+                <Camera className="h-4 w-4" /> 
+                <p>
+                Edit
+                </p>
             </label>
         </div>
     );

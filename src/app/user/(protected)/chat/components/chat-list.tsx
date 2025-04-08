@@ -11,7 +11,7 @@ import { User } from "@/types/user";
 import { userProfile } from "@/services/user";
 
 interface Chat {
-    id: string;
+    _id: string;
     lastMessage: {
         senderId: string;
         content: string;
@@ -45,7 +45,7 @@ export default function ChatList() {
             if (!isInvolved) return;
     
             setChats((prevChats) => {
-                const idx = prevChats.findIndex((c) => c.id === message.chatId);
+                const idx = prevChats.findIndex((c) => c._id === message.chatId);
                 const chatToUpdate = idx >= 0 ? { ...prevChats[idx] } : {
                     id: message.chatId,
                     lastMessage: { senderId: "", content: "", timestamp: "" }
@@ -81,7 +81,7 @@ export default function ChatList() {
         // Join all chat rooms after fetching chats
         const joinChatRooms = async () => {
             const userChats = await chatService.getUserChats(String(user.id));
-            userChats.forEach(chat => chatService.joinChat(chat.id));
+            userChats.forEach(chat => chatService.joinChat(chat._id));
         };
         joinChatRooms();
     
@@ -136,7 +136,7 @@ export default function ChatList() {
     };
 
     return (
-        <div className="p-4 h-screen bg-gray-200">
+        <div className="p-4 h-screen bg-gray-50">
             <h1 className="text-xl font-bold text-center">Chats</h1>
             {error ? (
                 <p className="text-red-500">{error}</p>
@@ -145,12 +145,12 @@ export default function ChatList() {
             ) : (
                 <ul className="mt-4 space-y-2">
                     {chats.map((chat) => {
-                        const [u1, u2] = chat.id.split("-");
+                        const [u1, u2] = chat._id.split("-");
                         const UserId = u1 === String(user?.id) ? u2 : u1;
 
                         return (
-                            <li key={chat.id}>
-                                <ChatListItem chat={chat} UserId={UserId} isUnread={unreadChatIds.has(chat.id)} />
+                            <li key={chat._id}>
+                                <ChatListItem chat={chat} UserId={UserId} isUnread={unreadChatIds.has(chat._id)} />
                             </li>
                         );
                     })}
@@ -186,13 +186,13 @@ function ChatListItem({
             }
         };
         fetchProfile();
-        console.log("Chat ID:", chat.id, "isUnread:", isUnread);
+        console.log("Chat ID:", chat._id, "isUnread:", isUnread);
     }, [UserId]);
 
     if (!profile) return null;
 
     return (
-        <Link href={`/user/chat/${chat.id}`}>
+        <Link href={`/user/chat/${chat._id}`}>
             <div className={`flex items-center gap-3 hover:bg-gray-100 rounded-md px-2 py-1 ${isUnread ? "bg-blue-200" : ""}`}>
                 <div className="relative w-12 h-12 rounded-full overflow-hidden">
                     <Image

@@ -29,7 +29,7 @@ const RequireSeller: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   useEffect(() => {
     // Only run if loading is done and user is fetched
     if (!loading && user && !user.has_bank_account) {
-      router.push("/user/setting/bank-account");
+      router.push("/user/account/bank-account");
     }
   }, [loading, user, router]);
 

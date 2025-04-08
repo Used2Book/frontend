@@ -12,6 +12,7 @@ import { Bell, ShoppingCart, MessageCircleMore, Handshake, LogOut, User, Setting
 import chatService from "@/services/chat";
 import paymentService from "@/services/payment";
 import { logout } from "@/services/auth";
+import { useRouter } from "next/navigation"; // <== import this at the top
 
 const NavItemString = ({ href, link_string }: { href: string; link_string: string }) => (
     <li className="p-2 hover:bg-zinc-200 rounded-full text-xs md:text-sm cursor-pointer font-sans text-gray-600">
@@ -39,6 +40,8 @@ export default function NavLink() {
     const [showDropdown, setShowDropdown] = useState(false);
 
     const dropdownRef = useRef<HTMLDivElement | null>(null);
+    
+    const router = useRouter(); 
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -89,7 +92,7 @@ export default function NavLink() {
                             <ul className="flex space-x-6 sm:space-x-10 md:space-x-12 items-center">
                                 <NavItemString href="/user/home" link_string="Home" />
                                 <NavItemString href="/user/webboard" link_string="Web board" />
-                                <NavItemString href="/user/store" link_string="Store" />
+                                <NavItemString href="/user/sale/my-sale" link_string="Sale" />
                             </ul>
                         </div>
                     ) : null}
@@ -116,41 +119,31 @@ export default function NavLink() {
                                                 <Link href="/user/profile" className="flex space-x-2 px-4 py-2 hover:bg-gray-100" onClick={() => setShowDropdown(false)}>
                                                     <User size={18} />
                                                     <p>
-                                                    My Profile
+                                                        My Profile
                                                     </p>
                                                 </Link>
                                             </li>
                                             <li>
-                                                <Link href="/user/setting" className="flex space-x-2 px-4 py-2 hover:bg-gray-100" onClick={() => setShowDropdown(false)}>
-                                                    <Settings size={18}/>
+                                                <Link href="/user/account" className="flex space-x-2 px-4 py-2 hover:bg-gray-100" onClick={() => setShowDropdown(false)}>
+                                                    <Settings size={18} />
                                                     <p>
-                                                    Settings
+                                                        Settings
                                                     </p>
                                                 </Link>
                                             </li>
                                         </ul>
                                         <div className="py-2">
-                                            {/* <button
-                                                onClick={() => {
-                                                    useAuthStore.getState().logout();
-                                                    setShowDropdown(false);
-                                                }}
-                                                className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                            >
-                                                Logout
-                                            </button> */}
-
-                                            <Link
-                                                href="/auth"
+                                            <button
                                                 className="flex space-x-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                                 onClick={async (e) => {
                                                     e.preventDefault(); // ✅ Prevent default link behavior
-                                                    await logout(); // ✅ Pass router as a parameter
+                                                    await logout(); // ✅ Clear auth
+                                                    router.push("/auth"); // ✅ Programmatic redirect
                                                 }}
                                             >
                                                 <LogOut size={18} />
-                                                <span className="">Log Out</span>
-                                            </Link>
+                                                <span>Log Out</span>
+                                            </button>
 
                                         </div>
                                     </div>

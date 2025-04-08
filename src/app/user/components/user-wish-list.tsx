@@ -36,7 +36,7 @@ const UserWishList: React.FC<{clientID: number}> = ({clientID}) => {
             {loading ? (
                 <p className="text-center py-4">Loading your Wishlist ...</p>
             ) : bookList.length === 0 ? (
-                <p className="text-center py-4 text-gray-400">Adding some wish list ...</p>
+                <p className="text-center py-4 text-gray-400">No Wish List ...</p>
             ) : (
                 <div className="flex space-x-6 overflow-x-auto py-4 scrollbar-hide mx-3">
 

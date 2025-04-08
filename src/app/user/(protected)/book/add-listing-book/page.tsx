@@ -75,7 +75,7 @@ export default function AddListingBookPage() {
                 const updatedUser = await getMe();
                 if (updatedUser) {
                     setUser(updatedUser);
-                    router.push("/user/store");
+                    router.push("/user/sale");
                 }
                 setIsSubmitting(false);
             }, 500);

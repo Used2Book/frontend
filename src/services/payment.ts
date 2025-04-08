@@ -8,7 +8,6 @@ import toast from "react-hot-toast";
 
 const NOTIFICATION_SOCKET_URL = "http://localhost:5001";
 
-const STRIPE_PUBLIC_KEY = process.env.STRIPE_PUBLIC_KEY || ""; 
 
 
 
@@ -50,6 +49,11 @@ class paymentService {
         this.notiSocket?.on("unread_payment_count", callback);
     }
 
+    onPaymentList(callback: (lists: Notification[]) => void): void {
+        this.notiSocket?.on("payment_list", callback);
+    }
+    
+
     async getUnreadPaymentCount(userId: string): Promise<number> {
         try {
             const response = await fetch(`http://localhost:5001/notifications/unread-payments?user_id=${userId}`, {
@@ -72,6 +76,9 @@ class paymentService {
 }
 
 export default new paymentService();
+
+
+
 
 export const checkout = async (listingId: number, buyerId: number, offerId?: number) => {
     try {
