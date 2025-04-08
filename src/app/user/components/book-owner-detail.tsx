@@ -66,7 +66,18 @@ const BookOwnerDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => 
                 <p className="text-lg font-bold">{bookDetail.title}</p>
                 <div className="flex space-x-2 items-center">
                     <p className="text-sm font-bold">Author</p>
-                    <p>{bookDetail.author}</p>
+                    <div>
+                        <ul className="flex space-x-2">
+                            {bookDetail?.author.map((author: any, index: any) => (
+                                <li
+                                    key={index}
+                                    className="inline-block whitespace-nowrap"
+                                >
+                                    {author}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
                 <div className="flex space-x-2 items-center">
                     <Image src={star_png} alt="rating" width={15} height={15} />
@@ -79,7 +90,7 @@ const BookOwnerDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => 
                 <div className="flex space-x-2 items-center">
                     <p className="text-sm font-bold">Genres </p>
                     <ul className="flex space-x-2">
-                        
+
                         {Array.isArray(bookDetail.genres) && bookDetail.genres.map((genre, index) => (
                             <li key={index} className="bg-zinc-600 px-2 py-1 rounded-lg text-white">{genre}</li>
                         ))}

@@ -33,7 +33,8 @@ const BookOwnerCard: React.FC<Book & { price: number; status: string }> = ({
 
                     <div className="flex mt-3 justify-between items-center space-x-3 text-gray-500">
                         <p className="text-ellipsis overflow-hidden whitespace-nowrap">
-                            {author.length > 9 ? `${author.slice(0, 9)}...` : author}
+                            {author[0].length > 9 ? `${author[0].slice(0, 9)}...` : author[0]}
+                            
                         </p>
                         <div className="flex space-x-1">
                             <Image src={star_png} alt="rating" width={10} height={10} />

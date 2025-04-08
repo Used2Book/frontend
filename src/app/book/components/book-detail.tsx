@@ -70,7 +70,19 @@ const BookDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => {
             {/* Book Info Section */}
             <div className="flex flex-col justify-start space-y-5 text-sm p-4">
                 <p className="text-lg font-bold">{bookDetail.title}</p>
-                <p className='italic'>by {bookDetail.author}</p>
+                <p className=''>
+                <ul className="flex space-x-2 italic text-gray-700">
+                    <li className="mr-1">by</li>
+                    {bookDetail?.author.map((author: any, index: any) => (
+                      <li
+                        key={index}
+                        className="inline-block whitespace-nowrap"
+                      >
+                        {author}
+                      </li>
+                    ))}
+                  </ul>
+                </p>
                 <div className="flex space-x-2 items-center">
                     <Image src={star_png} alt="rating" width={15} height={15} />
                     <p>{bookDetail.average_rating}</p>

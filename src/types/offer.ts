@@ -7,7 +7,7 @@ export interface Offer {
     status: "pending" | "accepted" | "rejected";
     book_id: number;
     book_title: string;
-    book_author: string;
+    book_author: string[];
     cover_image_url: string;
     image_url?: string;
     seller_id: number;

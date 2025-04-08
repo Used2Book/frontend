@@ -76,7 +76,7 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
         toast.error("User ID not available.");
         return;
       }
-      
+
       await checkout(parseInt(listingId), user?.id, 0); // 0 for no offerId
 
       toast.success("Redirect !!!");
@@ -135,7 +135,7 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
   return (
     <div className="w-full items-center pb-3">
       <div className="flex justify-center space-x-6 p-8  shadow-sm rounded-md bg-white">
-      {/* <div className="flex justify-center relative h-full space-x-6 p-8 shadow-sm rounded-md bg-white"> */}
+        {/* <div className="flex justify-center relative h-full space-x-6 p-8 shadow-sm rounded-md bg-white"> */}
         <div className="flex-1 flex justify-end rounded-sm max-w-sm ">
           <div className="flex flex-col space-y-4">
             {/* Main Image */}
@@ -183,16 +183,16 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
                 ))}
               </div>
             )}
-          {user?.id !== owner_id && (
-            <div className="flex space-x-2">
-              <button
-                className={`flex-1 flex justify-center items-center space-x-3 text-center font-bold text-xxs rounded-md border-[1.5px] border-black whitespace-nowrap shadow-md w-full p-1 transition-all duration-200 ease-in-out transform ${isSold ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "hover:bg-zinc-100 hover:scale-105 active:scale-90"}`}
-                onClick={handleAddToCart}
-                disabled={isSold}
-              >
-                <ShoppingBasket color={isSold ? "gray" : "black"} size={18} />
-                <p>{isSold ? "Sold" : "Cart"}</p>
-              </button>
+            {user?.id !== owner_id && (
+              <div className="flex space-x-2">
+                <button
+                  className={`flex-1 flex justify-center items-center space-x-3 text-center font-bold text-xxs rounded-md border-[1.5px] border-black whitespace-nowrap shadow-md w-full p-1 transition-all duration-200 ease-in-out transform ${isSold ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "hover:bg-zinc-100 hover:scale-105 active:scale-90"}`}
+                  onClick={handleAddToCart}
+                  disabled={isSold}
+                >
+                  <ShoppingBasket color={isSold ? "gray" : "black"} size={18} />
+                  <p>{isSold ? "Sold" : "Cart"}</p>
+                </button>
                 <button
                   className={`flex-1 w-full text-center text-xxs font-bold rounded-md shadow-md p-1 border-[1.5px] border-black transition-all duration-200 ease-in-out transform ${isSold ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-black text-white hover:bg-zinc-700 hover:scale-105 active:scale-90"}`}
                   disabled={isSold}
@@ -200,10 +200,10 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
                 >
                   {isSold ? "Sold" : "Buy"}
                 </button>
-              {/* <Link href={`/user/${owner_id}/book/${listingId}/payment`} className="flex-1 w-full">
+                {/* <Link href={`/user/${owner_id}/book/${listingId}/payment`} className="flex-1 w-full">
               </Link> */}
-            </div>
-          )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -216,13 +216,25 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
           </div>
 
           <div className="flex space-x-2 items-center text-zinc-600 italic mb-5">
-            <p>{listing?.author || "Unknown"}</p>
+            {/* <p>{listing?.author || "Unknown"}</p> */}
+
+            <ul className="flex space-x-2">
+              {listing?.author.map((author: any, index: any) => (
+                <li
+                  key={index}
+                  className="inline-block whitespace-nowrap"
+                >
+                  {author}
+                </li>
+              ))}
+            </ul>
+
           </div>
-          
+
           <div>
             <SaleProfileCard id={owner_id} />
           </div>
-          
+
 
           <div className="flex space-x-2 items-center">
             <p className={`font-bold text-xl my-3 ${isSold ? "text-gray-500 line-through" : "text-black"}`}>
@@ -244,12 +256,12 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
 
           <div className="flex flex-col space-y-3 my-2 pr-52">
             <h4 className="text-base font-semibold">Seller Note</h4>
-            <hr className="border-gray-200"/>
+            <hr className="border-gray-200" />
             <p className="text-gray-600 text-sm sm:text-base">{listing?.seller_note}</p>
           </div>
 
 
-          
+
         </div>
       </div>
 

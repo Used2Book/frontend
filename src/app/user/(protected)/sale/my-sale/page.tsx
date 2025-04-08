@@ -180,9 +180,7 @@ const MySalePage = () => {
                                                 {book.title.length > 38 ? `${book.title.slice(0, 38)}...` : book.title}
                                             </h2>
 
-                                            {/* <p className="text-xs text-gray-600">
-                                            {book.author || "Unknown Author"}
-                                            </p> */}
+                                        
                                             <div className="flex justify-between items-center">
                                                 <p className="text-base font-bold text-blue-600">
                                                     {book.price} ฿

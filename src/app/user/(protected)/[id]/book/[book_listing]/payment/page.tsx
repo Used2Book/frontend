@@ -139,11 +139,16 @@ export default function PaymentPage({ params }: { params: Promise<{ book_listing
                     <div className="flex flex-col justify-start space-y-3 text-sm p-4">
                         <p className="text-xl font-bold">{listing?.title || "Unknown Title"}</p>
                         <p className="flex space-x-2 items-center text-zinc-400 italic">
-                            {listing?.author
-                                ? listing.author.length > 50
-                                    ? `${listing.author.slice(0, 50)}...`
-                                    : listing.author
-                                : "Unknown Author"}
+                            <ul className="flex space-x-2">
+                                {listing?.author.map((author: any, index: any) => (
+                                    <li
+                                        key={index}
+                                        className="inline-block whitespace-nowrap"
+                                    >
+                                        {author}
+                                    </li>
+                                ))}
+                            </ul>
                         </p>
                         <div className="flex space-x-2 items-center py-2">
                             <div className="flex justify-start w-8 h-8 rounded-full overflow-hidden">

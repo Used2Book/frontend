@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { getMe } from "@/services/user";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/contexts/auth-store";
+import { Book } from "@/types/book";
 
 const Label = ({ label }: { label: string }) => (
     <label className="block text-base font-medium mb-2">{label}</label>
@@ -17,7 +18,8 @@ export default function AddLibraryBookPage() {
     const setUser = useAuthStore((state) => state.setUser);
 
     const [title, setTitle] = useState("");
-    const [books, setBooks] = useState([]);
+    const [books, setBooks] = useState<Book[]>([]);
+
     const [searchQuery, setSearchQuery] = useState("");
     const [bookID, setBookID] = useState<number | null>(null);
     const [readingStatus, setReadingStatus] = useState<number>(1); // Default to "Finished Reading" (1)
@@ -108,7 +110,7 @@ export default function AddLibraryBookPage() {
                                         <p className="text-xs font-semibold text-black truncate">
                                             {book?.title.length > 50 ? `${book?.title.slice(0, 50)}...` : book?.title}
                                         </p>
-                                        <p className="text-xxs">by {book?.author}</p>
+                                        <p className="text-xxs">by {book?.author[0]}</p>
                                     </div>
                                 </li>
                             ))}

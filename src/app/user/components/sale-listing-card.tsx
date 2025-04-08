@@ -75,7 +75,7 @@ const SaleListingCard: React.FC<{ book: SaleBook }> = ({ book }) => {
                         {book.title.length > 15 ? `${book.title.slice(0, 15)}...` : book.title}
                     </h3>
                     <p className="text-xxxs text-gray-500 truncate">
-                        {book.author.length > 12 ? `${book.author.slice(0, 12)}...` : book.author}
+                        {book.author[0].length > 12 ? `${book.author[0].slice(0, 12)}...` : book.author[0]}
                     </p>
 
                     {/* Price and Offer */}

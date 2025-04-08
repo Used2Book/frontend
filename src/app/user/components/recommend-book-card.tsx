@@ -2,7 +2,7 @@
 import Image from "next/image";
 import star_png from "@/assets/images/star.png";
 import { Book } from "@/types/book";
-import {Vibrant} from "node-vibrant/browser"; // Use node-vibrant/browser
+import { Vibrant } from "node-vibrant/browser"; // Use node-vibrant/browser
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
@@ -55,7 +55,18 @@ const RecommendBookCard: React.FC<Book> = ({ id, title, author, cover_image_url,
                 {/* Book Info Section */}
                 <div className="flex-1 text-black space-y-2 text-xs sm:text-sm md:text-base p-4 max-w-md">
                     <p className="text-base sm:text-lg md:text-xl lg:text-lg font-bold truncate">{title}</p>
-                    <p className="truncate text-zinc-800 text-sm">by {author}</p>
+                    <p className="truncate text-zinc-800 text-sm">by
+                        <ul className="flex space-x-2">
+                            {author.map((author_: any, index: any) => (
+                                <li
+                                    key={index}
+                                    className="inline-block whitespace-nowrap"
+                                >
+                                    {author_}
+                                </li>
+                            ))}
+                        </ul>
+                    </p>
                     <div className="flex space-x-2 items-center">
                         <Image
                             src={star_png}

@@ -4,7 +4,6 @@ import { Book } from '@/types/book'
 import Link from 'next/link';
 
 
-// export default function BookCard({ title, author, image, rating }: BookCardProps) {
 const BookCard: React.FC<Book> = ({ title, author, cover_image_url, average_rating, id }) => {
     return (
         // <Link href={{ pathname: "/book/[id]", params: { id: id.toString() } }}>
@@ -32,7 +31,7 @@ const BookCard: React.FC<Book> = ({ title, author, cover_image_url, average_rati
                         <div >
                             {/* <p className=""> */}
                             <p className="text-ellipsis overflow-hidden whitespace-nowrap">
-                                {author.length > 9 ? `${author.slice(0, 9)}...` : author}
+                                {author[0].length > 9 ? `${author[0].slice(0, 9)}...` : author[0]}
                             </p>
                         </div>
                         <div className='flex space-x-1'>

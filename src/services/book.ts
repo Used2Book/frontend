@@ -133,7 +133,7 @@ export const getAllBookGenres = async (): Promise<BookGenre[]> => {
 
   export const insertBook = async (bookData: {
     title: string;
-    author: string;
+    author: string[];
     description?: string;
     language?: string;
     isbn?: string;

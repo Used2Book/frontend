@@ -154,7 +154,7 @@ export default function AddListingBookPage() {
                                                     ? `${book?.title.slice(0, 50)}...`
                                                     : book?.title}
                                             </p>
-                                            <p className="text-xxs">by {book?.author}</p>
+                                            <p className="text-xxs">by {book?.author[0]}</p>
                                         </div>
                                     </li>
                                 ))}

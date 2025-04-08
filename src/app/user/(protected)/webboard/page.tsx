@@ -265,7 +265,18 @@ export default function WebBoardPage() {
 
                     <div className="flex-1 flex-col justify-start space-y-2 text-sm">
                       <p className="text-sm font-bold">{selectedBook.title}</p>
-                      <p className='text-xs text-gray-600'>{selectedBook.author}</p>
+                      <p className='text-xs text-gray-600'>
+                        <ul className="flex space-x-2">
+                          {selectedBook?.author.map((author: any, index: any) => (
+                            <li
+                              key={index}
+                              className="inline-block whitespace-nowrap"
+                            >
+                              {author}
+                            </li>
+                          ))}
+                        </ul>
+                      </p>
                       <div className="flex space-x-2 items-center text-xs">
                         <Image src={star_png} alt="rating" width={15} height={15} />
                         <p>{selectedBook.average_rating}</p>
@@ -277,8 +288,8 @@ export default function WebBoardPage() {
                 ) : (
                   <h2 className="text-base font-semibold text-center border border-gray-200 shadow-md rounded-md p-5">{selectedGenre?.name}</h2>
                 )}
-                  {selectedItem && selectedItem.type !== "user" && (
-                    <div className="flex w-full justify-end items-end">
+                {selectedItem && selectedItem.type !== "user" && (
+                  <div className="flex w-full justify-end items-end">
                     <button
                       className="mt-4 mr-8 px-5 py-1 bg-black text-white text-xs sm:text-sm shadow-md rounded-lg hover:bg-gray-800 transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95"
                       onClick={() => setIsModalOpen(true)}
@@ -286,8 +297,8 @@ export default function WebBoardPage() {
                       + Add Post
                       {/* {selectedItem.type === "book" ? selectedBook?.title : selectedGenre?.name} */}
                     </button>
-                    </div>
-                  )}
+                  </div>
+                )}
               </div>
             )}
             {/* Right Side: Posts */}

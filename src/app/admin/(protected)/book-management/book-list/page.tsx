@@ -3,23 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { allBooks } from "@/services/book"; // Adjust import path
 import Image from "next/image";
-
+import { Book } from "@/types/book";
 // Define Book type based on your backend model
-interface Book {
-  id: number;
-  title: string;
-  author: string;
-  description?: string;
-  language?: string;
-  isbn?: string;
-  publisher?: string;
-  publish_date?: string; // Adjust to Date if you parse it
-  cover_image_url?: string;
-  num_ratings?: string; // Could be number if parsed
-  average_rating?: string; // Could be number if parsed
-  created_at?: string; // Adjust to Date if parsed
-  updated_at?: string; // Adjust to Date if parsed
-}
 
 const BookAdminManagementPage: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
@@ -85,7 +70,18 @@ const BookAdminManagementPage: React.FC = () => {
               )}
               <div>
                 <p className="text-lg font-semibold">{book.title}</p>
-                <p className="text-sm text-gray-500">by {book.author}</p>
+                <div className="text-sm text-gray-500">by
+                  <ul className="flex space-x-2">
+                    {book?.author.map((author: any, index: any) => (
+                      <li
+                        key={index}
+                        className="inline-block whitespace-nowrap"
+                      >
+                        {author}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           ))}

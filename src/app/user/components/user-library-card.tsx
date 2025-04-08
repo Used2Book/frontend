@@ -4,7 +4,6 @@ import { Book } from '@/types/book'
 import Link from 'next/link';
 
 
-// export default function UserLibraryCard({ title, author, image, rating }: BookCardProps) {
 const UserLibraryCard: React.FC<Book> = ({ title, author, cover_image_url, id,  average_rating, reading_status}) => {
     
     const statusStyles: { [key: number]: string } = {
@@ -39,7 +38,7 @@ const UserLibraryCard: React.FC<Book> = ({ title, author, cover_image_url, id,  
                         <div >
                             {/* <p className=""> */}
                             <p className="text-ellipsis overflow-hidden whitespace-nowrap">
-                                {author.length > 9 ? `${author.slice(0, 9)}...` : author}
+                                {author[0].length > 9 ? `${author[0].slice(0, 9)}...` : author[0]}
                             </p>
                         </div>
                         <div className='flex space-x-1'>

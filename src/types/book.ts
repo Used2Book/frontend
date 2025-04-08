@@ -6,7 +6,7 @@ export interface BookListCardProps {
 export interface Book {
   id: number;
   title: string;
-  author: string;
+  author: string[];
   cover_image_url: string;
   rating?: number;
   description?: string;
@@ -26,7 +26,7 @@ export interface Book {
 export interface SaleBook {
   id: number;
   title: string;
-  author: string;
+  author: string[];
   cover_image_url: string;
   rating: number;
   description?: string;
