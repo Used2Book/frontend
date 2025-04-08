@@ -1,0 +1,13 @@
+export interface Notification {
+    _id: string;
+    user_id: number;
+    buyer_id?: number;
+    seller_id?: number;
+    listing_id?: number;
+    type: string;
+    message: string;
+    related_id: string;
+    chatId?: string;
+    read: boolean;
+    created_at: string;
+}

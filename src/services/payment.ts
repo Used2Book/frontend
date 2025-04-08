@@ -5,6 +5,7 @@ import useAuthStore from "@/contexts/auth-store";
 import { loadStripe } from '@stripe/stripe-js';
 import axios from "axios";
 import toast from "react-hot-toast";
+import { Notification } from "@/types/notification";
 
 const NOTIFICATION_SOCKET_URL = "http://localhost:5001";
 
@@ -49,7 +50,7 @@ class paymentService {
         this.notiSocket?.on("unread_payment_count", callback);
     }
 
-    onPaymentList(callback: (lists: Notification[]) => void): void {
+    onPaymentList(callback: (payment_lists: {lists: Notification[]}) => void): void {
         this.notiSocket?.on("payment_list", callback);
     }
     
@@ -61,6 +62,19 @@ class paymentService {
             });
             const { payments } = await response.json();
             return payments;
+        } catch (error) {
+            console.error("Error fetching unread payment count:", error);
+            return 0;
+        }
+    }
+
+    async getPaymentList(userId: string): Promise<Notification[]> {
+        try {
+            const response = await fetch(`http://localhost:5001/notifications/all-payments?user_id=${userId}`, {
+                headers: { Authorization: `Bearer ${useAuthStore.getState().token}` },
+            });
+            const data = await response.json();
+            return data.lists;
         } catch (error) {
             console.error("Error fetching unread payment count:", error);
             return 0;

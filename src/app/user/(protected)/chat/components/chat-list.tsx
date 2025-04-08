@@ -141,7 +141,7 @@ export default function ChatList() {
             {error ? (
                 <p className="text-red-500">{error}</p>
             ) : chats.length === 0 ? (
-                <p>No active chats yet.</p>
+                <p className="text-center text-gray-400 mt-10">No active chats yet.</p>
             ) : (
                 <ul className="mt-4 space-y-2">
                     {chats.map((chat) => {
