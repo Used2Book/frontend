@@ -65,6 +65,8 @@ const UserLibraryList: React.FC<{clientID: number}> = ({clientID}) => {
                             cover_image_url={book.cover_image_url}
                             average_rating={book.average_rating}
                             reading_status={book.reading_status}
+                            delete_={false}
+                            library_id={book.library_id}
                         />
                     ))}
                 </div>

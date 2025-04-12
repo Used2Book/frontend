@@ -11,6 +11,7 @@ import ReviewListCard from "@/app/user/components/review-list";
 import { FaStar } from "react-icons/fa"; // Import star icons
 import { addBookReview } from "@/services/book";
 import MyRecommendedBookList from "@/app/user/components/my-recommendation-list";
+import Loading from "@/app/loading";
 
 export default function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = use(params);
@@ -70,7 +71,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
         }
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <Loading/>;
     if (error) return <div>{error}</div>;
 
     return (

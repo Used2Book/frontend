@@ -120,6 +120,18 @@ export const userAddLibrary = async (userInfo: {
   }
 };
 
+export const userDeleteBookInLibrary = async (listing_id: number) => {
+  try {
+    const res = await httpClient.post(`/user/delete-user-library/${listing_id}`);
+    if (res.data.success) {
+      toast.success("delete from your library successfully !")
+    }
+  } catch (err) {
+    console.error("add book in library Failed:", err);
+    throw err;
+  }
+};
+
 export const userAddListing = async (LibraryInfo: {
   book_id: number;
   price: number;

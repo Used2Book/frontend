@@ -22,8 +22,8 @@ const links: LinkItem[] = [
     { href: "/user/account/purchase", label: "My Purchase", icon: <ShoppingBag size={16} />},
 
 
-    { href: "/user/account/username", label: "Change Name", icon: <User size={16} /> },
-    { href: "/user/account/preferrence", label: "Update Preferences", icon: <PictureInPicture2 size={16} /> },
+    // { href: "/user/account/username", label: "Change Name", icon: <User size={16} /> },
+    // { href: "/user/account/preferrence", label: "Update Preferences", icon: <PictureInPicture2 size={16} /> },
     { href: "/user/account/phone-number", label: "Update Phone Number", icon: <Phone size={16} /> },
     { href: "/user/account/bank-account", label: "Update Bank Account", icon: <CreditCard size={16} /> },
 

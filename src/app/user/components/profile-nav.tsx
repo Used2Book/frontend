@@ -13,6 +13,7 @@ import { Post } from "@/types/post";
 import { getPostsByUserID } from "@/services/webboard";
 import { allBooks } from "@/services/book";
 import { getAllGenres } from "@/services/book";
+import { CircleFadingPlus } from "lucide-react";
 
 const ProfileNav: React.FC<{ clientID: number }> = ({ clientID }) => {
     const me = useAuthStore((state) => state.user);
@@ -81,9 +82,12 @@ const ProfileNav: React.FC<{ clientID: number }> = ({ clientID }) => {
                             {/* <p className="font-semibold text-lg">All My Reads</p> */}
                             {me?.id === clientID ? (
                                 <Link href="/user/book/add-library-book" className="">
-                                    <p className="text-center text-xs font-bold rounded-md shadow-md w-full px-10 py-2 mt-3 border-[1.5px] transition-all duration-200 ease-in-out transform bg-black text-white hover:bg-zinc-700 hover:scale-105 active:scale-90">
-                                        Add to My Reads
-                                    </p>
+                                    <div className="flex space-x-2 justify-center items-center text-center text-xs font-bold rounded-md shadow-md w-full px-5 py-2 mt-3 border-[1.5px] transition-all duration-200 ease-in-out transform bg-black text-white hover:bg-zinc-700 hover:scale-105 active:scale-90">
+                                        <CircleFadingPlus size={18} />
+                                        <p className="">
+                                            Add to My Reads
+                                        </p>
+                                    </div>
                                 </Link>
                             ) : (
                                 <></>

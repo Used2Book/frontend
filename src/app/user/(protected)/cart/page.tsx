@@ -6,6 +6,7 @@ import { Cart } from "@/types/cart";
 import CartCard from "@/app/user/components/cart-card";
 import { ShoppingCart } from "lucide-react";
 import toast from "react-hot-toast";
+import Loading from "@/app/loading";
 
 export default function CartPage() {
   const [carts, setCarts] = useState<Cart[]>([]);
@@ -36,11 +37,14 @@ export default function CartPage() {
     }
   };
 
-  if (loading) return <p className="text-center py-4">Loading...</p>;
+  if (loading) return <Loading/>;
 
   return (
     <div className="w-full h-screen px-32 py-10">
-      <div className="text-xl font-semibold mb-10">My Cart</div>
+      <div className="flex items-center space-x-3 mb-5">
+        <div className="text-3xl font-bold">Carts</div>
+        <ShoppingCart size={25} />
+      </div>
       <div className="flex justify-center items-center space-x-3 mb-1 text-gray-500">
         {/* <ShoppingCart size={25} />*/}
         <p className="flex-1 text-center">Item</p>

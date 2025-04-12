@@ -6,13 +6,12 @@ import Avatar from "@/components/avatar";
 import useAuthStore from "@/contexts/auth-store";
 import { ImagePlus, Loader2, Search } from "lucide-react";
 import { uploadPostImages, createPost, getAllPosts } from "@/services/webboard";
-import { getAllGenres } from "@/services/book";
+import { getAllGenres, getRecommendedBooks } from "@/services/book";
 import { allBooks } from "@/services/book";
-import { getAllUsers } from "@/services/user";
 import Image from "next/image";
-import Link from "next/link";
-import star_png from '@/assets/images/star.png';
+import star_png from "@/assets/images/star.png";
 import { Book } from "@/types/book";
+import Link from "next/link";
 
 export default function WebBoardPage() {
   const user = useAuthStore((state) => state.user);
@@ -24,23 +23,33 @@ export default function WebBoardPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [genres, setGenres] = useState<{ id: number; name: string }[]>([]);
   const [books, setBooks] = useState<Book[]>([]);
-  const [users, setUsers] = useState<{ id: number; first_name: string; last_name: string; picture_profile?: string }[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedItem, setSelectedItem] = useState<{ type: "book" | "genre" | "user"; id: number } | null>(null);
-  const [activeTab, setActiveTab] = useState<"book" | "genre" | "user">("book");
+  const [selectedItem, setSelectedItem] = useState<{ type: "book" | "genre"; id: number } | null>(null);
+  const [activeTab, setActiveTab] = useState<"book" | "genre">("book");
+  const [recommendedBookList, setRecommendedBookList] = useState<Book[]>([]);
+  useEffect(() => {
+    const fetchRecommendedBooks = async () => {
+        try {
+            const recommendBook = await getRecommendedBooks(20);
+            console.log("Recommended books:", recommendBook);
+            setRecommendedBookList(recommendBook);
+        } catch (error) {
+            console.error("Failed to fetch recommended books:", error);
+        }
+    };
+    fetchRecommendedBooks();
+}, []);
 
   useEffect(() => {
     const fetchData = async () => {
-      const [posts, fetchedGenres, fetchedBooks, fetchedUsers] = await Promise.all([
+      const [posts, fetchedGenres, fetchedBooks] = await Promise.all([
         getAllPosts(),
         getAllGenres(),
         allBooks(),
-        getAllUsers(),
       ]);
       setPostList(posts);
       setGenres(fetchedGenres);
       setBooks(fetchedBooks);
-      setUsers(fetchedUsers);
     };
     fetchData();
   }, []);
@@ -99,37 +108,25 @@ export default function WebBoardPage() {
         average_rating: book.average_rating,
       }))
       .filter((item) => item.label.toLowerCase().includes(searchQuery.toLowerCase()))
-    : activeTab === "genre"
-      ? genres
-        .map((genre) => ({
-          type: "genre" as const,
-          id: genre.id,
-          label: genre.name,
-          image: null,
-        }))
-        .filter((item) => item.label.toLowerCase().includes(searchQuery.toLowerCase()))
-      : users
-        .map((user) => ({
-          type: "user" as const,
-          id: user.id,
-          label: `${user.first_name} ${user.last_name}`,
-          image: user.picture_profile || null,
-        }))
-        .filter((item) => item.label.toLowerCase().includes(searchQuery.toLowerCase()));
+    : genres
+      .map((genre) => ({
+        type: "genre" as const,
+        id: genre.id,
+        label: genre.name,
+        image: null,
+      }))
+      .filter((item) => item.label.toLowerCase().includes(searchQuery.toLowerCase()));
 
   const filteredPosts = selectedItem
     ? postList.filter((post) =>
       selectedItem.type === "book"
         ? post.book_id === selectedItem.id
-        : selectedItem.type === "genre"
-          ? post.genre_id === selectedItem.id
-          : post.user_id === selectedItem.id
+        : post.genre_id === selectedItem.id
     )
     : postList;
 
   const selectedBook = selectedItem?.type === "book" ? books.find((b) => b.id === selectedItem.id) : null;
   const selectedGenre = selectedItem?.type === "genre" ? genres.find((g) => g.id === selectedItem.id) : null;
-  const selectedUser = selectedItem?.type === "user" ? users.find((u) => u.id === selectedItem.id) : null;
 
   return (
     <div className="min-h-screen py-10 px-4 sm:px-8 md:px-16 lg:px-24">
@@ -137,7 +134,7 @@ export default function WebBoardPage() {
       {/* Tabbed Search and Add Button */}
       <div className="flex justify-start mb-6 space-x-16">
         <div className="flex-1 flex-col">
-          <div className="flex space-x-5 mb-4 ">
+          <div className="flex space-x-5 mb-4">
             <button
               className={`flex py-2 px-10 text-sm font-semibold ${activeTab === "book" ? "bg-blue-200 text-blue-900 rounded-md" : "text-gray-500"}`}
               onClick={() => {
@@ -158,95 +155,60 @@ export default function WebBoardPage() {
             >
               Genres
             </button>
-            <button
-              className={`flex py-2 px-10 text-sm font-semibold ${activeTab === "user" ? "bg-blue-200 text-blue-900 rounded-md" : "text-gray-500"}`}
-              onClick={() => {
-                setActiveTab("user");
-                setSearchQuery("");
-                setSelectedItem(null);
-              }}
-            >
-              Users
-            </button>
           </div>
           <label className="block text-sm font-medium mb-2">
-            Search {activeTab === "book" ? "Books" : activeTab === "genre" ? "Genres" : "Users"}
+            Search {activeTab === "book" ? "Books" : "Genres"}
           </label>
           <div className="relative w-full mb-5">
+            <Search className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400" size={20} />
             <input
               type="text"
-              placeholder={`  Search ${activeTab === "book" ? "books" : activeTab === "genre" ? "genres" : "users"}...`}
+              placeholder={`Search ${activeTab === "book" ? "books" : "genres"}...`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full p-2 pr-10 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 pl-10 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500"
             />
-            <Search className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400" size={20} />
             {searchQuery && filteredItems.length > 0 && (
               <ul className="absolute w-full top-full mt-1 border bg-white rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
                 {filteredItems.map((item) => (
                   <li
                     key={`${item.type}-${item.id}`}
-                    className="px-4 py-2 px-5 hover:bg-gray-100 cursor-pointer flex space-x-3 items-center"
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex space-x-3 items-center"
                   >
-                    {item.type === "user" ? (
-                      <Link href={`/user/${item.id}`} passHref>
-                        <div className="flex space-x-3 items-center w-full">
-                          {item.image && (
-                            <div className="relative w-12 h-12">
-                              <Image
-                                alt="User profile"
-                                src={item.image}
-                                fill
-                                objectFit="cover"
-                                className="rounded-full border border-zinc-300 shadow-md"
-                              />
-                            </div>
-                          )}
-                          <div className="flex flex-col">
-                            <p className="text-xs font-semibold text-black truncate">
-                              {item.label.length > 50 ? `${item.label.slice(0, 50)}...` : item.label}
-                            </p>
-                            <p className="text-xxs capitalize">{item.type}</p>
-                          </div>
+                    <div
+                      className="flex space-x-3 items-center w-full"
+                      onClick={() => {
+                        setSelectedItem({ type: item.type, id: item.id });
+                        setSearchQuery("");
+                      }}
+                    >
+                      {item.type === "book" && item.image && (
+                        <div className="relative w-12 h-16">
+                          <Image
+                            alt="Book cover"
+                            src={item.image}
+                            fill
+                            objectFit="cover"
+                            className="rounded-sm border border-zinc-300 shadow-md"
+                          />
                         </div>
-                      </Link>
-                    ) : (
-                      <div
-                        className="flex space-x-3 items-center w-full"
-                        onClick={() => {
-                          setSelectedItem({ type: item.type, id: item.id });
-                          setSearchQuery("");
-                        }}
-                      >
-                        {item.type === "book" && item.image && (
-                          <div className="relative w-12 h-16">
-                            <Image
-                              alt="Book cover"
-                              src={item.image}
-                              fill
-                              objectFit="cover"
-                              className="rounded-sm border border-zinc-300 shadow-md"
-                            />
-                          </div>
-                        )}
-                        <div className="flex flex-col">
-                          <p className="text-xs font-semibold text-black truncate">
-                            {item.label.length > 50 ? `${item.label.slice(0, 50)}...` : item.label}
-                          </p>
-                          <p className="text-xxs capitalize">{item.type}</p>
-                        </div>
+                      )}
+                      <div className="flex flex-col">
+                        <p className="text-xs font-semibold text-black truncate">
+                          {item.label.length > 50 ? `${item.label.slice(0, 50)}...` : item.label}
+                        </p>
+                        <p className="text-xxs capitalize">{item.type}</p>
                       </div>
-                    )}
+                    </div>
                   </li>
                 ))}
               </ul>
             )}
           </div>
-          {/* Two-Column Layout remains outside */}
           {/* Two-Column Layout */}
           <div className="max-w-4xl mx-auto flex flex-col gap-6">
-            {/* Left Side: Selected Item */}
-            {selectedItem && selectedItem.type !== "user" && (
+            {/* Selected Item */}
+            {selectedItem && (
               <div className="flex flex-col items-center">
                 {selectedItem.type === "book" && selectedBook ? (
                   <div className="flex flex-col w-full md:flex-row py-10 px-5 border-b-2 border-gray-200">
@@ -262,21 +224,17 @@ export default function WebBoardPage() {
                         />
                       </div>
                     </div>
-
                     <div className="flex-1 flex-col justify-start space-y-2 text-sm">
                       <p className="text-sm font-bold">{selectedBook.title}</p>
-                      <p className='text-xs text-gray-600'>
+                      <div className="text-xs text-gray-600">
                         <ul className="flex space-x-2">
                           {selectedBook?.author.map((author: any, index: any) => (
-                            <li
-                              key={index}
-                              className="inline-block whitespace-nowrap"
-                            >
+                            <li key={index} className="inline-block whitespace-nowrap">
                               {author}
                             </li>
                           ))}
                         </ul>
-                      </p>
+                      </div>
                       <div className="flex space-x-2 items-center text-xs">
                         <Image src={star_png} alt="rating" width={15} height={15} />
                         <p>{selectedBook.average_rating}</p>
@@ -288,36 +246,19 @@ export default function WebBoardPage() {
                 ) : (
                   <h2 className="text-base font-semibold text-center border border-gray-200 shadow-md rounded-md p-5">{selectedGenre?.name}</h2>
                 )}
-                {selectedItem && selectedItem.type !== "user" && (
-                  <div className="flex w-full justify-end items-end">
-                    <button
-                      className="mt-4 mr-8 px-5 py-1 bg-black text-white text-xs sm:text-sm shadow-md rounded-lg hover:bg-gray-800 transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95"
-                      onClick={() => setIsModalOpen(true)}
-                    >
-                      + Add Post
-                      {/* {selectedItem.type === "book" ? selectedBook?.title : selectedGenre?.name} */}
-                    </button>
-                  </div>
-                )}
+                <div className="flex w-full justify-end items-end">
+                  <button
+                    className="mt-4 mr-8 px-5 py-1 bg-black text-white text-xs sm:text-sm shadow-md rounded-lg hover:bg-gray-800 transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95"
+                    onClick={() => setIsModalOpen(true)}
+                  >
+                    + Add Post
+                  </button>
+                </div>
               </div>
             )}
-            {/* Right Side: Posts */}
+            {/* Posts */}
             <div className="flex-1 flex flex-col space-y-5">
-              {selectedItem?.type === "user" && selectedUser ? (
-                <div className="text-center">
-                  <p className="text-gray-500">
-                    Viewing posts by{" "}
-                    <Link href={`/user/${selectedUser.id}`} className="text-blue-500 hover:underline">
-                      {selectedUser.first_name} {selectedUser.last_name}
-                    </Link>
-                  </p>
-                  {filteredPosts.length > 0 ? (
-                    filteredPosts.map((post) => <PostCard key={post.id} postDetail={post} books={books} genres={genres} />)
-                  ) : (
-                    <p className="text-gray-500 my-10">No posts-1 found for this user.</p>
-                  )}
-                </div>
-              ) : filteredPosts.length > 0 ? (
+              {filteredPosts.length > 0 ? (
                 filteredPosts.map((post) => <PostCard key={post.id} postDetail={post} books={books} genres={genres} />)
               ) : (
                 <p className="text-gray-500 text-center my-10">post not found ...</p>
@@ -325,14 +266,28 @@ export default function WebBoardPage() {
             </div>
           </div>
         </div>
-        <div className="flex w-full max-w-xs bg-green-300">
+        <div className="flex flex-col w-full max-w-xs space-y-5">
           <p className="font-semibold">Recommended Book</p>
+          <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-1">
+          {recommendedBookList.map((book) => (
+            <Link href={`/book/${book.id}`} key={book.id}>
+              <div className="relative w-10 h-14">
+                <Image
+                  alt="Book cover"
+                  src={book.cover_image_url}
+                  fill
+                  objectFit="cover"
+                  className="rounded-sm border border-zinc-300 shadow-md"
+                />
+              </div>
+            </Link>
+          ))}
+          </div>
         </div>
       </div>
 
-
       {/* Post Creation Modal */}
-      {isModalOpen && selectedItem && selectedItem.type !== "user" && (
+      {isModalOpen && selectedItem && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
           <div className="bg-white p-4 sm:p-8 rounded-lg w-full max-w-lg sm:max-w-xl md:max-w-2xl">
             <div className="pt-4 pb-4 sm:pt-8">
@@ -343,8 +298,7 @@ export default function WebBoardPage() {
                     {user?.first_name} {user?.last_name}
                   </span>
                   <span className="text-xs text-gray-500">
-                    Posting about{" "}
-                    {selectedItem.type === "book" ? selectedBook?.title : selectedGenre?.name}
+                    Posting about {selectedItem.type === "book" ? selectedBook?.title : selectedGenre?.name}
                   </span>
                 </div>
               </div>

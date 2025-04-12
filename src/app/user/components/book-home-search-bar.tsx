@@ -56,7 +56,7 @@ const BookHomeSearchBar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-black flex justify-center w-full">
+    <nav className="bg-white flex justify-center w-full py-2 shadow-md">
       <div className="flex w-full max-w-5xl items-center space-x-4">
         {/* 🔍 Search Input */}
         <div className="relative flex-grow" ref={wrapperRef}>

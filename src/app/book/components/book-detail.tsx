@@ -70,7 +70,7 @@ const BookDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => {
             {/* Book Info Section */}
             <div className="flex flex-col justify-start space-y-5 text-sm p-4">
                 <p className="text-lg font-bold">{bookDetail.title}</p>
-                <p className=''>
+                <div className=''>
                 <ul className="flex space-x-2 italic text-gray-700">
                     <li className="mr-1">by</li>
                     {bookDetail?.author.map((author: any, index: any) => (
@@ -82,15 +82,7 @@ const BookDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => {
                       </li>
                     ))}
                   </ul>
-                </p>
-                <div className="flex space-x-2 items-center">
-                    <Image src={star_png} alt="rating" width={15} height={15} />
-                    <p>{bookDetail.average_rating}</p>
-                    <p className="text-zinc-400">({bookDetail.num_ratings})</p>
                 </div>
-                <p className="line-clamp-3">
-                    {bookDetail.description}
-                </p>
                 <div className="flex space-x-2 items-center">
                     <p className="inline-block whitespace-nowrap">Genres :</p>
                     <ul className="flex space-x-2">
@@ -104,6 +96,14 @@ const BookDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => {
                         ))}
                     </ul>
                 </div>
+                <div className="flex space-x-2 items-center">
+                    <Image src={star_png} alt="rating" width={15} height={15} />
+                    <p>{bookDetail.average_rating}</p>
+                    <p className="text-zinc-400">({bookDetail.num_ratings})</p>
+                </div>
+                <p className="line-clamp-3">
+                    {bookDetail.description}
+                </p>
             </div>
         </div>
     );

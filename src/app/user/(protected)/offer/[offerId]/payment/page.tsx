@@ -10,6 +10,7 @@ import NoBackGround from "@/assets/images/no-background.jpg";
 import NoAvatar from "@/assets/images/no-avatar.png";
 import useAuthStore from "@/contexts/auth-store";
 import paymentService from "@/services/payment"; // Assuming this is your NotificationService
+import Loading from "@/app/loading";
 
 export default function PaymentPage({ params }: { params: Promise<{ offerId: string }> }) {
     const user = useAuthStore((state) => state.user);
@@ -102,7 +103,7 @@ export default function PaymentPage({ params }: { params: Promise<{ offerId: str
         }
     };
 
-    if (loading) return <p className="text-center py-4">Loading...</p>;
+    if (loading) return <Loading/>;
 
     return (
         <div className="relative bg-white mt-10 mx-36 p-6 border border-gray-300 rounded-lg shadow-lg">

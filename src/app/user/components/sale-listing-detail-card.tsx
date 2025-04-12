@@ -13,6 +13,7 @@ import { ShoppingBasket, ChevronLeft, ChevronRight, Handshake } from "lucide-rea
 import useAuthStore from "@/contexts/auth-store";
 import SaleProfileCard from "@/app/user/components/sale-profile-card";
 import { checkout } from "@/services/payment";
+import Loading from "@/app/loading";
 const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }> = ({ book_listing, owner_id }) => {
   const [bookId, listingId] = book_listing.split("_");
   const [listing, setListing] = useState<SaleBook | null>(null);
@@ -122,7 +123,7 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
     setCurrentImageIndex((prev) => (prev < (listing?.image_urls?.length || 1) - 1 ? prev + 1 : 0));
   };
 
-  if (loading) return <p className="text-center py-4">Loading...</p>;
+  if (loading) return <Loading/>;
   if (error) return <p className="text-center text-red-500 py-4">{error}</p>;
 
   const maxGridImages = 4;
@@ -330,7 +331,7 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
                 onChange={(e) => setOfferedPrice(e.target.value === "" ? "" : Number(e.target.value))}
                 min="1"
                 step="1"
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 block w-full border border-gray-300 rounded-full shadow-sm p-2"
                 placeholder="Enter your offer"
               />
             </div>

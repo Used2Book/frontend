@@ -51,6 +51,7 @@ export default function HomePage() {
   return (
     <div className="mb-10">
       <RecommendBookCarouselCard />
+      <BookHomeSearchBar/>
       <div className="mx-16 mt-4">
         <div className="flex flex-col space-y-5 py-12">
           <div className="text-xl font-bold">Recommended for you</div>

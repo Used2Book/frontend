@@ -18,7 +18,7 @@ export default function AddListingBookPage() {
     const setUser = useAuthStore((state) => state.setUser);
 
     const [title, setTitle] = useState("");
-    const [price, setPrice] = useState<number>(0);
+    const [price, setPrice] = useState<number | "">("");
     const [note, setNote] = useState<string>("");
     const [books, setBooks] = useState<any[]>([]); // Specify type if possible
     const [searchQuery, setSearchQuery] = useState("");
@@ -113,7 +113,7 @@ export default function AddListingBookPage() {
     return (
         <RequireSeller>
             <div className="max-w-xl mx-48 my-5 p-6">
-                <h2 className="text-2xl font-bold mb-6">Add to My Reads</h2>
+                <h2 className="text-2xl font-bold mb-6">Add to My Sales</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="relative">
                         <Label label="Book Title" />
@@ -128,11 +128,11 @@ export default function AddListingBookPage() {
                             className="w-full p-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
                         />
                         {searchQuery && filteredBooks.length > 0 && (
-                            <ul className="absolute w-1/2 mt-1 border bg-white rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
+                            <ul className="absolute w-full mt-1 border bg-white rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
                                 {filteredBooks.map((book) => (
                                     <li
                                         key={book?.id}
-                                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex space-x-3 items-center"
+                                        className="w-full px-4 py-2 hover:bg-gray-100 cursor-pointer flex space-x-3 items-center"
                                         onClick={() => {
                                             setTitle(book?.title);
                                             setSearchQuery("");
