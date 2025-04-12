@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Book } from "@/types/book";
 import { CircleFadingPlus, Search } from "lucide-react";
 import Link from "next/link";
-const BookAdminManagementPage: React.FC = () => {
+const BookAdminManagement: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
@@ -30,9 +30,9 @@ const BookAdminManagementPage: React.FC = () => {
   );
 
   return (
-    <div className="p-8 bg-white">
-      <div className="flex justify-between items-center px-10">
-        <h1 className="text-2xl font-bold mb-6">Book Admin Management</h1>
+    <div className="p-8 bg-white round-lg shadow-md">
+      <div className="flex justify-between items-center px-5 mb-3">
+        <h1 className="text-xl font-bold">Book Admin Management</h1>
         <Link
           href="/admin/book-management/insert-book"
           className="text-white bg-black rounded-md px-6 py-1.5 text-sm hover:bg-zinc-700 transition"
@@ -46,8 +46,8 @@ const BookAdminManagementPage: React.FC = () => {
         </Link>
       </div>
 
-      <div className="relative mb-6 px-10">
-        <Search className="absolute top-1/2 left-12 transform -translate-y-1/2 text-gray-400" size={18} />
+      <div className="relative mb-6 px-5">
+        <Search className="absolute top-1/2 left-8 transform -translate-y-1/2 text-gray-400" size={18} />
         <input
           type="text"
           placeholder="Search books by title..."
@@ -58,7 +58,7 @@ const BookAdminManagementPage: React.FC = () => {
       </div>
 
       <hr className="text-gray-500 mb-2 px-5" />
-      <div className="flex justify-between text-xs font-semibold px-10 text-gray-500">
+      <div className="flex justify-between text-xs font-semibold px-5 text-gray-500">
         <p>Book</p>
         <p className="text-gray-500">Edit</p>
       </div>
@@ -67,11 +67,11 @@ const BookAdminManagementPage: React.FC = () => {
       {loading ? (
         <p className="text-gray-500 mt-2">Loading books...</p>
       ) : filteredBooks.length > 0 ? (
-        <div className="max-h-[300px] overflow-y-auto space-y-2 mt-2 divide-y-2">
+        <div className="h-[250px] overflow-y-auto space-y-2 mt-2 divide-y-2">
           {filteredBooks.map((book) => (
             <div
               key={book.id}
-              className="flex items-center justify-between py-4 px-10"
+              className="flex items-center justify-between py-4 px-5"
             >
               <div className="flex items-center space-x-4">
                 {book.cover_image_url && (
@@ -110,4 +110,4 @@ const BookAdminManagementPage: React.FC = () => {
   );
 };
 
-export default BookAdminManagementPage;
+export default BookAdminManagement;

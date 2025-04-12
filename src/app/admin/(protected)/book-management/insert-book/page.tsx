@@ -3,13 +3,13 @@
 import { useState, useEffect } from "react";
 import { insertBook, getAllGenres } from "@/services/book";
 import Image from "next/image";
-import { ImagePlus, Loader2 } from "lucide-react";
+import { ImagePlus, Loader2, Plus, Trash } from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function AddBookPage() {
     const [formData, setFormData] = useState({
         title: "",
-        author: "",
+        author: [""],
         description: "",
         language: "",
         isbn: "",
@@ -39,12 +39,26 @@ export default function AddBookPage() {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         if (name === "publish_date" && value) {
-            // Append ":00" if seconds are missing
             const normalizedValue = value.endsWith(":00") ? value : `${value}:00`;
             setFormData((prev) => ({ ...prev, [name]: normalizedValue }));
         } else {
             setFormData((prev) => ({ ...prev, [name]: value }));
         }
+    };
+
+    const handleAuthorChange = (index: number, value: string) => {
+        const newAuthors = [...formData.author];
+        newAuthors[index] = value;
+        setFormData((prev) => ({ ...prev, author: newAuthors }));
+    };
+
+    const addAuthorField = () => {
+        setFormData((prev) => ({ ...prev, author: [...prev.author, ""] }));
+    };
+
+    const removeAuthorField = (index: number) => {
+        const newAuthors = formData.author.filter((_, i) => i !== index);
+        setFormData((prev) => ({ ...prev, author: newAuthors }));
     };
 
     const handleGenreChange = (genreName: string, checked: boolean) => {
@@ -75,7 +89,7 @@ export default function AddBookPage() {
 
         try {
             const localDate = new Date(formData.publish_date);
-            const isoPublishDate = localDate.toISOString(); // RFC3339 format
+            const isoPublishDate = localDate.toISOString();
 
             const payload = {
                 ...formData,
@@ -86,7 +100,7 @@ export default function AddBookPage() {
             toast.success(`Book added successfully! Book ID: ${bookId}`);
             setFormData({
                 title: "",
-                author: "",
+                author: [""],
                 description: "",
                 language: "",
                 isbn: "",
@@ -121,16 +135,35 @@ export default function AddBookPage() {
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium mb-1">Author *</label>
-                    <input
-                        type="text"
-                        name="author"
-                        value={formData.author}
-                        onChange={handleInputChange}
-                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-                        placeholder="Enter author name"
-                        required
-                    />
+                    <label className="block text-sm font-medium mb-1">Author(s) *</label>
+                    {formData.author.map((a, index) => (
+                        <div key={index} className="flex space-x-2 mb-2">
+                            <input
+                                type="text"
+                                value={a}
+                                onChange={(e) => handleAuthorChange(index, e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                                placeholder={`Author ${index + 1}`}
+                                required
+                            />
+                            {formData.author.length > 1 && (
+                                <button
+                                    type="button"
+                                    onClick={() => removeAuthorField(index)}
+                                    className="bg-red-500 text-white px-2 rounded hover:bg-red-600"
+                                >
+                                    <Trash size={16} />
+                                </button>
+                            )}
+                        </div>
+                    ))}
+                    <button
+                        type="button"
+                        onClick={addAuthorField}
+                        className="text-blue-500 text-sm hover:underline flex items-center space-x-1"
+                    >
+                        <Plus size={14} /> <span>Add another author</span>
+                    </button>
                 </div>
                 <div>
                     <label className="block text-sm font-medium mb-1">Description</label>

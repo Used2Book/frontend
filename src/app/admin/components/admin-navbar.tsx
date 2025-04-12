@@ -6,6 +6,10 @@ import Logo from "@/assets/images/used2book-logo.png";
 import useStore from "@/contexts/useStore";
 import useAuthStore from "@/contexts/auth-store";
 import Avatar from "@/components/avatar";
+import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { logout } from "@/services/auth";
+import { LogOut } from "lucide-react";
 
 const NavItemString = ({ href, link_string }: { href: string; link_string: string }) => (
     <li className="p-2 hover:bg-zinc-700 rounded-full text-xs md:text-sm cursor-pointer">
@@ -28,6 +32,27 @@ const NavItemIcon = ({ href, icon, count = 0 }: { href: string; icon: React.Reac
 
 export default function AdminNavLink() {
     const user = useStore(useAuthStore, (state) => state.user);
+    const profileDropdownRef = useRef<HTMLDivElement | null>(null);
+    const [showProfileDropdown, setshowProfileDropdown] = useState(false);
+    const router = useRouter();
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                profileDropdownRef.current &&
+                !profileDropdownRef.current.contains(event.target as Node)
+            ) {
+                setshowProfileDropdown(false);
+            }
+
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
 
     return (
         <nav className="bg-black top-0 left-0 w-full z-10 px-4 sm:px-10 py-3 text-xs md:text-sm font-medium text-white">
@@ -39,7 +64,7 @@ export default function AdminNavLink() {
                     {user ? (
                         <div>
                             <ul className="flex space-x-6 sm:space-x-10 md:space-x-12 items-center">
-                                <NavItemString href="/admin" link_string="Home" />
+                                {/* <NavItemString href="/admin" link_string="Home" /> */}
                                 {/* <NavItemString href="/user/webboard" link_string="Web board" />
                                 <NavItemString href="/user/sale" link_string="Store" /> */}
                             </ul>
@@ -57,14 +82,39 @@ export default function AdminNavLink() {
                                 <Link href="/user/profile" className="cursor-pointer">
                                 </Link>
                             </li> */}
-                            <li>
-                                <div className="flex bg-white w-10 h-10 rounded-full overflow-hidden border border-gray-300">
+                            <li className="relative" ref={profileDropdownRef}>
+                                <button
+                                    onClick={() => setshowProfileDropdown(!showProfileDropdown)}
+                                    className="flex items-center justify-center bg-white w-10 h-10 rounded-full overflow-hidden border border-gray-300 ml-4 focus:outline-none"
+                                >
                                     <Avatar user={user} />
-                                </div>
-                            </li>
-                            <li>
-                                <p className="text-white">{user.first_name} {user.last_name}</p>
-
+                                </button>
+                                {showProfileDropdown && (
+                                    <div className="absolute right-0 mt-2 w-44 bg-white divide-y divide-gray-100 rounded-lg shadow-sm z-50 border-2 border-gray-200">
+                                        <ul className="py-2 text-sm text-gray-700">
+                                            {/* <li>
+                                                <Link href="/user/profile" className="flex space-x-2 px-4 py-2 hover:bg-gray-100" onClick={() => setshowProfileDropdown(false)}>
+                                                    <User size={18} />
+                                                    <p>My Profile</p>
+                                                </Link>
+                                            </li> */}
+                                            
+                                        </ul>
+                                        <div className="py-2">
+                                            <button
+                                                className="flex space-x-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                onClick={async (e) => {
+                                                    e.preventDefault();
+                                                    await logout();
+                                                    router.push("/auth");
+                                                }}
+                                            >
+                                                <LogOut size={18} />
+                                                <span>Log Out</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
                             </li>
                         </ul>
                     ) : (

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/contexts/auth-store";
 import { getMe } from "@/services/user";
-
+import Loading from "@/app/loading";
 export default function AuthCallback() {
     const router = useRouter();
 
@@ -41,5 +41,5 @@ export default function AuthCallback() {
         handleAuthCallback();
     }, [router]);
 
-    return <p>Logging you in...</p>;
+    return <Loading/>;
 }

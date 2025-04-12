@@ -131,22 +131,58 @@ export const getAllBookGenres = async (): Promise<BookGenre[]> => {
   };
 
 
-  export const insertBook = async (bookData: {
-    title: string;
-    author: string[];
-    description?: string;
-    language?: string;
-    isbn?: string;
-    publisher?: string;
-    publish_date?: string;
-    genres: string[];
-  }, coverImage?: File): Promise<number> => {
-    const formData = new FormData();
-    formData.append("data", JSON.stringify(bookData));
-    if (coverImage) {
-      formData.append("cover_image", coverImage);
-    }
+export const insertBook = async (bookData: {
+title: string;
+author: string[];
+description?: string;
+language?: string;
+isbn?: string;
+publisher?: string;
+publish_date?: string;
+genres: string[];
+}, coverImage?: File): Promise<number> => {
+const formData = new FormData();
+formData.append("data", JSON.stringify(bookData));
+if (coverImage) {
+    formData.append("cover_image", coverImage);
+}
+
+const res = await uploadClient.post("/book/insert-book", formData);
+return res.data.book_id;
+};
+
+export const updateBook = async (
+    bookID: number,
+    bookData: {
+      title: string;
+      author: string[];
+      description?: string;
+      language?: string;
+      isbn?: string;
+      publisher?: string;
+      publish_date?: string;
+      genres: string[];
+      cover_image_url?: string; // in case no new upload
+    },
+    coverImage?: File
+  ): Promise<void> => {
+    try {
+      const formData = new FormData();
+      formData.append("data", JSON.stringify(bookData));
+      if (coverImage) {
+        formData.append("cover_image", coverImage);
+      }
   
-    const res = await uploadClient.post("/book/insert-book", formData);
-    return res.data.book_id;
+      const res = await uploadClient.post(`/book/edit-book/${bookID}`, formData);
+  
+      if (res.data.success) {
+        toast.success("Book updated successfully!");
+      } else {
+        toast.error(res.data.message || "Update failed.");
+      }
+    } catch (err: any) {
+      console.error("Update Book Error:", err);
+      toast.error("Something went wrong while updating the book.");
+    }
   };
+  
