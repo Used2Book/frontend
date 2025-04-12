@@ -48,14 +48,16 @@ const PurchaseCard: React.FC<{ order: MyPurchase }> = ({ order }) => {
                 </Link>
                 <div className="flex flex-col ml-3 space-y-2">
                     <Link href={`/user/${order.seller_id}/book/${order.book_id}_${order.listing_id}`}>
-                        <p className="font-semibold text-xs">
+                        <p className="font-semibold text-xs text-start">
                             {order.book_title.length > 20 ? `${order.book_title.slice(0, 20)}...` : order.book_title}
                         </p>
                     </Link>
                     <SaleProfileCard id={order.seller_id} />
+                    <p className="text-start text-xs p-1 bg-sky-100 rounded-full">
+                        Tel: <span className="text-blue-500">{order.seller_phone}</span>
+                    </p>
                 </div>
             </div>
-
 
             <div className="flex-1 flex flex-col justify-center items-end p-2">
                 <div className="font-bold">

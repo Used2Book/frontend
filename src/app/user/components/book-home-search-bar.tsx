@@ -69,7 +69,7 @@ const BookHomeSearchBar: React.FC = () => {
             onFocus={() => {
               if (filteredBooks.length > 0) setIsDropdownOpen(true); // Reopen dropdown on focus if results exist
             }}
-            className="w-full pl-10 pr-4 py-2 rounded-full bg-white text-black shadow-md focus:outline-none"
+            className="w-full pl-10 pr-4 py-2 rounded-full bg-white border-2 border-gray-200 text-black focus:outline-none"
           />
           {/* Dropdown for search results */}
           {isDropdownOpen && (

@@ -48,6 +48,8 @@ export interface SaleBook {
   average_rating?: number;
   num_ratings?: number;
   image_urls?: string[];
+
+  phone_number?: string;
 }
 
 

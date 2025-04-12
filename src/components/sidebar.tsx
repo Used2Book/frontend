@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { logout } from "@/services/auth";
-import { User, Settings, Mail, Key, Phone, ChevronDown, ChevronUp, PictureInPicture2, CircleArrowLeft, LogOut, CircleArrowRight, CreditCard, MapPinHouse, ShoppingBag } from "lucide-react";
+import { User, CreditCard, ShoppingBag } from "lucide-react";
 type Sublink = {
     href: string;
     label: string;
@@ -24,7 +23,7 @@ const links: LinkItem[] = [
 
     // { href: "/user/account/username", label: "Change Name", icon: <User size={16} /> },
     // { href: "/user/account/preferrence", label: "Update Preferences", icon: <PictureInPicture2 size={16} /> },
-    { href: "/user/account/phone-number", label: "Update Phone Number", icon: <Phone size={16} /> },
+    // { href: "/user/account/phone-number", label: "Update Phone Number", icon: <Phone size={16} /> },
     { href: "/user/account/bank-account", label: "Update Bank Account", icon: <CreditCard size={16} /> },
 
 

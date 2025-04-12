@@ -224,9 +224,12 @@ export default function NavLink() {
               <NavItemString href="/user/sale/my-sale" link_string="Sale" />
             </ul>
           ) : null}
-          <div className="w-48 md:w-72 shrink-0">
-            <UserSearchBar users={users} onUserSelect={handleUserSelect} />
-          </div>
+          {user ? (
+            <div className="w-48 md:w-72 shrink-0">
+              <UserSearchBar users={users} onUserSelect={handleUserSelect} />
+            </div>
+          ) : null}
+
         </div>
         <div className="flex flex-row flex-nowrap items-center">
           {user ? (

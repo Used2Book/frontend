@@ -126,7 +126,7 @@ const SaleListingDetailCard: React.FC<{ book_listing: string; owner_id: number }
   if (loading) return <Loading/>;
   if (error) return <p className="text-center text-red-500 py-4">{error}</p>;
 
-  const maxGridImages = 4;
+  const maxGridImages = 5;
   const imageCount = listing?.image_urls?.length || 0;
   const mainImage = listing?.image_urls?.[0];
   const subImages = listing?.image_urls?.slice(1, maxGridImages) || [];

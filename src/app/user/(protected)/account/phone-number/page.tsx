@@ -68,7 +68,7 @@ export default function OTPPage() {
         setModalOpen(false);
         toast.success("Verified Successfully!");
 
-        router.push("/user/home");
+        router.push("/user/order");
       }
 
     } catch (error: any) {

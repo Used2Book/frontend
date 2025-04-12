@@ -136,7 +136,8 @@ export const userAddListing = async (LibraryInfo: {
   book_id: number;
   price: number;
   allow_offers: boolean;
-  seller_note: string
+  seller_note: string;
+  phone_number: string;
 }, images: File[]) => {
   const formData = new FormData();
   formData.append("data", JSON.stringify(LibraryInfo));
