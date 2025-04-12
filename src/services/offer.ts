@@ -1,5 +1,81 @@
 import { httpClient } from "@/lib/http-client";
 import { toast } from "react-hot-toast";
+import { io, Socket } from "socket.io-client";
+import useAuthStore from "@/contexts/auth-store";
+
+
+const NOTIFICATION_SOCKET_URL = "http://localhost:5001";
+
+
+class offerService {
+    private notiSocket: Socket | null = null;
+
+    connect(): Socket {
+        const userId = useAuthStore.getState().user?.id;
+        if (!userId) throw new Error("No user ID available");
+        console.log("Connecting with user ID:", userId);
+
+        if (!this.notiSocket) {
+            this.notiSocket = io(NOTIFICATION_SOCKET_URL, {
+                query: { user_id: userId },
+                transports: ["websocket"],
+            });
+
+            this.notiSocket.on("connect", () => {
+                console.log("Connected to notification service:", this.notiSocket?.id);
+                this.getUnreadOfferCount(userId.toString()); // Fetch initial count
+            });
+
+            this.notiSocket.on("connect_error", (error: Error) => {
+                console.error("Notification connection error:", error.message);
+            });
+        }
+
+        return this.notiSocket;
+    }
+
+    onOfferCount(callback: (counts: { offers: number }) => void): void {
+        this.notiSocket?.on("unread_offer_count", callback);
+    }
+
+    
+
+    async getUnreadOfferCount(userId: string): Promise<number> {
+        try {
+            const response = await fetch(`http://localhost:5001/notifications/unread-offers?user_id=${userId}`, {
+                headers: { Authorization: `Bearer ${useAuthStore.getState().token}` },
+            });
+            const { offers } = await response.json();
+            return offers;
+        } catch (error) {
+            console.error("Error fetching unread offers count:", error);
+            return 0;
+        }
+    }
+
+    async updateReadOffer(userId: string){
+        try {
+            const response = await fetch(`http://localhost:5001/notifications/mark-offer-read`, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${useAuthStore.getState().token}` },
+                body: JSON.stringify({ user_id: userId })
+            });
+            const data = await response.json();
+            console.log("Update read offer:", data)
+        } catch (error) {
+            console.error("Error fetching unread offer count:", error);
+        }
+    }
+
+    disconnect(): void {
+        if (this.notiSocket) {
+            this.notiSocket.disconnect();
+            this.notiSocket = null;
+        }
+    }
+}
+
+export default new offerService();
 
 export async function addOffer(listingId: number, offeredPrice: number) {
     try {

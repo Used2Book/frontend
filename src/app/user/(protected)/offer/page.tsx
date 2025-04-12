@@ -6,6 +6,7 @@ import { Offer } from "@/types/offer";
 import OfferCard from "@/app/user/components/offer-card";
 import { Handshake } from "lucide-react";
 import toast from "react-hot-toast";
+import Loading from "@/app/loading";
 
 export default function OfferPage() {
   const [buyerOffers, setBuyerOffers] = useState<Offer[]>([]);
@@ -37,7 +38,7 @@ export default function OfferPage() {
     await fetchOffers(); // Refetch both lists after any update (delete, accept, reject)
   };
 
-  if (loading) return <p className="text-center py-4">Loading...</p>;
+  if (loading) return <Loading/>;
 
   return (
     <div className="w-full h-screen px-32 py-10">
