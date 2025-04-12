@@ -71,13 +71,28 @@ class paymentService {
     async getPaymentList(userId: string): Promise<Notification[]> {
         try {
             const response = await fetch(`http://localhost:5001/notifications/all-payments?user_id=${userId}`, {
+                method: "GET",
                 headers: { Authorization: `Bearer ${useAuthStore.getState().token}` },
             });
             const data = await response.json();
             return data.lists;
         } catch (error) {
             console.error("Error fetching unread payment count:", error);
-            return 0;
+            return [];
+        }
+    }
+
+    async updateReadPayment(userId: string){
+        try {
+            const response = await fetch(`http://localhost:5001/notifications/mark-payment-read`, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${useAuthStore.getState().token}` },
+                body: JSON.stringify({ user_id: userId })
+            });
+            const data = await response.json();
+            console.log("Update read payment:", data)
+        } catch (error) {
+            console.error("Error fetching unread payment count:", error);
         }
     }
 

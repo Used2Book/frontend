@@ -11,3 +11,17 @@ export interface Notification {
     read: boolean;
     created_at: string;
 }
+export interface NotiBox {
+    _id: string;
+
+    seller_id: string;
+
+    buyer_img: string;
+    buyer_name: string;
+
+    book_name: string;
+    book_img_url: string;
+
+    create_at: string;
+}
+

@@ -21,6 +21,12 @@ export interface Book {
   average_rating?: number;
   num_ratings?: number;
   reading_status?: number;
+  language?: string;
+  isbn?: string;
+  publisher?: string;
+  publish_date?: string;
+
+  library_id?: number;
 }
 
 export interface SaleBook {
