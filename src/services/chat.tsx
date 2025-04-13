@@ -13,6 +13,8 @@ class ChatService {
     connect(): { socket: Socket; notiSocket: Socket } {
         const token = useAuthStore.getState().token;
         const userId = useAuthStore.getState().user?.id;
+        const isAdmin = useAuthStore.getState().user?.role === "admin";
+
         if (!token || !userId) throw new Error("No authentication token or user ID available");
 
         if (!this.socket) {
@@ -22,7 +24,7 @@ class ChatService {
             });
 
             this.notiSocket = io(NOTIFICATION_SOCKET_URL, {
-                query: { user_id: userId },
+                query: { user_id: userId, isAdmin: isAdmin },
                 transports: ["websocket"],
             });
 

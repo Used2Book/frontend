@@ -2,6 +2,7 @@ export interface Review {
     id: number;
     user_id: string;
     book_id: string;
+    title: string;
     first_name: string;
     last_name: string;
     picture_profile: string;

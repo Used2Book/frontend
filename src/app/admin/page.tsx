@@ -5,8 +5,12 @@ import { userCount } from "@/services/user";
 import UserAdminManagement from "./components/user-management";
 import BookAdminManagement from "./components/book-management";
 import Loading from "./components/loading";
+import useAuthStore from "@/contexts/auth-store";
+import { ShieldHalf } from "lucide-react";
+
 
 export default function AdminPage() {
+  const user = useAuthStore((state) => state.user)
   const [countBook, setCountBook] = useState<number | null>(null);
   const [countUser, setCountUser] = useState<number | null>(null);
 
@@ -28,7 +32,10 @@ export default function AdminPage() {
 
   return (
     <div className="bg-zinc-100 min-h-screen p-16">
-      <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
+      <div className="flex space-x-1 items-center mb-10">
+        <ShieldHalf size={25} />
+        <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+      </div>
 
       <div className="flex gap-6">
         {/* Left Side */}
@@ -37,17 +44,17 @@ export default function AdminPage() {
             <div className="bg-white rounded-lg shadow-md p-4 w-full">
               <p className="text-sm text-gray-600">Total Books</p>
               <div className="text-xl font-semibold text-gray-800">
-                {countBook !== null ? countBook : <Loading/>}
+                {countBook !== null ? countBook : <Loading />}
               </div>
             </div>
             <div className="bg-white rounded-lg shadow-md p-4 w-full">
               <p className="text-sm text-gray-600">Total Users</p>
               <div className="text-xl font-semibold text-gray-800">
-                {countUser !== null ? countUser : <Loading/>}
+                {countUser !== null ? countUser : <Loading />}
               </div>
             </div>
           </div>
-          <BookAdminManagement/>
+          <BookAdminManagement />
         </div>
 
         {/* Right Side */}

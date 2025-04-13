@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import Link from "next/link";
 
-const CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID";
+const CLIENT_ID = "GOOGLE_CLIENT_ID";
 
 const AuthModal: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);

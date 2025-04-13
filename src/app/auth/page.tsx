@@ -24,17 +24,15 @@ export default function AuthPage() {
         useAuthStore.getState().clearAuth();
     }, []);
     
-    // ✅ Toggle Login/Signup & Clear Input Fields
     const handleToggle = (mode: boolean) => {
         setIsLogin(mode);
-        setEmail(""); // ✅ Clears email field
+        setEmail(""); 
         setFirstName("");
         setLastName("");
-        setPassword(""); // ✅ Clears password field
-        setError(""); // ✅ Clears any error message
+        setPassword(""); 
+        setError("");
     };
 
-    // ✅ Handle Login/Signup Submission
     const handleAuth = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
@@ -44,7 +42,6 @@ export default function AuthPage() {
                 console.log("login");
                 await login(email, password);
     
-                // ✅ Fetch the latest user data after login
                 const updatedUser = useAuthStore.getState().user;
     
                 console.log("Updated user role:", updatedUser?.role);
@@ -79,18 +76,15 @@ export default function AuthPage() {
     };
 
     return (
-        <div className="flex h-screen">
-            {/* Left Half with Image */}
+        <div className="flex h-screen py-1">
             <div className="bg-black w-1/2 flex items-center justify-center">
                 <Image src={Logo} alt="Description of Image" width={300} height={300} />
             </div>
 
-            {/* Right Half with Login/Signup Form */}
             <div className="bg-black w-1/2 flex items-center justify-center">
                 <div className="bg-white p-8 rounded-lg shadow-md w-3/4">
                     <h2 className="text-2xl font-bold mb-4 text-center">Welcome</h2>
 
-                    {/* Toggle Login/Signup */}
                     <div className="flex justify-around mb-4">
                         <button
                             className={`px-4 py-2 rounded-lg transition-colors ${isLogin ? 'bg-black text-white' : 'bg-gray-300 text-black'}`}
@@ -106,10 +100,8 @@ export default function AuthPage() {
                         </button>
                     </div>
 
-                    {/* Error Message */}
                     {error && <p className="text-red-500 text-center">{error}</p>}
 
-                    {/* Login/Signup Form */}
                     <form onSubmit={handleAuth} className="block">
                         <h3 className="text-xl font-semibold mb-4">{isLogin ? "Login" : "Sign Up"}</h3>
                         {isLogin ? null : 
@@ -164,7 +156,6 @@ export default function AuthPage() {
                         </button>
                     </form>
 
-                    {/* Google Login */}
                     <button type="button" onClick={handleGoogleLogin}  className="w-full mt-2">
                         <div className="flex justify-center items-center p-2 rounded-md border border-zinc-300 hover:bg-zinc-100 transition-colors">
                             <Icons.google className="mr-2 h-4 w-4" />

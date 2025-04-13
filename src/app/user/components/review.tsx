@@ -6,7 +6,7 @@ import NoAvatar from "@/assets/images/no-avatar.png";
 import ThumbsUpButton from "./thumbsup";
 import { Review } from "@/types/review";
 
-const ReviewCard: React.FC<{ reviewDetail: Review }> = ({ reviewDetail }) => {
+const ReviewCard: React.FC<{ reviewDetail: Review, isUserReview: boolean }> = ({ reviewDetail, isUserReview }) => {
     const [timeAgo, setTimeAgo] = useState<string>("");
 
     useEffect(() => {
@@ -37,7 +37,7 @@ const ReviewCard: React.FC<{ reviewDetail: Review }> = ({ reviewDetail }) => {
         calculateDaysAgo();
     }, [reviewDetail]);
     return (
-        <div className="flex relative h-full w-full mx-auto space-x-4 py-3 border-b-[1px] border-zinc-200 bg-slate-50 shadow-sm rounded-md p-5">
+        <div className="flex relative h-full w-full mx-auto space-x-4 py-3 border-[2px] border-gray-100 bg-slate-50 shadow-sm rounded-md p-5">
             {/* Profile Section */}
             <div className="flex-shrink-0 flex justify-center rounded-sm">
                 <div className="w-12 h-12 rounded-full overflow-hidden">
@@ -51,20 +51,27 @@ const ReviewCard: React.FC<{ reviewDetail: Review }> = ({ reviewDetail }) => {
                     <p className="text-base font-bold">{reviewDetail.first_name} {reviewDetail.last_name}</p>
                     <p className="text-xs text-zinc-500">{timeAgo}</p>
                 </div>
+                {isUserReview && reviewDetail.title &&
+                    <div>
+                        <span className="inline-block mb-3 px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                            {reviewDetail.title}
+                        </span>
+                    </div>
+                }
                 <div className="flex space-x-2 items-center">
                     <Image src={star_png} alt="rating" width={15} height={15} />
-                    <p>{reviewDetail.rating}</p>
+                    <p className="text-zinc-500">{reviewDetail.rating}.00</p>
                 </div>
-                <p className="line-clamp-3">
+                <p className="line-clamp-3 py-5">
                     {reviewDetail.comment}
                 </p>
-                <div className="flex space-x-2 items-center text-xxs">
+                {/* <div className="flex space-x-2 items-center text-xxs">
                     <div className="flex">
                         <ThumbsUpButton />
                         <p className="pt-2">Like</p>
                     </div>
                     <p className="pt-1 text-zinc-500">({reviewDetail.likes} likes)</p>
-                </div>
+                </div> */}
             </div>
         </div>
     );

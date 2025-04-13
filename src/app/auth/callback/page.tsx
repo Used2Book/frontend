@@ -18,7 +18,7 @@ export default function AuthCallback() {
                 return;
             }
 
-            useAuthStore.getState().setToken(token); // ✅ Store token in Zustand
+            useAuthStore.getState().setToken(token); 
 
             // ✅ Fetch user details
             const user = await getMe();
@@ -30,11 +30,10 @@ export default function AuthCallback() {
 
             console.log("user.role:", user.role)
 
-            // ✅ Check role and redirect accordingly
             if (user.role === "admin") {
-                router.push("/admin"); // ✅ Admins go to `/admin`
+                router.push("/admin");
             } else {
-                router.push("/user/home"); // ✅ Normal users go to `/user/home`
+                router.push("/user/home"); 
             }
         };
 

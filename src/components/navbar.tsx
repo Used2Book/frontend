@@ -16,16 +16,9 @@ import { userProfile, getListingByID, getAllUsers } from "@/services/user";
 import NoAvatar from "@/assets/images/no-avatar.png";
 import UserSearchBar from "@/app/user/components/user-search-bar";
 import offerService from "@/services/offer";
+import { NotiBox } from "@/types/notification";
 
-export interface NotiBox {
-  _id: string;
-  seller_id: string;
-  buyer_img: string;
-  buyer_name: string;
-  book_name: string;
-  book_img_url: string;
-  create_at: string;
-}
+
 
 const NavItemString = ({ href, link_string }: { href: string; link_string: string }) => (
   <li className="p-2 hover:bg-zinc-200 rounded-full text-xs md:text-sm cursor-pointer font-sans text-gray-600">

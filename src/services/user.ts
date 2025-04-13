@@ -399,6 +399,23 @@ export async function setUserPreferredGenres(genreIDs: number[]) {
   }
 };
 
+export async function createBookRequest(bookInfo: {
+  title: string;
+  isbn: string;
+  note: string;
+}) {
+  try {
+    const res = await httpClient.post("/user/book-request", bookInfo); // Send flat object
+    if (res.data.success) {
+      return res.data; // Return data to allow handleSubmit to handle toasts
+    } else {
+      throw new Error(res.data.message || "Something went wrong");
+    }
+  } catch (error) {
+    throw new Error((error as Error).message || "Failed to send book request");
+  }
+}
+
 
 
 export async function getAllUserGenres() {
@@ -430,6 +447,17 @@ export async function updateGender(gender: string) {
   } catch (error) {
     console.error("Error fetching user gender:", error);
     toast.error("error : " + error)
+  }
+};
+
+export async function getBookRequest() {
+  try {
+      const res = await httpClient.get("/user/book-request");
+      console.log("res requests:", res.data.reqs)
+      return res.data.reqs
+  } catch (error) {
+      console.error("Error get book request:", error);
+      toast.error("error : " + error)
   }
 };
 

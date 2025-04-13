@@ -2,22 +2,37 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import NavLink from "@/components/navbar";
-// const inter = Inter({ subsets: ["latin"] });
-import './globals.css';
+import NavLinkNoAuth from "@/components/navbar-signup";
+import useAuthStore from "@/contexts/auth-store";
+import { Toaster } from "react-hot-toast";
+import Footer from "@/components/footer";
+
+const inter = Inter({ subsets: ["latin"] });
+
 export const metadata: Metadata = {
-  title: "Used2book",
-  description: "book community web app",
+  title: "Used2Book",
+  description: "Book community web app",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+
   return (
     <html lang="en" className="scroll-smooth">
-      <body >
-        {children}
+      <body className={inter.className}>
+        <Toaster
+          position="top-right"
+          reverseOrder={false}
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: "#1f2937",
+              color: "#fff",
+            },
+          }}
+        />
+        {/* {children} */}
+        <div className="mb-1">{children}</div>
+        <Footer />
       </body>
     </html>
   );

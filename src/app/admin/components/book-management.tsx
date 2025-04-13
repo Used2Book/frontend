@@ -30,7 +30,7 @@ const BookAdminManagement: React.FC = () => {
   );
 
   return (
-    <div className="p-8 bg-white round-lg shadow-md">
+    <div className="p-8 bg-white rounded-lg shadow-md">
       <div className="flex justify-between items-center px-5 mb-3">
         <h1 className="text-xl font-bold">Book Admin Management</h1>
         <Link

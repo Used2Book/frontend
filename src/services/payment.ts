@@ -17,12 +17,13 @@ class paymentService {
 
     connect(): Socket {
         const userId = useAuthStore.getState().user?.id;
+        const isAdmin = useAuthStore.getState().user?.role === "admin";
         if (!userId) throw new Error("No user ID available");
         console.log("Connecting with user ID:", userId);
 
         if (!this.notiSocket) {
             this.notiSocket = io(NOTIFICATION_SOCKET_URL, {
-                query: { user_id: userId },
+                query: { user_id: userId, isAdmin: isAdmin },
                 transports: ["websocket"],
             });
 

@@ -12,8 +12,10 @@ import PostCard from "@/app/user/components/post-card";
 import { Post } from "@/types/post";
 import { getPostsByUserID } from "@/services/webboard";
 import { allBooks } from "@/services/book";
-import { getAllGenres } from "@/services/book";
+import { getAllGenres, getUserReview } from "@/services/book";
 import { CircleFadingPlus } from "lucide-react";
+import { Review } from "@/types/review";
+import ReviewCard from "./review";
 
 const ProfileNav: React.FC<{ clientID: number }> = ({ clientID }) => {
     const me = useAuthStore((state) => state.user);
@@ -21,18 +23,21 @@ const ProfileNav: React.FC<{ clientID: number }> = ({ clientID }) => {
     const [posts, setPosts] = useState<Post[]>([]);
     const [books, setBooks] = useState<{ id: number; title: string; cover_image_url: string }[]>([]);
     const [genres, setGenres] = useState<{ id: number; name: string }[]>([]);
+    const [reviews, setReviews] = useState<Review[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [fetchedPosts, fetchedBooks, fetchedGenres] = await Promise.all([
+                const [fetchedPosts, fetchedBooks, fetchedGenres, fetchedReviews] = await Promise.all([
                     getPostsByUserID(clientID),
                     allBooks(),
                     getAllGenres(),
+                    getUserReview(clientID),
                 ]);
                 setPosts(fetchedPosts);
                 setBooks(fetchedBooks);
                 setGenres(fetchedGenres);
+                setReviews(fetchedReviews)
             } catch (error) {
                 console.error("Error fetching profile data:", error);
             }
@@ -71,6 +76,12 @@ const ProfileNav: React.FC<{ clientID: number }> = ({ clientID }) => {
                         onClick={() => handleTabClick("Post")}
                     >
                         <Link href="#">Post</Link>
+                    </li>
+                    <li
+                        className={`p-3 text-xs md:text-sm cursor-pointer ${activeTab === "Review" ? "border-b-4 border-black text-black" : "hover:bg-zinc-300 text-gray-400"}`}
+                        onClick={() => handleTabClick("Review")}
+                    >
+                        <Link href="#">Book Review</Link>
                     </li>
                 </ul>
             </div>
@@ -126,6 +137,17 @@ const ProfileNav: React.FC<{ clientID: number }> = ({ clientID }) => {
                             ))
                         ) : (
                             <div className="flex justify-center items-center text-gray-400">No Post ...</div>
+                        )}
+                    </div>
+                )}
+                {activeTab === "Review" && (
+                    <div className="flex flex-col space-y-5 mt-10">
+                        {reviews?.length > 0 ? (
+                            reviews.map((review) => (
+                                <ReviewCard key={review.id} reviewDetail={review} isUserReview={true}/>
+                            ))
+                        ) : (
+                            <div className="flex justify-center items-center text-gray-400">No Review ...</div>
                         )}
                     </div>
                 )}

@@ -35,7 +35,7 @@ const ReviewListCard: React.FC<{ bookID: number; refreshTrigger: boolean }> = ({
                 ) : (
                     reviewList
                         .slice(0, showAll ? reviewList.length : 1) // Show one or all reviews
-                        .map((review) => <ReviewCard key={review.id} reviewDetail={review} />)
+                        .map((review) => <ReviewCard key={review.id} reviewDetail={review} isUserReview={false}/>)
                 )}
             </div>
             {!showAll && reviewList.length > 1 && (

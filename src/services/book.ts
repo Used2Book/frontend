@@ -40,6 +40,18 @@ export const getBookReview = async (book_id:number) => {
     }
 };
 
+export const getUserReview = async (user_id:number) => {
+  try {
+      console.log("Fetching user review...");
+      const res = await httpClient.get(`book/get-reviews/${user_id}`);
+      console.log("user reviews :", res.data.reviews)
+      return res.data.reviews
+  } catch (err) {
+      console.log("Get user reviews unsuccessfully !")
+      return null
+  }
+};
+
 export const addBookReview = async (data: {book_id:number, rating:number, comment:string}) => {
     try {
         console.log("Add book review...");
