@@ -10,7 +10,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const user = useAuthStore((state) => state.user);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-full">
       <header>
         {user ? <NavLink /> : <NavLinkNoAuth />}
       </header>

@@ -31,13 +31,13 @@ const UserAdminManagement: React.FC = () => {
     fetchUsers();
   }, []);
 
-  
+
   const filteredUsers = users.filter((user) => {
     const matchesName = `${user.first_name} ${user.last_name}`.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesRole = roleFilter === "all" || user.role === roleFilter;
     return matchesName && matchesRole;
   });
-  
+
 
 
   return (
@@ -47,7 +47,7 @@ const UserAdminManagement: React.FC = () => {
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 px-5">
 
-        <div className="relative w-full max-w-sm flex">
+        <div className="relative w-full max-w-xs flex">
           <Search className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400" size={18} />
           <input
             type="text"
@@ -58,7 +58,7 @@ const UserAdminManagement: React.FC = () => {
           />
         </div>
 
-        <div className="relative w-full max-w-md flex-1">
+        <div className="relative w-full max-w-lg flex-1">
 
           <select
             value={roleFilter}
@@ -94,7 +94,7 @@ const UserAdminManagement: React.FC = () => {
       {loading ? (
         <p className="text-gray-500 mt-2">Loading users...</p>
       ) : filteredUsers.length > 0 ? (
-          <div className="min-h-[200px] overflow-y-auto space-y-2 mt-2 divide-y-2">
+        <div className="h-[250px] overflow-y-auto space-y-2 mt-2 divide-y-2">
           {filteredUsers.map((user) => (
             <div className="flex justify-between items-center px-5" key={user.id}>
               <div

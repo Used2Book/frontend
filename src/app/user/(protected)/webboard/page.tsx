@@ -12,6 +12,7 @@ import Image from "next/image";
 import star_png from "@/assets/images/star.png";
 import { Book } from "@/types/book";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 export default function WebBoardPage() {
   const user = useAuthStore((state) => state.user);
@@ -59,15 +60,22 @@ export default function WebBoardPage() {
       alert("Please log in to submit a post.");
       return;
     }
-
+  
+    if (postText.trim() === "" && images.length === 0) {
+      toast.error("Please write something or upload at least one image.");
+      return;
+    }
+  
     setIsLoading(true);
     try {
       let imageUrls: string[] = [];
       if (images.length > 0) {
         imageUrls = await uploadPostImages(images);
       }
+  
       const genreId = selectedItem?.type === "genre" ? selectedItem.id : null;
       const bookId = selectedItem?.type === "book" ? selectedItem.id : null;
+  
       const newPost = await createPost(postText, imageUrls, genreId, bookId);
       setPostList((prev) => [newPost, ...prev]);
       setPostText("");
@@ -81,6 +89,7 @@ export default function WebBoardPage() {
       setIsLoading(false);
     }
   };
+  
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -129,7 +138,7 @@ export default function WebBoardPage() {
   const selectedGenre = selectedItem?.type === "genre" ? genres.find((g) => g.id === selectedItem.id) : null;
 
   return (
-    <div className="min-h-screen py-10 px-4 sm:px-8 md:px-16 lg:px-24">
+    <div className="h-full py-10 px-4 sm:px-8 md:px-16 lg:px-24">
       <h1 className="text-xl sm:text-2xl font-bold mb-10">WebBoard</h1>
       {/* Tabbed Search and Add Button */}
       <div className="flex justify-start mb-6 space-x-16">
@@ -292,7 +301,14 @@ export default function WebBoardPage() {
           <div className="bg-white p-4 sm:p-8 rounded-lg w-full max-w-lg sm:max-w-xl md:max-w-2xl">
             <div className="pt-4 pb-4 sm:pt-8">
               <div className="flex space-x-4 mb-2">
-                <Avatar user={user} />
+                <div className="relative w-12 h-12 rounded-full overflow-hidden">
+                  <Image
+                    src={user?.picture_profile || NoAvatar}
+                    alt={`${user?.first_name} ${user?.last_name}'s profile`}
+                    fill
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
                 <div className="flex flex-col justify-center space-y-1">
                   <span className="text-sm sm:text-base font-semibold">
                     {user?.first_name} {user?.last_name}

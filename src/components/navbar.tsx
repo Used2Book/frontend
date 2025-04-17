@@ -6,7 +6,7 @@ import Logo from "@/assets/images/used2book-logo-black.png";
 import useStore from "@/contexts/useStore";
 import useAuthStore from "@/contexts/auth-store";
 import Avatar from "./avatar";
-import { Bell, ShoppingCart, MessageCircleMore, Handshake, LogOut, User, Settings } from "lucide-react";
+import { Bell, ShoppingCart, MessageCircleMore, Handshake, LogOut, User, Settings, ShoppingBag } from "lucide-react";
 import chatService from "@/services/chat";
 import paymentService from "@/services/payment";
 import { logout } from "@/services/auth";
@@ -310,6 +310,12 @@ export default function NavLink() {
                         <Link href="/user/account/profile" className="flex space-x-2 px-4 py-2 hover:bg-gray-100" onClick={() => setShowProfileDropdown(false)}>
                           <Settings size={18} />
                           <p>Account Settings</p>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/user/account/purchase" className="flex space-x-2 px-4 py-2 hover:bg-gray-100" onClick={() => setShowProfileDropdown(false)}>
+                          <ShoppingBag size={18}/>
+                          <p>My Purchase</p>
                         </Link>
                       </li>
                     </ul>

@@ -36,7 +36,7 @@ const SettingsSidebar: React.FC = () => {
         <div className="relative h-full">
             <div className="flex flex-col h-full w-64 shadow-md px-8 py-5 transition-all duration-300">
                 <div className="font-semibold text-xl mb-5">
-                    <p>Settings</p>
+                    <p>My Account</p>
                 </div>
                 <div className="flex flex-col justify-between h-full">
                     <div>

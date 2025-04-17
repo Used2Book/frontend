@@ -12,6 +12,9 @@ import { Loader2 } from "lucide-react";
 import { User } from "@/types/user";
 import { userProfile } from "@/services/user";
 import Link from "next/link";
+import Image from "next/image";
+import NoAvatar from "@/assets/images/no-avatar.png";
+import toast from "react-hot-toast";
 
 interface PostCardProps {
   postDetail: Post;
@@ -80,7 +83,10 @@ const PostCard: React.FC<PostCardProps> = ({ postDetail, books = [], genres = []
   };
 
   const handleCommentSubmit = async () => {
-    if (!user || !commentText.trim()) return;
+    if (!user || !commentText.trim()) {
+      toast.error("please write something ..")
+      return
+    };
     try {
       const newComment = await createComment(postDetail.id, commentText);
       setComments((prev) => [...prev, newComment]);
@@ -132,14 +138,21 @@ const PostCard: React.FC<PostCardProps> = ({ postDetail, books = [], genres = []
   const tagName = postDetail.book_id
     ? books.find((b) => b.id === postDetail.book_id)?.title || "Unknown Book"
     : postDetail.genre_id
-    ? genres.find((g) => g.id === postDetail.genre_id)?.name || "Unknown Genre"
-    : null;
+      ? genres.find((g) => g.id === postDetail.genre_id)?.name || "Unknown Genre"
+      : null;
 
   return (
     <div className="bg-white rounded-md shadow-sm border hover:shadow-md transition-shadow duration-300 flex flex-col w-full max-w-3xl mx-auto">
       <div className="px-4 py-6 sm:px-8 sm:pb-4">
         <div className="flex space-x-4 mb-2">
-          <Avatar user={profile} />
+          <div className="relative w-12 h-12 rounded-full overflow-hidden">
+            <Image
+              src={profile?.picture_profile || NoAvatar}
+              alt={`${profile?.first_name} ${profile?.last_name}'s profile`}
+              fill
+              style={{ objectFit: "cover" }}
+            />
+          </div>
           <div className="flex flex-col justify-center space-y-1">
             <Link href={`/user/${profile?.id}`}>
               <span className="text-sm font-semibold sm:text-base hover:underline">
@@ -172,9 +185,8 @@ const PostCard: React.FC<PostCardProps> = ({ postDetail, books = [], genres = []
                   <img
                     src={url}
                     alt="Post Image"
-                    className={`w-full object-cover rounded-lg cursor-pointer ${
-                      imageCount === 1 || isLastInThree ? "h-48 sm:h-96" : "h-32 sm:h-40"
-                    }`}
+                    className={`w-full object-cover rounded-lg cursor-pointer ${imageCount === 1 || isLastInThree ? "h-48 sm:h-96" : "h-32 sm:h-40"
+                      }`}
                   />
                   {i === maxGridImages - 1 && extraImages > 0 && (
                     <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-sm sm:text-base rounded-lg">
@@ -201,9 +213,8 @@ const PostCard: React.FC<PostCardProps> = ({ postDetail, books = [], genres = []
         <button
           onClick={handleLikeToggle}
           disabled={isLikeLoading}
-          className={`flex w-full justify-center items-center space-x-2 text-center ${
-            isLiked ? "text-blue-600" : "text-gray-500"
-          } text-xs sm:text-sm py-2 hover:bg-gray-200`}
+          className={`flex w-full justify-center items-center space-x-2 text-center ${isLiked ? "text-blue-600" : "text-gray-500"
+            } text-xs sm:text-sm py-2 hover:bg-gray-200`}
         >
           {isLikeLoading ? (
             <span className="animate-spin">
@@ -212,9 +223,8 @@ const PostCard: React.FC<PostCardProps> = ({ postDetail, books = [], genres = []
           ) : (
             <ThumbsUp
               size={14}
-              className={`transition-all duration-300 ${
-                isLiked ? "fill-blue-600 text-blue-600 scale-110" : "fill-none text-gray-400 hover:text-black"
-              }`}
+              className={`transition-all duration-300 ${isLiked ? "fill-blue-600 text-blue-600 scale-110" : "fill-none text-gray-400 hover:text-black"
+                }`}
             />
           )}
           <span className={`${isLiked ? "text-blue-600 scale-110" : "text-gray-400"}`}>Like</span>
@@ -240,11 +250,20 @@ const PostCard: React.FC<PostCardProps> = ({ postDetail, books = [], genres = []
             {comments.length > 0 ? (
               comments.map((comment) => (
                 <div key={comment.id} className="flex space-x-2 items-start">
-                  <Avatar user={user} />
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden">
+                    <Image
+                      src={comment.picture_profile || NoAvatar}
+                      alt={`${comment.first_name} ${comment.last_name}'s profile`}
+                      fill
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
                   <div className="flex-1">
-                    <p className="text-xs sm:text-sm font-semibold">
-                      {user?.first_name} {user?.last_name}
-                    </p>
+                    <Link href={`/user/${comment.user_id}`}>
+                      <p className="text-xs sm:text-sm font-semibold hover:underline">
+                        {comment?.first_name} {comment?.last_name}
+                      </p>
+                    </Link>
                     <p className="text-xs sm:text-sm text-gray-600">{comment.content}</p>
                     <p className="text-xs text-gray-400">
                       {format(new Date(comment.created_at), "MMM d, yyyy 'at' hh:mm a")}
@@ -263,6 +282,7 @@ const PostCard: React.FC<PostCardProps> = ({ postDetail, books = [], genres = []
               onChange={(e) => setCommentText(e.target.value)}
               placeholder="Write a comment..."
               className="flex-1 p-2 border rounded-md text-xs sm:text-sm"
+              required
             />
             <button
               onClick={handleCommentSubmit}

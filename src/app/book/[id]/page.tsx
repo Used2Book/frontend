@@ -12,6 +12,7 @@ import { FaStar } from "react-icons/fa"; // Import star icons
 import { addBookReview } from "@/services/book";
 import MyRecommendedBookList from "@/app/user/components/my-recommendation-list";
 import Loading from "@/app/loading";
+import toast from "react-hot-toast";
 
 export default function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = use(params);
@@ -54,7 +55,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
 
     const handleReviewSubmit = async () => {
         if (rating === 0) {
-            alert("Please select a star rating before submitting.");
+            toast.error("Please select a star rating before submitting.");
             return;
         }
 
@@ -77,7 +78,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
     return (
         <div>
             {book ? (
-                <>
+                <div className="">
                     <BookDetailCard bookDetail={book} />
                     <div className="">
                         <div className="px-20 py-2 space-y-6 mt-5">
@@ -150,7 +151,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
                             </div>
                         </div>
                     )}
-                </>
+                </div>
             ) : (
                 notFound()
             )}

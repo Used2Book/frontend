@@ -31,7 +31,7 @@ const BookCard: React.FC<Book> = ({ title, author, cover_image_url, average_rati
                         <div >
                             {/* <p className=""> */}
                             <p className="text-ellipsis overflow-hidden whitespace-nowrap">
-                                {author[0].length > 9 ? `${author[0].slice(0, 9)}...` : author[0]}
+                                {author[0].length > 7 ? `${author[0].slice(0, 7)}...` : author[0]}
                             </p>
                         </div>
                         <div className='flex space-x-1'>

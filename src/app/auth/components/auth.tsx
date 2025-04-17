@@ -30,28 +30,28 @@ const AuthModal: React.FC = () => {
             <div>
                 {/* Buttons to open the modal */}
                 <Link
-                    href="/"
+                    href="/auth"
                     className="p-2 hover:bg-zinc-700 rounded-full text-xs md:text-sm"
-                    onClick={(e) => {
-                        e.preventDefault(); // Prevent Link navigation
-                        openModal(false); // Open Sign In modal
-                    }}
+                    // onClick={(e) => {
+                    //     e.preventDefault(); // Prevent Link navigation
+                    //     openModal(false); // Open Sign In modal
+                    // }}
                 >
                     Log in
                 </Link>
                 <Link
-                    href="/"
+                    href="/auth"
                     className="bg-white text-black px-3 py-2 rounded-lg hover:bg-zinc-300 transition duration-200"
-                    onClick={(e) => {
-                        e.preventDefault(); // Prevent Link navigation
-                        openModal(true); // Open Sign Up modal
-                    }}
+                    // onClick={(e) => {
+                    //     e.preventDefault(); // Prevent Link navigation
+                    //     openModal(true); // Open Sign Up modal
+                    // }}
                 >
                     Sign up
                 </Link>
 
                 {/* Modal */}
-                {isOpen && (
+                {/* {isOpen && (
                     <div
                         className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 text-black z-20"
                         onClick={closeModal} // Close modal on background click
@@ -85,7 +85,7 @@ const AuthModal: React.FC = () => {
                             </div>
                         </div>
                     </div>
-                )}
+                )} */}
             </div>
         </GoogleOAuthProvider>
     );

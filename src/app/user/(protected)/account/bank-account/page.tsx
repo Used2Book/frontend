@@ -56,7 +56,7 @@ const BankAccount: React.FC = () => {
     <div className="p-6 bg-white max-w-lg mx-auto mt-3 h-screen">
       <h2 className="text-medium font-semibold text-center mb-4">Become a Seller</h2>
       <p className="text-gray-600 text-center mb-6">
-        Enter your bank details below to register with Omise and start selling.
+        Enter your bank details below to register with Stripe and start selling.
       </p>
 
       <div className="space-y-4">

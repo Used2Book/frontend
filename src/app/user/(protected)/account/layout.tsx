@@ -7,7 +7,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const user = useAuthStore((state) => state.user);
 
   return (
-    <div className="h-screen flex flex-col"> 
+    <div className="h-full flex flex-col"> 
 
       {/* Main Content Area */}
       <div className="flex flex-1 overflow-hidden">

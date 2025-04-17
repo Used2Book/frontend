@@ -60,13 +60,14 @@ const MyOrderCard: React.FC<{ order: MyOrder }> = ({ order }) => {
                         <div className="bg-blue-100 rounded-md p-5">
 
                             <div className="flex flex-col justify-center items-center space-y-2 mb-4">
-                                <Image
-                                    src={order.buyer_profile_image || NoAvatar}
-                                    alt="Buyer"
-                                    width={40}
-                                    height={40}
-                                    className="rounded-full object-cover"
-                                />
+                                <div className="relative w-14 h-14 rounded-full overflow-hidden">
+                                    <Image
+                                        src={order.buyer_profile_image || NoAvatar}
+                                        alt={`${order.buyer_first_name} ${order.buyer_last_name}'s profile`}
+                                        fill
+                                        style={{ objectFit: "cover" }}
+                                    />
+                                </div>
                                 <div className="text-sm font-semibold">
                                     {order.buyer_first_name} {order.buyer_last_name}
                                 </div>
@@ -84,14 +85,14 @@ const MyOrderCard: React.FC<{ order: MyOrder }> = ({ order }) => {
                             </div>
 
                         </div>
-                            <div className="mt-6 text-right">
-                                <button
-                                    onClick={() => setShowModal(false)}
-                                    className="px-4 py-1 text-sm rounded-md border border-gray-300 hover:bg-gray-100"
-                                >
-                                    Close
-                                </button>
-                            </div>
+                        <div className="mt-6 text-right">
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="px-4 py-1 text-sm rounded-md border border-gray-300 hover:bg-gray-100"
+                            >
+                                Close
+                            </button>
+                        </div>
                     </div>
 
                 </div>

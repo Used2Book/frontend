@@ -7,6 +7,7 @@ import Image from "next/image";
 import Logo from "@/assets/images/used2book-logo.png";
 import { Icons } from "@/components/icons";
 import { useEffect } from "react";
+import toast from "react-hot-toast";
 export default function AuthPage() {
     const router = useRouter();
 
@@ -23,13 +24,13 @@ export default function AuthPage() {
     useEffect(() => {
         useAuthStore.getState().clearAuth();
     }, []);
-    
+
     const handleToggle = (mode: boolean) => {
         setIsLogin(mode);
-        setEmail(""); 
+        setEmail("");
         setFirstName("");
         setLastName("");
-        setPassword(""); 
+        setPassword("");
         setError("");
     };
 
@@ -37,33 +38,51 @@ export default function AuthPage() {
         e.preventDefault();
         setError("");
     
+        // Email format validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            setError("Invalid email format");
+            return;
+        }
+    
+        if (password.length < 8) {
+            setError("Password must be at least 8 characters");
+            return;
+        }
+    
+        if (!isLogin) {
+            if (firstName.trim() === "" || lastName.trim() === "") {
+                setError("First name and last name cannot be empty");
+                return;
+            }
+        }
+    
         try {
             if (isLogin) {
-                console.log("login");
                 await login(email, password);
-    
                 const updatedUser = useAuthStore.getState().user;
     
-                console.log("Updated user role:", updatedUser?.role);
-    
                 if (updatedUser?.role === "admin") {
-                    console.log("Welcome Admin!");
                     router.push("/admin");
                 } else {
-                    console.log("Welcome User!");
-
                     router.push("/user/home");
                 }
             } else {
-                console.log("signup");
                 await signup(firstName, lastName, email, password);
+                toast.success("Sign up successfully!");
             }
-        } catch (err) {
-            setError("Authentication failed. Check your credentials.");
+        } catch (err: any) {
             console.error("Auth error:", err);
+    
+            if (err?.response?.status === 401) {
+                setError("Email not found or incorrect password.");
+            } else {
+                setError("Authentication failed. Please check your input.");
+            }
         }
     };
     
+
 
     // ✅ Handle Google Login
     const handleGoogleLogin = async () => {
@@ -76,7 +95,7 @@ export default function AuthPage() {
     };
 
     return (
-        <div className="flex h-screen py-1">
+        <div className="flex min-h-screen py-5 bg-black">
             <div className="bg-black w-1/2 flex items-center justify-center">
                 <Image src={Logo} alt="Description of Image" width={300} height={300} />
             </div>
@@ -104,29 +123,29 @@ export default function AuthPage() {
 
                     <form onSubmit={handleAuth} className="block">
                         <h3 className="text-xl font-semibold mb-4">{isLogin ? "Login" : "Sign Up"}</h3>
-                        {isLogin ? null : 
-                        <>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
-                                <input
-                                    type="name"
-                                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    value={firstName}
-                                    onChange={(e) => setFirstName(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
-                                <input
-                                    type="name"
-                                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    value={lastName}
-                                    onChange={(e) => setLastName(e.target.value)}
-                                    required
-                                />
-                            </div>
-                        </>
+                        {isLogin ? null :
+                            <>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                                    <input
+                                        type="name"
+                                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        value={firstName}
+                                        onChange={(e) => setFirstName(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                                    <input
+                                        type="name"
+                                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        value={lastName}
+                                        onChange={(e) => setLastName(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                            </>
                         }
 
                         <div className="mb-4">
@@ -144,6 +163,7 @@ export default function AuthPage() {
                             <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
                             <input
                                 type="password"
+                                minLength={8} 
                                 className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -151,12 +171,13 @@ export default function AuthPage() {
                             />
                         </div>
 
+
                         <button type="submit" className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-zinc-700 transition-colors">
                             {isLogin ? "Sign in" : "Sign up"}
                         </button>
                     </form>
 
-                    <button type="button" onClick={handleGoogleLogin}  className="w-full mt-2">
+                    <button type="button" onClick={handleGoogleLogin} className="w-full mt-2">
                         <div className="flex justify-center items-center p-2 rounded-md border border-zinc-300 hover:bg-zinc-100 transition-colors">
                             <Icons.google className="mr-2 h-4 w-4" />
                             {isLogin ? "Sign in with Google" : "Sign Up with Google"}

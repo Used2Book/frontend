@@ -9,7 +9,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const user = useAuthStore((state) => state.user);
 
   return (
-    <div className="h-screen flex flex-col"> 
+    <div className="h-full flex flex-col"> 
     <Toaster 
         position="top-right" 
         reverseOrder={false} 

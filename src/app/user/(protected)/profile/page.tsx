@@ -21,7 +21,7 @@ export default function ProfilePage() {
         : NoBackground;
     return (
         <div>
-            <div className="flex flex-col bg-white w-full">
+            <div className="flex flex-col bg-white w-full h-full">
                 {/* Background Image Section */}
                 <div className="relative w-full h-52 bg-orange-400">
                     <Image
@@ -35,7 +35,7 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Profile Picture Section */}
-                <div className="flex items-center gap-4 ml-20 -mt-16">
+                <div className="flex items-center gap-5 ml-20 -mt-16">
                     {/* Profile Image */}
                     <div className="relative w-20 h-20 md:w-24 md:h-24 lg:w-40 lg:h-40 overflow-hidden rounded-full bg-teal-400 border-[15px] border-white">
                         <Image
@@ -48,7 +48,7 @@ export default function ProfilePage() {
                     </div>
 
                     {/* User Name */}
-                    <p className="font-semibold text-lg mt-10 ml-5">{user?.first_name} {user?.last_name}</p>
+                    <p className="font-semibold text-lg mt-10 ml-2">{user?.first_name} {user?.last_name}</p>
                 </div>
 
                 

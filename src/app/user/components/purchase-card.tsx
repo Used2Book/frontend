@@ -65,7 +65,7 @@ const PurchaseCard: React.FC<{ order: MyPurchase }> = ({ order }) => {
                 </div>
                 <div className="flex space-x-2 text-xs text-gray-400 mt-2">
                     <p>Date:</p>
-                    <p>{order.transaction_time}</p>
+                    <p>{new Date(order.transaction_time).toLocaleString()}</p>
                 </div>
             </div>
 

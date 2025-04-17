@@ -7,7 +7,7 @@ import { getUserWishlistByBookId } from "@/services/user";
 import Image from "next/image";
 import Link from "next/link";
 import { User } from "@/types/user";
-import {Book} from "@/types/book";
+import { Book } from "@/types/book";
 import NoAvatar from "@/assets/images/no-avatar.png";
 
 
@@ -42,10 +42,10 @@ export default function BookSearchSidebar() {
 
   return (
     <div className="w-80 bg-white ml-10 p-4">
-        <div className="flex space-x-2 items-center mb-4">
+      <div className="flex space-x-2 items-center mb-4">
         <BookHeart size={18} />
-      <h3 className="text-base font-bold">Find Interested Users</h3>
-        </div>
+        <h3 className="text-base font-bold">Find Interested Users</h3>
+      </div>
 
       <div className="relative mb-4">
         <input
@@ -83,16 +83,16 @@ export default function BookSearchSidebar() {
       {selectedBook && (
         <div className="mt-4">
           <div className="flex items-center space-x-3 mb-4">
-          {selectedBook.cover_image_url && (
-                  <Image
-                    src={selectedBook.cover_image_url}
-                    alt="cover"
-                    width={30}
-                    height={40}
-                    className="rounded-sm border"
-                  />
-                )}
-                <span className="text-xs">{selectedBook?.title.length > 35 ? `${selectedBook?.title.slice(0, 35)}...` : selectedBook?.title}</span>
+            {selectedBook.cover_image_url && (
+              <Image
+                src={selectedBook.cover_image_url}
+                alt="cover"
+                width={30}
+                height={40}
+                className="rounded-sm border"
+              />
+            )}
+            <span className="text-xs">{selectedBook?.title.length > 35 ? `${selectedBook?.title.slice(0, 35)}...` : selectedBook?.title}</span>
           </div>
           <h4 className="font-semibold text-sm mb-4">Users who are interested</h4>
           {users.length > 0 ? (
@@ -101,13 +101,15 @@ export default function BookSearchSidebar() {
                 <li key={user.id} className="flex items-center space-x-3 bg-gray-100 rounded-md p-2">
                   <Link href={`/user/${user.id}`} className="flex items-center space-x-3 hover:underline">
                     <div className="flex">
-                    <Image
-                      src={user.picture_profile || NoAvatar}
-                      alt="user"
-                      width={30}
-                      height={30}
-                      className="rounded-full object-cover border"
-                    />
+
+                      <div className="relative w-8 h-8 rounded-full overflow-hidden">
+                        <Image
+                          src={user.picture_profile || NoAvatar}
+                          alt={`${user.first_name} ${user.last_name}'s profile`}
+                          fill
+                          style={{ objectFit: "cover" }}
+                        />
+                      </div>
                     </div>
                     <span className="text-sm flex">
                       {user.first_name} {user.last_name}

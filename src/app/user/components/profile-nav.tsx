@@ -51,7 +51,7 @@ const ProfileNav: React.FC<{ clientID: number }> = ({ clientID }) => {
 
     return (
         <div>
-            <div className="w-full flex px-16 bg-white shadow-sm rounded-lg border border-gray-200">
+            <div className="w-full flex px-16 bg-white shadow-sm rounded-lg border border-gray-200 h-full">
                 <ul className="flex space-x-6 sm:space-x-10 md:space-x-12 items-center w-full">
                     <li
                         className={`p-3 text-xs md:text-sm cursor-pointer ${activeTab === "Library" ? "border-b-4 border-black text-black" : "hover:bg-zinc-300 text-gray-400"}`}

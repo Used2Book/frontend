@@ -3,12 +3,14 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import NoAvatar from "@/assets/images/no-avatar.png";
+
 
 interface User {
   id: number;
   first_name: string;
   last_name: string;
-  picture_profile?: string;
+  picture_profile: string;
 }
 
 interface UserSearchBarProps {
@@ -47,7 +49,7 @@ export default function UserSearchBar({ users, onUserSelect }: UserSearchBarProp
           {filteredUsers.map((item) => (
             <li
               key={`${item.type}-${item.id}`}
-              className="px-4 py-2 px-5 hover:bg-gray-100 cursor-pointer flex space-x-3 items-center"
+              className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex space-x-3 items-center"
             >
               <Link href={`/user/${item.id}`} passHref onClick={onClickUser}>
                 <div className="flex space-x-3 items-center w-full">
@@ -55,7 +57,7 @@ export default function UserSearchBar({ users, onUserSelect }: UserSearchBarProp
                     <div className="relative w-12 h-12">
                       <Image
                         alt="User profile"
-                        src={item.image}
+                        src={item.image !== "" ? item.image : NoAvatar.src}
                         fill
                         objectFit="cover"
                         className="rounded-full border border-zinc-300 shadow-md"

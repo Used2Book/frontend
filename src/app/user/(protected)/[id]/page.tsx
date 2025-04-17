@@ -117,7 +117,7 @@ export default function ProfilePage({ params }: { params: Promise<{ id: string }
                         </div>
                     </div>
 
-                    <div className="flex justify-between mt-10 w-full pl-10 pr-20">
+                    <div className="flex justify-between mt-10 w-full pr-20">
                         <p className="font-semibold text-lg">{client?.first_name} {client?.last_name}</p>
                         {error && <p className="text-red-500">{error}</p>}
                         {isMe ? <></> : chatButton}

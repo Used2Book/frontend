@@ -22,6 +22,7 @@ interface OfferCardProps {
 }
 
 const OfferCard: React.FC<OfferCardProps> = ({ offerDetail, onUpdate, isBuyer }) => {
+  console.log("offer detail:", offerDetail)
   const [seller, setSeller] = useState<User | null>(null);
   const [chatLink, setChatLink] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -161,9 +162,14 @@ const OfferCard: React.FC<OfferCardProps> = ({ offerDetail, onUpdate, isBuyer })
               {offerDetail.book_title.length > 20 ? `${offerDetail.book_title.slice(0, 20)}...` : offerDetail.book_title}
             </p>
           </Link>
-          {seller &&
+          {isBuyer && seller &&
             <SaleProfileCard id={seller?.id} />
           }
+          {
+            !isBuyer &&
+            <SaleProfileCard id={offerDetail?.buyer_id} />
+          }
+          {/* <SaleProfileCard id={seller?.id} /> */}
 
           {/* <p className="text-start font-semibold">
             {offerDetail.initial_price} ฿

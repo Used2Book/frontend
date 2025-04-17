@@ -95,6 +95,7 @@ export const editProfile = async (userInfo: {
   address: string;
   quote: string;
   bio: string;
+  phone_number: string;
 }) => {
   try {
     console.log("userInfo:", userInfo)

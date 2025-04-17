@@ -15,10 +15,9 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={inter.className}>
+      <body className={`${inter.className} flex flex-col min-h-screen`}>
         <Toaster
           position="top-right"
           reverseOrder={false}
@@ -30,8 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             },
           }}
         />
-        {/* {children} */}
-        <div className="mb-1">{children}</div>
+        <div className="flex-1">{children}</div>
         <Footer />
       </body>
     </html>

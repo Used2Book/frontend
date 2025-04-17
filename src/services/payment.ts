@@ -76,6 +76,7 @@ class paymentService {
                 headers: { Authorization: `Bearer ${useAuthStore.getState().token}` },
             });
             const data = await response.json();
+            console.log("paid list:", data.lists)
             return data.lists;
         } catch (error) {
             console.error("Error fetching unread payment count:", error);

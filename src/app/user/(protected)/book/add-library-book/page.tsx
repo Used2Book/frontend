@@ -70,7 +70,7 @@ export default function AddLibraryBookPage() {
     );
 
     return (
-        <div className="max-w-xl mx-48 my-5 p-6">
+        <div className="max-w-xl mx-48 my-5 p-6 h-screen">
             <h2 className="text-2xl font-bold mb-6">Add to My Reads</h2>
             <form onSubmit={handleSubmit} className="space-y-10">
                 <div className="relative">

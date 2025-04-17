@@ -20,6 +20,7 @@ const ProfileSettingPage: React.FC = () => {
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
     const [address, setAddress] = useState("");
     const [quote, setQuote] = useState("");
     const [bio, setBio] = useState("");
@@ -33,6 +34,7 @@ const ProfileSettingPage: React.FC = () => {
             setAddress(user.address || "");
             setQuote(user.quote || "");
             setBio(user.bio || "");
+            setPhoneNumber(user.phone_number || "");
             setProfilePicture(user.picture_profile || NoAvatar);
             setBackgroundPicture(user.picture_background || NoBackground);
         }
@@ -70,6 +72,7 @@ const ProfileSettingPage: React.FC = () => {
             await editProfile({
                 first_name: firstName,
                 last_name: lastName,
+                phone_number: phoneNumber,
                 address,
                 quote,
                 bio,
@@ -80,7 +83,7 @@ const ProfileSettingPage: React.FC = () => {
             const updatedUser = await getMe();
             if (updatedUser) {
                 setUser(updatedUser);
-                // router.push("/user/profile");
+                router.push("/user/profile");
             }
         } catch {
             toast.error("Failed to update profile info");
@@ -93,6 +96,7 @@ const ProfileSettingPage: React.FC = () => {
             setAddress(user.address || "");
             setQuote(user.quote || "");
             setBio(user.bio || "");
+            setPhoneNumber(user.phone_number || "");
             setProfilePicture(user.picture_profile || NoAvatar);
             setBackgroundPicture(user.picture_background || NoBackground);
         }
@@ -109,7 +113,7 @@ const ProfileSettingPage: React.FC = () => {
                 />
             </div>
 
-            <div className="flex flex-col justify-center">
+            <div className="flex flex-col justify-center mt-2">
                 <h2 className="text-xl font-bold mb-6 ml-10">Profile Setting</h2>
                 <form onSubmit={handleUpdateInfo} className="space-y-5">
                     <div className="flex items-center ml-10">
@@ -130,6 +134,18 @@ const ProfileSettingPage: React.FC = () => {
                                 placeholder="Last Name"
                             />
                         </div>
+                    </div>
+
+                    <hr className="border-gray-200" />
+
+                    <div className="flex items-center ml-10">
+                        <Label label="Phone Number" />
+                        <input
+                            type="text"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            className="w-3/5 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                        />
                     </div>
 
                     <hr className="border-gray-200" />
