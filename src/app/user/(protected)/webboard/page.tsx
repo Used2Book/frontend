@@ -13,6 +13,8 @@ import star_png from "@/assets/images/star.png";
 import { Book } from "@/types/book";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import NoAvatar from "@/assets/images/no-avatar.png";
+
 
 export default function WebBoardPage() {
   const user = useAuthStore((state) => state.user);

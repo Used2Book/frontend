@@ -1,20 +1,11 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { mockBookList } from "@/assets/mockData/books";
 import { Book } from "@/types/book";
 import star_png from '@/assets/images/star.png';
 import { Heart } from "lucide-react";
 
-// export default function BookDetailCard({ bookId }: { bookId: string }) {
-//     const [book, setBook] = useState(null);
 
-//     useEffect(() => {
-//       // Simulate API call or database fetch
-//       fetch(`/api/books/${bookId}`)
-//         .then((res) => res.json())
-//         .then((data) => setBook(data));
-//     }, [bookId]);
 const BookOwnerDetailCard: React.FC<{ bookDetail: Book }> = ({ bookDetail }) => {
     const [isWishlist, setIsWishlist] = useState(false);
 

@@ -140,7 +140,7 @@ export default function EditBookPage({ params }: { params: Promise<{ book_id: st
                             name="title"
                             value={formData.title}
                             onChange={handleInputChange}
-                            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-gray-400"
                             placeholder="Enter book title"
                             required
                         />

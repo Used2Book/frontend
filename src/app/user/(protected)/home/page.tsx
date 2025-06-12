@@ -8,36 +8,53 @@ import { useEffect, useState } from "react";
 import { allBooks, getAllGenres, getAllBookGenres } from "@/services/book";
 import { Book } from "@/types/book";
 import { ChevronDown } from "lucide-react";
+import { getRecommendedBooks } from "@/services/book";
 
 export default function HomePage() {
   const [bookList, setBookList] = useState<Book[]>([]);
   const [genres, setGenres] = useState<{ id: number; name: string }[]>([]);
   const [bookGenres, setBookGenres] = useState<{ book_id: number; genre_id: number }[]>([]);
   const [selectedGenreId, setSelectedGenreId] = useState<number | null>(null);
+  
+  const [loading, setLoading] = useState(true);
+  
+  const [recommendedBookList, setRecommendedBookList] = useState<Book[]>([]);
+  const [recommendedBookCarouselList, setRecommendedBookCarouselList] = useState<Book[]>([]);
+
+  const fetchRecommendedBooks = async () => {
+      try {
+          const recommendBook = await getRecommendedBooks(30);
+          console.log("Recommended books:", recommendBook);
+          setRecommendedBookList(recommendBook);
+          setRecommendedBookCarouselList(recommendBook.slice(0,4))
+      } catch (error) {
+          console.error("Failed to fetch recommended books:", error);
+      } finally {
+        setLoading(false);
+      }
+  };
+  
+  const fetchData = async () => {
+    try {
+      const [books, fetchedGenres, bookGenreMappings] = await Promise.all([
+        allBooks(),
+        getAllGenres(),
+        getAllBookGenres(),
+      ]);
+      
+      setBookList(books);
+      setGenres(fetchedGenres);
+      setBookGenres(bookGenreMappings);
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [books, fetchedGenres, bookGenreMappings] = await Promise.all([
-          allBooks(),
-          getAllGenres(),
-          getAllBookGenres(),
-        ]);
-        console.log("-All books:", books);
-        console.log("-All genres:", fetchedGenres);
-        console.log("-Book genres:", bookGenreMappings);
-        setBookList(books);
-        setGenres(fetchedGenres);
-        setBookGenres(bookGenreMappings);
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-      }
-    };
-
     fetchData();
+    fetchRecommendedBooks();
   }, []);
 
-  // Filter books by selected genre (multi-genre support)
   const filteredBooks = selectedGenreId
     ? bookList.filter((book) =>
       bookGenres.some(
@@ -50,12 +67,12 @@ export default function HomePage() {
 
   return (
     <div className="mb-10">
-      <RecommendBookCarouselCard />
+      <RecommendBookCarouselCard recommendedBookList={recommendedBookCarouselList}/>
       <BookHomeSearchBar/>
       <div className="mx-16 mt-4">
         <div className="flex flex-col space-y-5 py-12">
           <div className="text-xl font-bold">Recommended for you</div>
-          <MyRecommendedBookList />
+          <MyRecommendedBookList recommendedBookList={recommendedBookList} loading={loading} />
         </div>
 
         <div className="flex justify-between items-center space-y-5 py-12">

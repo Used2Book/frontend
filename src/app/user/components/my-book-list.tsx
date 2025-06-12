@@ -11,7 +11,6 @@ const MyBookListCard: React.FC = () => {
     useEffect(() => {
         const fetchListings = async () => {
             try {
-                // Step 1: Fetch user listings (only book IDs & prices)
                 const myListings = await myListing();
                 console.log("myListings:", myListings)
                 if (!myListings || myListings.length === 0) {
@@ -19,7 +18,6 @@ const MyBookListCard: React.FC = () => {
                     return;
                 }
 
-                // Step 2: Fetch full book details for each book_id
                 const bookDetailsPromises = myListings.map(async (listing: any) => {
                     const book = await getBookByID(listing.book_id);
                     return book
@@ -27,13 +25,10 @@ const MyBookListCard: React.FC = () => {
                         : null;
                 });
 
-                // Step 3: Resolve all book fetches
                 const books = await Promise.all(bookDetailsPromises);
 
-                // Step 4: Filter out any failed fetches (null results)
                 const validBooks = books.filter((book) => book !== null);
 
-                // Step 5: Update state with real books
                 setBookList(validBooks);
             } catch (error) {
                 console.error("Error fetching user listings:", error);

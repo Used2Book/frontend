@@ -6,9 +6,7 @@ export default function Loading() {
 
   // Hide loading after 3 seconds
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShow(false);
-    }, 1000);
+    const timer = setTimeout(() => {setShow(false);}, 1000);
 
     return () => clearTimeout(timer); // Cleanup timer
   }, []);

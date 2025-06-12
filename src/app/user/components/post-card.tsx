@@ -1,4 +1,3 @@
-// src/app/user/components/post-card.tsx
 "use client";
 import { Post } from "@/types/post";
 import { Comment } from "@/types/comment";

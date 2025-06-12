@@ -1,25 +1,10 @@
-"use client";
-import RecommendBookCard from "@/app/user/components/recommend-book-card";
 import { Book } from "@/types/book";
 import { Carousel } from "@material-tailwind/react";
-import { useState, useEffect } from "react";
-import { getRecommendedBooks } from "@/services/book";
+import RecommendBookCard from "@/app/user/components/recommend-book-card";
 
-export default function RecommendBookCarouselCard() {
-    const [recommendedBookList, setRecommendedBookList] = useState<Book[]>([]);
 
-    useEffect(() => {
-        const fetchRecommendedBooks = async () => {
-            try {
-                const recommendBook = await getRecommendedBooks(4);
-                console.log("Recommended books:", recommendBook);
-                setRecommendedBookList(recommendBook);
-            } catch (error) {
-                console.error("Failed to fetch recommended books:", error);
-            }
-        };
-        fetchRecommendedBooks();
-    }, []);
+
+export default function RecommendBookCarouselCard({recommendedBookList} : {recommendedBookList:Book[]}) {
 
     return (
         <div className="w-full">
@@ -40,7 +25,6 @@ export default function RecommendBookCarouselCard() {
                             cover_image_url={book.cover_image_url}
                             average_rating={book.average_rating}
                             description={book.description}
-                            
                         />
                     ))
                 ) : (
