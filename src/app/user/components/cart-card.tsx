@@ -21,9 +21,7 @@ interface CartCardProps {
 }
 
 const CartCard: React.FC<CartCardProps> = ({ cartDetail, onDelete }) => {
-  const [seller, setSeller] = useState<User | null>(null);
-  const [chatLink, setChatLink] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [seller, setSeller] = useState<User | null>(null)
 
   const user = useAuthStore((state) => state.user);
   const isSold = cartDetail.status === "sold"; // Check if item is sold
@@ -39,27 +37,6 @@ const CartCard: React.FC<CartCardProps> = ({ cartDetail, onDelete }) => {
     fetchSeller();
   }, [cartDetail.seller_id]);
 
-  const handleStartChat = useCallback(async () => {
-    if (!user || !seller) {
-      setError("You must be logged in to start a chat.");
-      return;
-    }
-    try {
-      const response = await chatHttpClient.post("/chat/start", {
-        senderId: String(user.id),
-        receiverId: String(seller?.id),
-      });
-      const chatId = response.data.chatId;
-      if (!chatId.includes("-")) {
-        throw new Error("Invalid chat ID format received from server.");
-      }
-      setChatLink(`/user/chat/${chatId}`);
-      setError(null);
-    } catch (error) {
-      console.error("Error starting chat:", error);
-      setError("Failed to start chat. Please try again.");
-    }
-  }, [user, seller]);
 
   const handleDeleteCart = async () => {
     try {
@@ -92,28 +69,7 @@ const CartCard: React.FC<CartCardProps> = ({ cartDetail, onDelete }) => {
     }
   };
 
-  const chatButton = (
-    <div
-      className={`py-1 px-4 rounded-md border-2 transition-all duration-200 ease-in-out transform ${isSold
-        ? "bg-gray-300 border-gray-400 cursor-not-allowed"
-        : "hover:bg-sky-100 hover:border-sky-400 border-sky-200 hover:scale-105 active:scale-95"
-        }`}
-    >
-      {chatLink ? (
-        <Link href={chatLink} prefetch={false}>
-          <MessageCircleMore size={15} color={isSold ? "gray" : "blue"} />
-        </Link>
-      ) : (
-        <div
-          onClick={!isSold ? handleStartChat : undefined}
-          className={`flex items-center ${!isSold ? "cursor-pointer" : "cursor-not-allowed"}`}
-        >
-          <MessageCircleMore size={15} color={isSold ? "gray" : "blue"} />
-        </div>
-      )}
-    </div>
-  );
-
+  
   const statusStyles: { [key: string]: string } = {
     for_sale: "bg-green-100 text-green-800",
     reserved: "bg-orange-100 text-orange-800",
@@ -145,7 +101,7 @@ const CartCard: React.FC<CartCardProps> = ({ cartDetail, onDelete }) => {
               {cartDetail.book_title.length > 20 ? `${cartDetail.book_title.slice(0, 20)}...` : cartDetail.book_title}
             </p>
           </Link>
-          {seller &&
+          {seller?.id &&
             <SaleProfileCard id={seller?.id} />
           }
         </div>

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { GoogleOAuthProvider} from "@react-oauth/google";
 import Link from "next/link";
 
 const CLIENT_ID = "GOOGLE_CLIENT_ID";

@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             },
           }}
         />
-        <div className="flex-1">{children}</div>
+        <div className="flex-grow">{children}</div>
         <Footer />
       </body>
     </html>

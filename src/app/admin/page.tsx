@@ -5,12 +5,10 @@ import { userCount } from "@/services/user";
 import UserAdminManagement from "./components/user-management";
 import BookAdminManagement from "./components/book-management";
 import Loading from "./components/loading";
-import useAuthStore from "@/contexts/auth-store";
 import { ShieldHalf } from "lucide-react";
 
 
 export default function AdminPage() {
-  const user = useAuthStore((state) => state.user)
   const [countBook, setCountBook] = useState<number | null>(null);
   const [countUser, setCountUser] = useState<number | null>(null);
 

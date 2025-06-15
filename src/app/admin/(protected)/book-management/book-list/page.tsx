@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Book } from "@/types/book";
 import { CircleFadingPlus, Search } from "lucide-react";
 import Link from "next/link";
+
 const BookAdminManagementPage: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [searchQuery, setSearchQuery] = useState("");

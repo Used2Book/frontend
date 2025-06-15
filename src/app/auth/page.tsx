@@ -16,7 +16,6 @@ export default function AuthPage() {
     const [email, setEmail] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const user = useAuthStore((state) => state.user);
 
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");

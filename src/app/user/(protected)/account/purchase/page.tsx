@@ -1,8 +1,6 @@
 // src/app/user/cart/page.tsx
 "use client";
-import { getCart } from "@/services/cart";
 import { useEffect, useState } from "react";
-import CartCard from "@/app/user/components/cart-card";
 import { myPurchaseListing } from "@/services/user";
 import { MyPurchase } from "@/types/my-purchase";
 import PurchaseCard from "@/app/user/components/purchase-card";

@@ -1,13 +1,8 @@
-"use client";
-
 import NavLink from "@/components/navbar";
-import useAuthStore from "@/contexts/auth-store";
 import { Toaster } from "react-hot-toast";
-import SettingsSidebar from "@/components/sidebar-old-version";
+
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const user = useAuthStore((state) => state.user);
-
   return (
     <div className="h-full flex flex-col"> 
     <Toaster 
@@ -24,15 +19,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       {/* The navbar, etc. */}
       <NavLink />
 
-      {/* Main Content Area */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* {user && <SettingsSidebar />}  */}
-
-        {/* Page Content */}
-        <div className="flex-1 overflow-y-auto">
+        <div>
           {children}
+
         </div>
-      </div>
+      {/* Main Content Area */}
+
     </div>
   );
 }

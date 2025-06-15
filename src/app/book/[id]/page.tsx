@@ -1,31 +1,34 @@
 "use client";
 import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
-import { getBookByID, getGenresBookByID } from "@/services/book";
+import { getBookByID, getGenresBookByID, getRecommendedBooks } from "@/services/book";
 import BookDetailCard from "@/app/book/components/book-detail";
 import { Book } from "@/types/book";
-import { use } from "react";
 import SaleListingList from "@/app/user/components/sale-listing-list";
 import ReviewListCard from "@/app/user/components/review-list";
-// import { submitReview } from "@/services/review"; // Import review service
 import { FaStar } from "react-icons/fa"; // Import star icons
 import { addBookReview } from "@/services/book";
 import MyRecommendedBookList from "@/app/user/components/my-recommendation-list";
 import Loading from "@/app/loading";
 import toast from "react-hot-toast";
+import { useParams } from "next/navigation";
 
-export default function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
-    const resolvedParams = use(params);
-    const bookID = parseInt(resolvedParams.id);
+export default function BookDetailPage() {
+    const { id } = useParams();
+    const bookID = Number(id);
 
     const [book, setBook] = useState<Book | null>(null);
     const [loading, setLoading] = useState(true);
+    const [loadingRecommended, setLoadingRecommened] = useState(true);
+
     const [error, setError] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [rating, setRating] = useState<number>(0);
     const [hover, setHover] = useState<number | null>(null);
     const [reviewText, setReviewText] = useState("");
     const [refreshReviews, setRefreshReviews] = useState(false);
+    const [recommendedBookList, setRecommendedBookList] = useState<Book[]>([]);
+    
 
     useEffect(() => {
         if (!bookID) return;
@@ -35,7 +38,6 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
                 const fetchedBook = await getBookByID(bookID);
                 if (!fetchedBook) {
                     setError("Book not found");
-                    setLoading(false);
                     return;
                 }
 
@@ -49,8 +51,19 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
                 setLoading(false);
             }
         };
+        const fetchRecommendedBooks = async () => {
+            try {
+                const recommendBook = await getRecommendedBooks(30);
+                setRecommendedBookList(recommendBook);
+            } catch (error) {
+                console.error("Failed to fetch recommended books:", error);
+            } finally {
+                setLoadingRecommened(false);
+            }
+        };
 
         fetchData();
+        fetchRecommendedBooks();
     }, [bookID, refreshReviews]);
 
     const handleReviewSubmit = async () => {
@@ -72,7 +85,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
         }
     };
 
-    if (loading) return <Loading/>;
+    if (loading) return <Loading />;
     if (error) return <div>{error}</div>;
 
     return (
@@ -103,7 +116,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
                     </div>
                     <div className="px-20 py-2 space-y-6 mb-20">
                         <p className="font-semibold text-lg">Recommended Similar Books</p>
-                        <MyRecommendedBookList/>
+                        <MyRecommendedBookList recommendedBookList={recommendedBookList} loading={loadingRecommended}/>
                     </div>
 
 

@@ -1,10 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import NavLinkNoAuth from "@/components/navbar-signup";
 import NavLink from "@/components/navbar";
 import useAuthStore from "@/contexts/auth-store";
-import SettingsSidebar from "@/components/sidebar-old-version";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const user = useAuthStore((state) => state.user);

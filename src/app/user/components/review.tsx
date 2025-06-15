@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import star_png from '@/assets/images/star.png';
 import NoAvatar from "@/assets/images/no-avatar.png";
-import ThumbsUpButton from "./thumbsup";
 import { Review } from "@/types/review";
 
 const ReviewCard: React.FC<{ reviewDetail: Review, isUserReview: boolean }> = ({ reviewDetail, isUserReview }) => {
@@ -37,7 +36,7 @@ const ReviewCard: React.FC<{ reviewDetail: Review, isUserReview: boolean }> = ({
         calculateDaysAgo();
     }, [reviewDetail]);
     return (
-        <div className="flex relative h-full w-full mx-auto space-x-4 py-3 border-[2px] border-gray-100 bg-white shadow-sm rounded-md p-5">
+        <div className="flex h-full w-full mx-auto space-x-4 py-3 border-[2px] border-gray-100 bg-white shadow-sm rounded-md p-5">
             {/* Profile Section */}
             <div className="flex-shrink-0 flex justify-center rounded-sm">
                 <div className="w-12 h-12 rounded-full overflow-hidden">

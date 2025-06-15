@@ -1,7 +1,7 @@
 import BookCard from "@/app/book/components/book";
 import { Book } from "@/types/book";
 
-export default function MyRecommendedrecommendedBookList({recommendedBookList, loading}: {recommendedBookList:Book[], loading: boolean}) {
+export default function MyRecommendedBookList({recommendedBookList, loading}: {recommendedBookList:Book[], loading: boolean}) {
   return (
     <div className="w-full rounded-md min-h-0 overflow-hidden">
       {loading ? (

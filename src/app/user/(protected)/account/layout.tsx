@@ -3,6 +3,8 @@
 import useAuthStore from "@/contexts/auth-store";
 import SettingsSidebar from "@/components/sidebar";
 
+// Not in used
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const user = useAuthStore((state) => state.user);
 

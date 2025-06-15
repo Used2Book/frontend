@@ -5,13 +5,13 @@ import { allBooks } from "@/services/book";
 import { userAddListing } from "@/services/user";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import useAuthStore from "@/contexts/auth-store";
 import RequireSeller from "@/components/require-seller";
 import { sendOTP, verifyOTP, resendOTP } from "@/services/auth";
 import { PhoneInput } from "react-international-phone";
 import { PhoneNumberUtil } from "google-libphonenumber";
 import "react-international-phone/style.css";
-import { SendOTPResponse, VerifyOTPResponse, Book } from "@/types"; // Adjust import
+import { SendOTPResponse, VerifyOTPResponse } from "@/types/otp";
+import { Book } from "@/types/book";
 import OTPModal from "@/app/user/components/otp-modal";
 
 const Label = ({ label }: { label: string }) => (
@@ -20,7 +20,6 @@ const Label = ({ label }: { label: string }) => (
 
 export default function AddListingBookPage() {
     const router = useRouter();
-    const { user } = useAuthStore(); // Get user from auth store
 
     const [title, setTitle] = useState("");
     const [price, setPrice] = useState<number | "">("");

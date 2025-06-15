@@ -7,6 +7,9 @@ import { useRouter } from "next/navigation";
 import { bankLists } from "@/utils/bank_icon";
 import Image from "next/image";
 // Sample Bank Options (Thailand Banks)
+
+// Not in used
+
 const bankOptions = [
   { code: "bbl", name: "Bangkok Bank (BBL)" },
   { code: "scb", name: "Siam Commercial Bank (SCB)" },
